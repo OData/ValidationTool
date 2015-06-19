@@ -1,0 +1,25 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Feed.Core.4208" category="core" v4specificationsection ="12" version="v4" requirementlevel="may" format="JsonLight" target="feed">
+    <description>A collections of entities MAY contain odata.nextLink annotations in V4.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "@odata.nextLink" : {
+        "type" : "any",
+        "required" : true,
+        },
+        },
+        }
+      </jsonschema>
+    </action>
+    <errormessage>A collections of entities MAY contain odata.nextLink annotations in V4.</errormessage>
+  </rule>
+</rules>

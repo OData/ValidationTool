@@ -1,0 +1,22 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="EntityReference.Core.4333" category="core" target="EntityRef" v4specificationsection ="13" version ="v4" requirementlevel="must" format="JsonLight">
+    <description>For a entity reference, the outermost JSON object MUST contain an odata.context annotation.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "additionalProperties" : true,
+        "type": "object",
+        "properties" : {
+        "@odata.context" : {"required":true },
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>For a entity reference, the outermost JSON object MUST contain an odata.context annotation.</errormessage>
+  </rule>
+</rules>

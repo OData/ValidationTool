@@ -1,0 +1,30 @@
+﻿<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1019" category="core" target="entry" specificationsection ="2.2.6.3.3" requirementlevel="may" format="json">
+    <description>The EntityType instance MAY include a name/value pair named "__metadata".</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "additionalProperties" : false,
+        "type" : "object",
+        "properties" : {
+
+        "d" : {
+        "additionalProperties" : true,
+        "type" : "object",
+        "properties" : {
+        "__metadata" : { "type" : "any", "required" : false  },
+        }
+        }
+
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The EntityType instance MAY include a name/value pair named "__metadata".</errormessage>
+  </rule>
+</rules>

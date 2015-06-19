@@ -1,0 +1,85 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Metadata.Core.1006" category="core" target="metadata" specificationsection ="2.2.3.7.2" version="v1_v2_v3" requirementlevel="must" format="xml" metadata="true">
+    <description>The contents of the &lt;edmx:Edmx&gt; element, in the context of a data service, is an &lt;edmx:DataServices&gt; element which contains one or more conceptual schema definition language (CSDL) documents.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0">
+            <!--Apply XSLT to get the edmx namespace from metadata document. -->
+            <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']"/>
+            <start>
+              <!-- Check the endpoint is exposed with DataServices element. Rest of the document can be ignored.  -->
+              <element name="edmx:Edmx">
+                <ref name="anyAttributes" />
+                <element name="edmx:DataServices">
+                  <ref name="anyAttributes" />
+                  <oneOrMore>
+                    <element name="edm:Schema">
+                      <ref name="anyContent" />
+                    </element>
+                  </oneOrMore>
+                </element>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template name="make-namespace-node">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ concat($prefix, ':dummy-for-xmlns') }" namespace="{ $uri }"/>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edmx'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edm'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema'])" />
+          </xsl:call-template>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>The contents of the &lt;edmx:Edmx&gt; element, in the context of a data service, is an &lt;edmx:DataServices&gt; element which contains one or more conceptual schema definition language (CSDL) documents.</errormessage>
+  </rule>
+</rules>

@@ -1,0 +1,63 @@
+﻿  <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.1002" category="core" target="servicedoc" specificationsection ="2.2.6.2.7" v4specificationsection="5.3" v4specification="odataatom" requirementlevel="must" format="xml" metadata="true">
+    <description>A data service MUST represent each EntitySet in its associated Entity Data Model as an &lt;app:collection&gt; element.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
+            <start>
+              <element>
+                <!-- Ignore the service level element -->
+                <anyName />
+                <ref name="anyAttributes" />
+                <element>
+                  <!-- Ignore the workspace level element -->
+                  <anyName />
+                  <element>
+                    <!-- Ignore the title element for default -->
+                    <anyName />
+                    <ref name="anyAttributes" />
+                    <text />
+                  </element>
+                  <group>
+                    <!-- Apply XSLT to get all EntitySet from Metadata and represent them as collections -->
+                    <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityContainer']"/>
+                  </group>
+                </element>
+              </element>
+            </start>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityContainer']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:for-each select="*[local-name()='EntitySet']">
+            <element name="app:collection">
+              <attribute name="href">
+                <text />
+              </attribute>
+              <element name="atom:title">
+                <ref name="anyAttributes" />
+                <text/>
+              </element>
+            </element>
+          </xsl:for-each>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>A data service MUST represent each EntitySet in its associated Entity Data Model as an &lt;app:collection&gt; element.</errormessage>
+  </rule>
+</rules>

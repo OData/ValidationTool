@@ -1,0 +1,26 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.4004" category="core" v4specificationsection ="5" version="v3_v4" requirementlevel="must" format="JsonLight" target="servicedoc">
+    <description>The value of the value property MUST be a JSON Array.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "value" : {
+        "type" : "array",
+        "additionalProperties" : true,
+        "required" : true
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The value of the value property MUST be a JSON Array.</errormessage>
+  </rule>
+</rules>

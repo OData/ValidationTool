@@ -1,0 +1,113 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.4632" category="core" target="entry" v4specificationsection="8.1.1.1" version="v3_v4" requirementlevel="must" format="atom">
+    <description>The rel attribute of atom:link element for navigation link MUST be present.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+        <start>
+          <element name="atom:entry">
+            <interleave>
+              <zeroOrMore>
+                <choice>
+                  <element name="atom:link">
+                    <interleave>
+                      <attribute name="rel" />
+                      <attribute name="type">
+                        <choice>
+                          <value>application/atom+xml;type=feed</value>
+                          <value>application/atom+xml;type=entry</value>
+                        </choice>
+                      </attribute>
+                      <ref name="anyAttributes_without_name_ref_or_type" />
+                    </interleave>
+                    <zeroOrMore>
+                      <choice>
+                        <text />
+                        <ref name="anyElement" />
+                      </choice>
+                    </zeroOrMore>
+                  </element>
+                  <ref name="anyElement_of_link_other_than_navigation_link" />
+                </choice>
+              </zeroOrMore>
+            </interleave>
+            <ref name="anyContentNotElements" />
+          </element>
+        </start>
+        <define name="anyAttributes_without_name_ref_or_type">
+          <zeroOrMore>
+            <attribute>
+              <anyName>
+                <except>
+                  <name>rel</name>
+                  <name>type</name>
+                </except>
+              </anyName>
+            </attribute>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttribute_without_navigation_flag">
+          <choice>
+            <attribute>
+              <anyName>
+                <except>
+                  <name>type</name>
+                </except>
+              </anyName>
+            </attribute>
+            <attribute>
+              <name>type</name>
+              <data type="string">
+                <except>
+                  <value>application/atom+xml;type=feed</value>
+                  <value>application/atom+xml;type=entry</value>
+                </except>
+              </data>
+            </attribute>
+          </choice>
+        </define>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyElement_of_link_other_than_navigation_link">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <ref name="anyAttribute_without_navigation_flag" />
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyContentNotElements">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+            </choice>
+          </zeroOrMore>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>The rel attribute of atom:link element for navigation link MUST be present.</errormessage>
+  </rule>
+</rules>

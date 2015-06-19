@@ -1,0 +1,155 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1011" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="8.1" v4specification="odataatom" requirementlevel="must" format="atom" metadata="true" projection="false" version="V1_V2">
+    <description>A data service MUST represent each NavigationProperty of the EntityType as an &lt;atom:link&gt; element that is a child element of the &lt;atom:entry&gt; element.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+            <start>
+              <element>
+                <anyName />
+                <ref name="anyAttributes" />
+                <interleave>
+                  <!-- Apply XSLT to get all properties from metadata using $ENTITYTYPE$ macro. -->
+                  <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+                  <zeroOrMore>
+                    <choice>
+                      <!-- Any element that is not atom:link. -->
+                      <ref name="anyElement_other_than_atom_link" />
+                      <!-- Any element that is atom:link yet with attribute rel equal to self, edit, or edit-media. -->
+                      <ref name="anyElement_of_atom_link_with_attribute_rel_value_equal_self_or_edit_or_editmedia" />
+                    </choice>
+                  </zeroOrMore>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_other_than_atom_rel_with_value_notequal_self_or_edit_or_editmedia">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>rel</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                  <attribute>
+                    <name>rel</name>
+                    <data type="token">
+                      <except>
+                        <value>self</value>
+                        <value>edit</value>
+                        <value>edit-media</value>
+                      </except>
+                    </data>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_other_than_atom_rel_with_value_equal_self_or_edit_or_editmedia">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>rel</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                  <attribute>
+                    <name>rel</name>
+                    <choice>
+                      <value>self</value>
+                      <value>edit</value>
+                      <value>edit-media</value>
+                    </choice>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_atom_link">
+              <element>
+                <choice>
+                  <anyName>
+                    <except>
+                      <nsName ns="http://www.w3.org/2005/Atom" />
+                    </except>
+                  </anyName>
+                  <nsName ns="http://www.w3.org/2005/Atom">
+                    <except>
+                      <name>atom:link</name>
+                    </except>
+                  </nsName>
+                </choice>
+                <ref name="anyAttributes" />
+                <text />
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_of_atom_link_with_attribute_rel_value_equal_self_or_edit_or_editmedia">
+              <element name="atom:link">
+                <ref name="anyAttributes_other_than_atom_rel_with_value_equal_self_or_edit_or_editmedia" />
+                <text />
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_of_atom_link_with_attribute_rel_value_notequal_self_or_edit_or_editmedia">
+              <element name="atom:link">
+                <ref name="anyAttributes_other_than_atom_rel_with_value_notequal_self_or_edit_or_editmedia" />
+                <text />
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:choose>
+            <xsl:when test="(*[local-name()='NavigationProperty'])">
+              <group>
+                <xsl:for-each select="*[local-name()='NavigationProperty']">
+                  <ref name="anyElement_of_atom_link_with_attribute_rel_value_notequal_self_or_edit_or_editmedia" />
+                </xsl:for-each>
+              </group>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>A data service MUST represent each NavigationProperty of the EntityType as an &lt;atom:link&gt; element that is a child element of the &lt;atom:entry&gt; element.</errormessage>
+  </rule>
+</rules>

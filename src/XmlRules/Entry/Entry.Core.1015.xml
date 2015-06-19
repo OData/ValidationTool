@@ -1,0 +1,136 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1015" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="8.1.1.3" v4specification="odataatom" requirementlevel="should" format="atom" projection="false">
+    <description>The &lt;atom:link&gt; element for NavigationProperty should have an atom:type attribute which should have a value of "application/atom+xml;type=entry" if the NavigationProperty identifies a single entity instance or "application/atom+xml;type=feed" if the NavigationProperty identifies an EntitySet.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+        <start>
+          <element>
+            <anyName />
+            <ref name="anyAttributes" />
+            <interleave>
+              <zeroOrMore>
+                <element name="atom:link">
+                  <zeroOrMore>
+                    <choice>
+                      <optional>
+                        <attribute name="type">
+                          <choice>
+                            <value>application/atom+xml;type=entry</value>
+                            <value>application/atom+xml;type=feed</value>
+                          </choice>
+                        </attribute>
+                      </optional>
+                      <ref name="anyAttributes_other_than_type" />
+                      <ref name="anyElement"/>
+                    </choice>
+                  </zeroOrMore>
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <choice>
+                  <!-- Any element that is not atom:link. -->
+                  <ref name="anyElement_other_than_atom_link" />
+                  <!-- Any element that is atom:link with attribute rel equal to self, edit, or edit-media. -->
+                  <ref name="anyElement_of_atom_link_with_attribute_rel_value_equal_self_or_edit_or_editmedia" />
+                </choice>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </start>
+        <define name="anyAttributes">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttributes_other_than_type">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName>
+                  <except>
+                    <name>type</name>
+                  </except>
+                </anyName>
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttributes_other_than_atom_rel_with_value_equal_self_or_edit_or_editmedia">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName>
+                  <except>
+                    <name>rel</name>
+                  </except>
+                </anyName>
+              </attribute>
+              <attribute>
+                <name>rel</name>
+                <choice>
+                  <value>self</value>
+                  <value>edit</value>
+                  <value>edit-media</value>
+                </choice>
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyElement_other_than_atom_link">
+          <element>
+            <choice>
+              <anyName>
+                <except>
+                  <nsName ns="http://www.w3.org/2005/Atom" />
+                </except>
+              </anyName>
+              <nsName ns="http://www.w3.org/2005/Atom">
+                <except>
+                  <name>atom:link</name>
+                </except>
+              </nsName>
+            </choice>
+            <ref name="anyAttributes" />
+            <text />
+            <zeroOrMore>
+              <ref name="anyElement" />
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyElement_of_atom_link_with_attribute_rel_value_equal_self_or_edit_or_editmedia">
+          <element name="atom:link">
+            <ref name="anyAttributes_other_than_atom_rel_with_value_equal_self_or_edit_or_editmedia" />
+            <text />
+            <zeroOrMore>
+              <ref name="anyElement" />
+            </zeroOrMore>
+          </element>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>The &lt;atom:link&gt; element for NavigationProperty should have an atom:type attribute which should have a value of "application/atom+xml;type=entry" if the NavigationProperty identifies a single entity instance or "application/atom+xml;type=feed" if the NavigationProperty identifies an EntitySet.</errormessage>
+  </rule>
+</rules>

@@ -1,0 +1,27 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.3006" category="core" v4specificationsection ="19" version="v3" requirementlevel="may" format="JsonLight" target="error">
+    <description>The error response object MAY contain name/value pair with the name target in V3.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "odata.error" : {
+        "additionalProperties" : true,
+        "properties" : {
+        "target" : { "type" : "any", "required" : true, },
+        },
+        },
+        },
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The error response object MAY contain name/value pair with the name target in V3.</errormessage>
+  </rule>
+</rules>

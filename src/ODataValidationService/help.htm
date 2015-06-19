@@ -1,0 +1,165 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OData Validator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link type="text/css" href="Styles/Site.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script>
+        function toggle(e) {
+            var divs = $('div', e.parentNode)
+            for (var i = 0; i < divs.length; i++) {
+                if (divs[i].style.display == "block") {
+                    e.src = "Images/arrow_right.gif"
+                    divs[i].style.display = "none"
+                }
+                else {
+                    e.src = "Images/arrow_down.gif"
+                    divs[i].style.display = "block"
+                }
+            }
+        }
+    </script>
+</head>
+<body style="overflow-y:scroll">
+    <div id="wrapper">
+        <div id="topBar">
+        </div>
+        <div id="header">
+            <div id="version">
+                Release - v1.06
+            </div>
+            <div id="navigation">
+                <ul class="menu">
+                    <li><a href=".">Home</a> |</li>
+                    <li><a href="validation.htm">Validation</a> |</li>
+                    <li><a href="roadmap.htm">Roadmap</a> |</li>
+                    <li><a href="feedback.htm">Feedback</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="infotop">
+
+            <div id="logo">
+                <img src="Images/ODataLogo.png" alt="logo" />
+            </div>
+
+            <div id="content">
+                <div id="whyuse">
+                    <h2>
+                        Why Use the OData Validator?
+                    </h2>
+                    <ul>
+                        <li>OData Validation tool is a key part of the OData ecosystem.</li>
+                        <li>It validate rules based on OData protocol specifications.</li>
+                        <li>Supporting validation for multiple OData versions, payload formats, and resource endpoint types.</li>
+                        <li>It is an Open Source project on <a href="http://odatavalidator.codeplex.com/">CodePlex</a>.  </li>
+                    </ul>
+                </div>
+                <div id="howuse">
+                    <h2>
+                        How to use OData Validator?
+                    </h2>
+                    <div id="useByUrl">
+                        <img alt="arrow right" src="Images/arrow_right.gif" onclick="toggle(this)" />
+                        <h3 class="subtitle" onclick="toggle(this)">How to use the By Uri tab?<br /></h3>
+                        <div style="display: none">
+                            <img src="Images/url.PNG"/>
+                            <ul>
+                                <li>Open the <a href="validation.htm">Validation page</a>.</li>
+                                <li>Enter an OData Service target endpoint.</li>
+                                <li>Select endpoint version.</li>
+                                <li>Select the response payload format.</li>
+                                <li>Hit Validate.</li>
+                                <li>The tool will list validation results and the response payload.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="useByDirectInput">
+                        <img alt="arrow right" src="Images/arrow_right.gif" onclick="toggle(this)" />
+                        <h3 class="subtitle">How to use the By Direct Input tab?<br /></h3>
+                        <div style="display: none">
+                            <img src="Images/directInput.PNG"/>
+                            <ul>
+                                <li>Open the <a href="validation.htm">Validation page</a> and click the <b>By Direct Input</b> tab.</li>
+                                <li>Paste your payload to the text box or click the Browse button to select a file from your file system.</li>
+                                <li>Choose the version of your payload.</li>
+                                <li>Select the metadata type if necessary.</li>
+                                <li>Paste your metadata document to the text box or click the Browse button to select a file from your file system.</li>
+                                <li>Hit Validate.</li>
+                                <li>The tool will list validation results and the response payload.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="useConformanceLevel">
+                        <img alt="arrow right" src="Images/arrow_right.gif" onclick="toggle(this)" />
+                        <h3 class="subtitle">How to use the Conformance Level tab?<br /></h3>
+                        <div style="display: none">
+                            <img src="Images/conformanceLevel.PNG"/>
+                            <ul>
+                                <li>Open the <a href="validation.htm">Validation page</a> and click the <b>Conformance Level</b> tab.</li>
+                                <li>Enter an OData Service target endpoint.</li>
+                                <li>Select the conformance level you want to validate.</li>
+                                <li>Select whether the tool could write data to your service.</li>
+                                <li>Hit Validate.</li>
+                                <li>The tool will list validation results and the response payload.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="useMetadataValidation">
+                        <img alt="arrow right" src="Images/arrow_right.gif" onclick="toggle(this)" />
+                        <h3 class="subtitle">How to use the Metadata Validation tab?<br /></h3>
+                        <div style="display: none">
+                            <img src="Images/metadata.PNG" />
+                            <ul>
+                                <li>Open the <a href="validation.htm">Validation page</a> and click the <b>Metadata Validation</b> tab.</li>
+                                <li>Enter an OData Service target endpoint (Not required ending with /$metadata).</li>
+                                <li>Select the version of your service endpoint.</li>
+                                <li>Hit Validate.</li>
+                                <li>The tool will list validation results and the response payload.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- START OF SmartSource Data Collector TAG -->
+    <!-- Copyright (c) 1996-2009 WebTrends Inc.  All rights reserved. -->
+    <!-- Version: MS.3.2.1 -->
+    <script src="scripts/wt.js" type="text/javascript"></script>
+    <!-- ----------------------------------------------------------------------------------- -->
+    <!-- Warning: The two script blocks below must remain inline. Moving them to an external -->
+    <!-- JavaScript include file can cause serious problems with cross-domain tracking.      -->
+    <!-- ----------------------------------------------------------------------------------- -->
+    <script type="text/javascript">
+        //<![CDATA[
+        var _tag = new WebTrends();
+        _tag.dcsid = "dcsc97avu10000kn75ujgpso2_7j5n";
+        _tag.fpcdom = ".odata.org";
+        _tag.dcsGetId();
+        _tag.trackevents = true;
+        //]]>>
+    </script>
+    <script type="text/javascript">
+        //<![CDATA[
+        // Add custom parameters here.
+        //_tag.DCSext.param_name=param_value;
+        _tag.dcsCollect();
+        //]]>>
+    </script>
+
+    <noscript>
+        <div>
+            <img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://m.webtrends.com/dcsc97avu10000kn75ujgpso2_7j5n/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=MS.3.0.0" />
+        </div>
+    </noscript>
+    <!-- END OF SmartSource Data Collector TAG -->
+</body>
+</html>

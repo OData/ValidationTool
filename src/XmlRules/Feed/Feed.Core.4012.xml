@@ -1,0 +1,25 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Feed.Core.4012" category="core" v4specificationsection ="12" version="v3_v4" requirementlevel="must" format="JsonLight" target="feed">
+    <description>The value of the value name/value pair is a JSON array.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "value" : {
+        "type" : "array",
+        "required" : true
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The value of the value name/value pair is a JSON array.</errormessage>
+  </rule>
+</rules>

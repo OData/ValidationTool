@@ -1,0 +1,41 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Feed.Core.1005" category="core" target="feed" specificationsection ="2.2.6.3.2" requirementlevel="should" format="json" version="v2" metadata="true">
+    <description>The nextURINVP SHOULD include a Skip Token System Query Option to indicate that the URI addresses the subsequent partial set of entities.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "additionalProperties" : false,
+          "type" : "object",
+          "properties" : {
+
+          "d" : {
+          "additionalProperties" : false,
+          "type" : "object",
+          "properties" : {
+
+          "results" : {
+          "required" : true,
+          "type" : "any",                  
+          },
+          
+          <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']"/>
+          }
+          }
+
+          }
+          }
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']">
+          "__next" : { "type" : "string", "pattern" : "\\$skiptoken", "required" : false }
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+  </rule>
+</rules>

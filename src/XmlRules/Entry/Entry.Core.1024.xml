@@ -1,0 +1,39 @@
+﻿<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1024" category="core" target="entry" specificationsection ="2.2.6.3.3" requirementlevel="must" format="json" mle="true">
+    <description>If the entity being represented is a Media Link Entry, the "media_src" and "content_type" name/value pairs MUST be included.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "additionalProperties" : false,
+        "type" : "object",
+        "properties" : {
+
+        "d" : {
+        <!-- Set additionalProperties to true to allow any other object other than Property -->
+        "additionalProperties" : true,
+        "type" : "object",
+        "properties" : {
+
+        "__metadata" : {
+        "additionalProperties" : true,
+        "type" : "object",
+        "properties" : {
+        "media_src" : { "type" : "any", "required" : true, "minLength" : 1 },
+        "content_type" : { "type" : "any", "required" : true, "minLength" : 1 }
+        }
+        }
+
+        }
+        }
+
+        }
+        }
+      </jsonschema>
+    </action>
+  </rule>
+</rules>

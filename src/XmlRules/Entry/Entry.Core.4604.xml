@@ -1,0 +1,59 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.4604" category="core" target="entry" v4specificationsection="6.1.3" version="v4" requirementlevel="may" format="atom">
+    <description>If the root of the response is an atom:entry element, it MAY have a metadata:metadata-etag attribute.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+        <start>
+          <element name="atom:entry">
+            <attribute name="m:metadata-etag">
+              <text />
+            </attribute>
+            <ref name="anyContent" />
+          </element>
+        </start>
+        <define name="anyAttributes">
+          <zeroOrMore>
+            <attribute>
+              <anyName />
+            </attribute>
+          </zeroOrMore>
+        </define>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyContent">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName>
+                  <except>
+                    <name>m:metadata-etag</name>
+                  </except>
+                </anyName>
+              </attribute>
+              <text />
+              <ref name="anyElement" />
+            </choice>
+          </zeroOrMore>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>If the root of the response is an atom:entry element, it MAY have a metadata:metadata-etag attribute.</errormessage>
+  </rule>
+</rules>

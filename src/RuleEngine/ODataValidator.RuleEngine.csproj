@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ODataValidator.RuleEngine</RootNamespace>
+    <AssemblyName>ODataValidator.RuleEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RelaxNG.3.0.2\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\AdditionalInfo.cs" />
+    <Compile Include="Common\AnnotationDVsManager.cs" />
+    <Compile Include="Common\ExceptionHelper.cs" />
+    <Compile Include="Common\HttpMethod.cs" />
+    <Compile Include="Common\ODataNamespaceManager.cs" />
+    <Compile Include="Common\OversizedPayloadException.cs" />
+    <Compile Include="Common\Request.cs" />
+    <Compile Include="Common\Response.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\ContextHelper.cs" />
+    <Compile Include="Common\RuleEngineSetting.cs" />
+    <Compile Include="Common\ServiceStatus.cs" />
+    <Compile Include="Common\TermDocuments.cs" />
+    <Compile Include="Common\UtilityHelper.cs" />
+    <Compile Include="Conformance\ConformanceAdvancedExtensionRule.cs" />
+    <Compile Include="Conformance\ConformanceExtensionRule.cs" />
+    <Compile Include="Conformance\ConformanceIntermediateExtensionRule.cs" />
+    <Compile Include="Conformance\ConformanceMinimalExtensionRule.cs" />
+    <Compile Include="Conformance\ConformanceType.cs" />
+    <Compile Include="DataService.cs" />
+    <Compile Include="IDataService.cs" />
+    <Compile Include="ExtensionRule.cs" />
+    <Compile Include="ExtensionRuleResultDetail.cs" />
+    <Compile Include="ExtensionRuleStore.cs" />
+    <Compile Include="ExtensionRuleViolationInfo.cs" />
+    <Compile Include="ExtensionVerifier.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HttpHeaderRegexVerifier.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="IResultProvider.cs" />
+    <Compile Include="IRuleStore.cs" />
+    <Compile Include="IVerifier.cs" />
+    <Compile Include="JobType.cs" />
+    <Compile Include="JsonSchemaVerifier.cs" />
+    <Compile Include="ODataMetadata.cs" />
+    <Compile Include="RegexVerifier.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Common\JsonHelper.cs" />
+    <Compile Include="ODataVersion.cs" />
+    <Compile Include="PayloadFormat.cs" />
+    <Compile Include="PayloadType.cs" />
+    <Compile Include="RngVerifier.cs" />
+    <Compile Include="Rule.cs" />
+    <Compile Include="RequirementLevel.cs" />
+    <Compile Include="RuleCatalogCollection.cs" />
+    <Compile Include="RuleEngineWrapper.cs" />
+    <Compile Include="RuleExecuter.cs" />
+    <Compile Include="ServiceContextCore.cs" />
+    <Compile Include="RuleSelector.cs" />
+    <Compile Include="RuleStoreAsXmlFile.cs" />
+    <Compile Include="RuleStoreAsXmlFolder.cs" />
+    <Compile Include="RuntimeException.cs" />
+    <Compile Include="ServiceContext.cs" />
+    <Compile Include="Common\WebHelper.cs" />
+    <Compile Include="Common\XmlHelper.cs" />
+    <Compile Include="ServiceContextFactory.cs" />
+    <Compile Include="ServiceVerificationResult.cs" />
+    <Compile Include="ServiceVerification.cs" />
+    <Compile Include="SupportedScheme.cs" />
+    <Compile Include="TestResult.cs" />
+    <Compile Include="Common\XsltTransformer.cs" />
+    <Compile Include="VerifierFactory.cs" />
+    <Compile Include="XsltJsonSchemaVerifier.cs" />
+    <Compile Include="XsltRngVerifier.cs" />
+    <Compile Include="XsltRulePreprocessor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

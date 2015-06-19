@@ -1,0 +1,155 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.4633" category="core" target="entry" v4specificationsection="8.1.1.1" version="v4" requirementlevel="must" format="atom" projection="false">
+    <description>The rel attribute MUST contain the string http://docs.oasis-open.org/odata/ns/related/ followed by the name of the navigation property on the entity.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" />
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+            <start>
+              <element name="atom:entry">
+                <ref name="anyAttributes" />
+                <zeroOrMore>
+                  <text />
+                </zeroOrMore>
+                <interleave>
+                  <zeroOrMore>
+                    <choice>
+                      <xsl:apply-templates select="//*[local-name()='EntityType' and @Name='$ENTITYTYPE$']" />
+                      <ref name="anyElement_of_atom_link_without_navigation_flag" />
+                    </choice>
+                  </zeroOrMore>
+                  <zeroOrMore>
+                    <ref name="anyElement_other_than_atom_link" />
+                  </zeroOrMore>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <attribute>
+                  <anyName />
+                </attribute>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyAttributes_without_rel_or_type">
+              <zeroOrMore>
+                <attribute>
+                  <anyName>
+                    <except>
+                      <name>rel</name>
+                      <name>type</name>
+                    </except>
+                  </anyName>
+                </attribute>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_without_navigation_flag">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>type</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                  <attribute name="type">
+                    <data type="string">
+                      <except>
+                        <value>application/atom+xml;type=feed</value>
+                        <value>application/atom+xml;type=entry</value>
+                      </except>
+                    </data>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement_of_atom_link_without_navigation_flag">
+              <element name="atom:link">
+                <ref name="anyAttributes_without_navigation_flag" />
+                <zeroOrMore>
+                  <choice>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_atom_link">
+              <element>
+                <anyName>
+                  <except>
+                    <name>atom:link</name>
+                  </except>
+                </anyName>
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:variable name="const_uri">http://docs.oasis-open.org/odata/ns/related/</xsl:variable>
+        <xsl:template match="//*[local-name()='EntityType' and @Name='$ENTITYTYPE$']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:choose>
+            <xsl:when test="*[local-name()='NavigationProperty']">
+              <element name="atom:link">
+                <interleave>
+                  <attribute name="rel">
+                    <choice>
+                      <xsl:for-each select="*[local-name()='NavigationProperty']">
+                        <value>
+                          <xsl:value-of select="concat(normalize-space($const_uri), @Name)" />
+                        </value>
+                      </xsl:for-each>
+                    </choice>
+                  </attribute>
+                  <attribute name="type">
+                    <choice>
+                      <value>application/atom+xml;type=feed</value>
+                      <value>application/atom+xml;type=entry</value>
+                    </choice>
+                  </attribute>
+                  <ref name="anyAttributes_without_rel_or_type" />
+                </interleave>
+                <zeroOrMore>
+                  <choice>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>The rel attribute MUST contain the string http://docs.oasis-open.org/odata/ns/related/ followed by the name of the navigation property on the entity.</errormessage>
+  </rule>
+</rules>

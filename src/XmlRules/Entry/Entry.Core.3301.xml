@@ -1,0 +1,22 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.3301" category="core" v4specificationsection ="4.5.7" version="v3" requirementlevel="must" format="JsonLight" target="entry" odatametadatatype="fullonly">
+    <description>The odata.id annotation MUST appear if odata.metadata=full is requested in V3.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "odata.id" : { "type" : "any", "required" : true, }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The odata.id annotation MUST appear if odata.metadata=full is requested in V3.</errormessage>
+  </rule>
+</rules>

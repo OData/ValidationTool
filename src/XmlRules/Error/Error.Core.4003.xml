@@ -1,0 +1,22 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.4003" category="core" target="error" v4specificationsection="19" version="v4" requirementlevel="must" format="JsonLight">
+    <description>The name of error response MUST be error in V4.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type": "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "error" : { "required" : true}
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The name of error response MUST be error in V4.</errormessage>
+  </rule>
+</rules>

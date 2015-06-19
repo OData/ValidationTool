@@ -1,0 +1,27 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.4005" category="core" specificationname="odata-json-format-v4.0" specificationsection ="5" version="v3_v4" requirementlevel="must" format="JsonLight" target="servicedoc">
+    <description>Each element in the value array MUST be a Json object.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "value" : {
+        "type" : "array",
+        "items" : {
+        "type" : "object"
+        }
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>Each element in the value array MUST be a Json object.</errormessage>
+  </rule>
+</rules>

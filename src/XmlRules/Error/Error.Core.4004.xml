@@ -1,0 +1,25 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.4004" category="core" v4specificationsection="19" requirementlevel="must" format="JsonLight" version="v4" target="error">
+    <description>The value of error response must be a JSON object.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : false,
+        "properties" : {
+        "error" : {
+        "type" : "object"       
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The value of error response must be a JSON object.</errormessage>
+  </rule>
+</rules>
+

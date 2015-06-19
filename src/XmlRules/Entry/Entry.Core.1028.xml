@@ -1,0 +1,39 @@
+﻿<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1028" category="core" target="entry" specificationsection ="2.2.6.3.3" requirementlevel="may" format="json" mle="true">
+    <description>If the entity being represented is a Media Link Entry, the "edit_media" and "media_etag" name/value pairs MAY be included.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "additionalProperties" : false,
+        "type" : "object",
+        "properties" : {
+
+        "d" : {
+        <!-- Set additionalProperties to true to allow any other object other than Property -->
+        "additionalProperties" : true,
+        "type" : "object",
+        "properties" : {
+
+        "__metadata" : {
+        "additionalProperties" : true,
+        "type" : "object",
+        "properties" : {
+        "edit_media" : { "type" : "string", "required" : false, "minLength" : 1 },
+        "media_etag" : { "type" : "string", "required" : false, "minLength" : 1 },
+        }
+        }
+
+        }
+        }
+
+        }
+        }
+      </jsonschema>
+    </action>
+  </rule>
+</rules>

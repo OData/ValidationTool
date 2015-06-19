@@ -1,0 +1,32 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.4007" category="core" target="ServiceDoc" v4specificationsection ="5" version="v3_v4" requirementlevel="may" format="JsonLight">
+    <description>Each element in the value array MAY contain a name/value pair with name title.</description>
+    <action processor ="jsonschema">
+      <jsonschema>
+        {
+        "type": "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "value" : {
+        "additionalProperties" : true,
+        "type" : "array",
+        "required" : true,
+        "items" : {
+        "type" : "object",
+        "properties" : {
+        "title" : { "required" : true}
+        }
+        }
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>Each element in the value array MAY contain a name/value pair with name title.</errormessage>
+  </rule>
+</rules>

@@ -1,0 +1,29 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.1007" category="core" target="servicedoc" specificationsection ="2.2.6.3.12" requirementlevel="should" format="json">
+    <description>A data service SHOULD represent all available collections in a single EntitySet array.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "type": "object",
+        "properties" : {
+        "d": {
+        "additionalProperties" : false,
+        "type": "object",
+        "properties" : {
+        "EntitySets" : {
+        "type": "array"
+        }
+        }
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>A data service SHOULD represent all available collections in a single EntitySet array.</errormessage>
+  </rule>
+</rules>

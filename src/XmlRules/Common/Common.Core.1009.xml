@@ -1,0 +1,118 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Common.Core.1009" category="core" target="error" specificationsection ="2.2.8.1.1" v4specificationsection="19.1" v4specification="odataatom" requirementlevel="must" format="xml" metadata="true">
+    <description>XML Error Response format MUST be used in response payloads representing top-level errors.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0">
+            <xsl:apply-templates select="*[local-name()='Edmx']"/>
+            <start>
+              <element name="m:error">
+                <ref name="anyAttribute" />
+                <interleave>
+                  <element name="m:code">
+                    <text/>
+                  </element>
+                  <element name="m:message">
+                    <ref name="anyContent" />
+                  </element>
+                  <zeroOrMore>
+                    <ref name="anyOtherContent" />
+                  </zeroOrMore>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyAttribute">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement_other_than_code_message">
+              <element>
+                <anyName>
+                  <except>
+                    <name>m:code</name>
+                    <name>m:message</name>
+                  </except>
+                </anyName>
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+          <define name="anyOtherContent">
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement_other_than_code_message" />
+              </choice>
+            </zeroOrMore>
+          </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template name="make-namespace-node">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ concat($prefix, ':dummy-for-xmlns') }" namespace="{ $uri }"/>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'m'" />
+            <!-- Get namespace using namespace axis rather than using the query. This is because in some instances m namespace is not on edmx element. -->
+            <xsl:with-param name="uri">
+              <xsl:choose>
+                <xsl:when test="/*[local-name()='Edmx']/@Version &lt; 4">http://schemas.microsoft.com/ado/2007/08/dataservices/metadata</xsl:when>
+                <xsl:when test="/*[local-name()='Edmx']/@Version = 4.0">http://docs.oasis-open.org/odata/ns/metadata</xsl:when>
+              </xsl:choose>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>XML Error Response format MUST be used in response payloads representing top-level errors.</errormessage>
+  </rule>
+</rules>

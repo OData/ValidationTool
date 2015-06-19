@@ -1,0 +1,236 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>show resultdetail</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link type="text/css" href="Styles/Site.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="Scripts/datajs-0.0.2.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.zclip.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <script id="detailTemplate" type="text/x-jQuery-tmpl">
+        <fieldset>
+            <legend>Request</legend>
+            <div class="requestheader">
+                {{each(i,header) RequestHeaders1}}
+                  {{if header}}
+                    <b>${header[0]}</b> : 
+                    <label contenteditable="false">${header[1]} </label>
+                <br />
+                {{/if}}
+                {{/each}}
+            </div>
+            <br />
+            <pre>  ${ RequestData }
+            </pre>
+            <br />
+            <button style="display:none;" disabled="true" onclick="Request(this);">${ HTTPMethod }</button>
+        </fieldset>
+        <fieldset>
+            <legend>Response</legend>
+            <div class="requestheader">
+                {{each(i,header) ResponseHeaders1}}
+                  {{if header}}
+                    <b>${header[0]}</b> : 
+                    <label>${header[1]} </label>
+                <br />
+                {{/if}}
+                {{/each}}
+            </div>
+            <br />
+            <button onclick="formatPayload(this);this.disable=true;">format</button>
+            <button onclick="clickToCopy(this);">copy</button>
+            <br />
+            <pre style="word-wrap: break-word;"> ${ResponsePayload}
+            </pre>
+        </fieldset>
+    </script>
+    <script id="detailResponseTemplate" type="text/x-jQuery-tmpl">
+        <fieldset>
+            <legend>Response</legend>
+            <div class="requestheader">
+                {{each(i,header) ResponseHeaders1}}
+                  {{if header}}
+                    <b>${header[0]}</b> : 
+                    <label>${header[1]} </label>
+                <br />
+                {{/if}}
+                {{/each}}
+            </div>
+            <br />
+            <button onclick="formatPayload(this);this.disable=true;">format</button>
+            <button onclick="clickToCopy(this);">copy</button>
+            <br />
+            <pre style="word-wrap: break-word;"> ${ResponsePayload}
+            </pre>
+        </fieldset>
+    </script>
+    <div id="wrapper">
+        <div id="topBar"></div>
+        <div id="infotop">
+            <div id="infobody"></div>
+            <div id="topbar">
+                <script id="totalStatusTemplate" type="text/x-jQuery-tmpl">
+                    <b>${HTTPMethod}  </b>${URI}
+            {{if ErrorMessage}}
+              <b style="color: red;">${ResponseStatusCode}</b>
+                    <p style="color: red;">${ErrorMessage}</p>
+                    {{else}}
+              <b>${ResponseStatusCode}</b>
+                    {{/if}}
+                </script>
+
+            </div>
+            <div id="tabs_container">
+                <ul class="tabs">
+                    <li class="active"><a href="#" rel="#tab_1_contents" class="tab" title="helo word, this is time and status information here">Detail </a></li>
+                    <li class="" style="display:none;"><a href="#" onclick="addTab(this);">+</a></li>
+                </ul>
+                <div class="tab_contents_container">
+                    <div id="tab_1_contents" class="tab_contents tab_contents_active">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function Request(e) {// contenteditable="false"
+                //e.disabled = true;
+                var now = new Date();
+                var outStr = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+                var data = {};
+                var headers = $("div>b", $(e).parent());
+                for (var i = 0; i < headers.length; i++) {
+                    data[headers[i].textContent] = $.trim(headers[i].nextSibling.nextSibling.textContent);
+                }
+                data["Method"] = e.textContent;
+                var jsonstr = $.trim( $(e).prevAll("pre")[0].textContent );
+                if( jsonstr.length )
+                    data["json"] = jsonstr;//TODO
+                data['url'] = $("#topbar > b")[0].nextSibling.data;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/request.aspx", true);
+                xhr.send(JSON.stringify(data));
+
+                xhr.onloadend = function (data) {
+                    if (this.readyState == 4 && this.status == 200 && this.response) {
+                        var a = JSON.parse(this.response);
+                        a.ResponseHeaders1 = headerfilter(a.ResponseHeaders.split(";;"));
+                        var temp = JSON.stringify(a.ResponsePayload);
+                        a.ResponsePayload = temp;
+                        $("#detailResponseTemplate").tmpl(a).appendTo(".tab_contents_container div.tab_contents_active");
+                    }else
+                        alert("receive error!");
+                    return;
+                    // should return json
+                    // done
+                };
+                //e.parent.firstElementChild.data = outStr;
+
+            }
+            function addTab(e) {
+                if ($('#tabs_container').is('#tabs_container.busy'))
+                    return;
+
+                var activeLi = $('#tabs_container li.active');
+                //attribute text  TODO
+                var tobeAddedLi = activeLi.clone(true);
+                activeLi.removeClass('active');
+
+                var activetab = $('.tab_contents_container div.tab_contents_active');
+                // TODO  editable  GET  delFieldSet
+                var tobeAddedTab = activetab.clone(true);
+                activetab.removeClass('tab_contents_active');
+
+                var fieldsets = $("fieldset", tobeAddedTab);
+                if (fieldsets.length > 1)
+                    tobeAddedTab[0].removeChild(fieldsets[1]);
+
+                var labellist = $(">div>label", fieldsets[0]);
+                for (var i = 0; i < labellist.length; i++) {
+                    $(labellist[i]).attr("contenteditable", "true");
+                }
+                $("pre", tobeAddedTab).attr("contenteditable", "true");
+                $(">button", fieldsets[0]).removeAttr('disabled');
+
+                var lastLi = $(e).parent().prev();
+                var numoftab = $("a", lastLi).attr("rel").match(/\d+/)[0];
+                numoftab = parseInt(numoftab);
+                var rel = "tab_" + (numoftab + 1) + "_contents";
+                $("a", tobeAddedLi).attr("rel", "#" + rel).text("TODO");
+                tobeAddedTab.attr("id", rel);
+
+                tobeAddedLi.insertBefore($(e).parent());
+                tobeAddedTab.appendTo($('.tab_contents_container'));
+
+                var strtip = "when you click here, it will fork active tab content!\n";
+                strtip += "you can edit request header and click the request button(GET/POST/PUT/...)";
+                //alert(strtip);
+            }
+            var currentDetail;
+
+            if (window.opener == null) {
+                currentDetail = {
+                    "ErrorMessage": "",
+                    "HTTPMethod": "GET",
+                    "ID": 13093,
+                    "RequestData": "{\n  \"@odata.type\": \"#ODataDemo.Product\",\n  \"ID\": 11,\n  \"Name\": \"Bread\",\n  \"Description\": \"Whole grain bread\",\n  \"ReleaseDate\": \"1992-01-01T00:00:00Z\",\n  \"DiscontinuedDate\": null,\n  \"Rating\": 4,\n  \"Price\": 2.5\n}",
+                    "RequestHeaders": "Accetp:application/json\r\nOData-Version:4.0r\n",
+                    "ResponseHeaders": "X-Content-Type-Options: nosniffr\nOData-Version: 4.0r\nAccess-Control-Allow-Origin: *r\nAccess-Control-Allow-Methods: GETr\nAccess-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersionr\nAccess-Control-Expose-Headers: DataServiceVersionr\nContent-Length: 1462r\nCache-Control: privater\nContent-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8r\nDate: Thu, 12 Jun 2014 10:57:55 GMTr\nSet-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.netr\nServer: Microsoft-IIS/8.0r\nX-AspNet-Version: 4.0.30319r\nX-Powered-By: ASP.NET\r\n\r\n",
+                    "ResponsePayload": " {\"@odata.context\":\"http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$metadata#Products\",\"value\":[{\"ID\":0,\"Name\":\"Bread\",\"Description\":\"Whole grain bread\",\"ReleaseDate\":\"1992-01-01T00:00:00Z\",\"DiscontinuedDate\":null,\"Rating\":4,\"Price\":2.5}]}",
+                    "ResponseStatusCode": "201,Created",
+                    "RuleName": "Advanced.Conformance.100901",
+                    "TestResultID": 20400,
+                    "URI": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/Products"
+                }
+                console.log("here is the page test");
+                //alert("the main window have been closed\n this is test details!");
+            } else {
+                currentDetail = window.opener.currentDetail;
+                function getParameterByName(name) {
+                    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                        results = regex.exec(location.search);
+                    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+                }
+                var resultDetailID = parseInt(getParameterByName("rid"));
+                if (currentDetail == null || currentDetail.ID != resultDetailID) {
+                    currentDetail = null;
+                    var tempArray = window.opener.conformanceResults.ResultDetails;
+                    for (var i = 0; i < tempArray.length; i++) {
+                        if (resultDetailID == tempArray[i].ID) {
+                            currentDetail = tempArray[i];
+                            break;
+                        }
+                    }
+                    if (currentDetail == null) {
+                        alert("dead");
+                    }
+                }
+
+            }
+            function headerfilter(array) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i] == "")
+                        delete array[i];
+                    else array[i] = array[i].split(":", 2);
+                }
+                return array;
+            }
+
+
+            currentDetail.RequestHeaders1 = headerfilter(currentDetail.RequestHeaders.split("\r\n"));
+            currentDetail.ResponseHeaders1 = headerfilter(currentDetail.ResponseHeaders.split("\r\n"));
+            $("#totalStatusTemplate").tmpl(currentDetail).appendTo("#topbar");
+            var t = $('#detailTemplate').tmpl(currentDetail);
+            t.appendTo('#tab_1_contents');
+        </script>
+        <script src="Scripts/detailshow.js" type="text/javascript"></script>
+</body>
+</html>

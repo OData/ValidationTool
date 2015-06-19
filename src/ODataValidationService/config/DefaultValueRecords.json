@@ -1,0 +1,31 @@
+[
+  {
+    "ServiceRoot": "Default",
+    "DefaultValue": {
+      "IsLanguageDependent": false,
+      "DereferenceableIDs": true,
+      "ConventionalIDs": true,
+      "Immutable": false,
+      "Computed": false,
+      "IsURL": false,
+      "IsMediaType": false,
+      "AsynchronousRequestsSupported": true,
+      "BatchContinueOnErrorSupported": false,
+      "CrossJoinSupported": false,
+      "IndexableByKey": true,
+      "TopSupported": true,
+      "SkipSupported": true,
+      "BatchSupported": true,
+      "ChangeTrackingType_Supported": true,
+      "CountRestrictionsType_Countable": true,
+      "FilterRestrictionsType_Filterable": true,
+      "SortRestrictionsType_Sortable": true,
+      "ExpandRestrictionsType_Expandable": true,
+      "SearchRestrictionsType_Searchable": true,
+      "SearchRestrictionsType_UnsupportedExpressions": 0,
+      "InsertRestrictionsType_Insertable": true,
+      "UpdateRestrictionsType_Updatable": true,
+      "DeleteRestrictionsType_Deletable": true
+    }
+  }
+]

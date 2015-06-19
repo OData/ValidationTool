@@ -1,0 +1,139 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1006" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="10.1" v4specification="odataatom" requirementlevel="should" format="atom" mle="true">
+    <description>If the entity represents an AtomPub Media Link Entry, an &lt;atom:link&gt; element SHOULD be included, which contains an atom:rel="edit-media" attribute.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+        <start>
+          <element>
+            <anyName />
+            <!-- Ignore the entry element. -->
+            <ref name="anyAttributes" />
+            <interleave>
+              <element name="atom:link">
+                <attribute name="rel">
+                  <value>edit-media</value>
+                </attribute>
+                <oneOrMore>
+                  <ref name="anyAttributes_other_than_atom_rel" />
+                </oneOrMore>
+              </element>
+              <zeroOrMore>
+                <!-- Elements here should not be atom:link with attribute rel with value edit-media. -->
+                <choice>
+                  <!-- Any element that is not atom:link. -->
+                  <ref name="anyElement_other_than_atom_link" />
+                  <!-- Any element that is atom:link yet with attribute rel not equal to edit-media. -->
+                  <ref name="anyElement_of_atom_link_without_attribute_rel_with_value_edit_media" />
+                </choice>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </start>
+        <define name="anyContent">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+              <ref name="anyElement" />
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttributes">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttributes_other_than_atom_rel">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName>
+                  <except>
+                    <name>rel</name>
+                  </except>
+                </anyName>
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttributes_other_than_atom_rel_with_value_edit_media">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName>
+                  <except>
+                    <name>rel</name>
+                  </except>
+                </anyName>
+              </attribute>
+              <attribute>
+                <name>rel</name>
+                <data type="token">
+                  <except>
+                    <value>edit-media</value>
+                  </except>
+                </data>
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyElement_other_than_atom_link">
+          <element>
+            <choice>
+              <anyName>
+                <except>
+                  <nsName ns="http://www.w3.org/2005/Atom" />
+                </except>
+              </anyName>
+              <nsName ns="http://www.w3.org/2005/Atom">
+                <except>
+                  <name>atom:link</name>
+                </except>
+              </nsName>
+            </choice>
+            <ref name="anyAttributes" />
+            <text />
+            <zeroOrMore>
+              <ref name="anyElement" />
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyElement_of_atom_link_without_attribute_rel_with_value_edit_media">
+          <element name="atom:link">
+            <ref name="anyAttributes_other_than_atom_rel_with_value_edit_media" />
+            <text />
+            <zeroOrMore>
+              <ref name="anyElement" />
+            </zeroOrMore>
+          </element>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>If the entity represents an AtomPub Media Link Entry, an &lt;atom:link&gt; element SHOULD be included, which contains an atom:rel="edit-media" attribute.</errormessage>
+  </rule>
+</rules>

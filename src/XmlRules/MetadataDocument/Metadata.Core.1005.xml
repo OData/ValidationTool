@@ -1,0 +1,105 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Metadata.Core.1005" category="core" target="metadata" specificationsection ="2.2.3.7.2" requirementlevel="should" version="V1_V2_V3" format="xml">
+    <description>DataServiceVersion attribute MUST be in the data service metadata namespace and SHOULD be present on a &lt;edmx:DataServices&gt; element [MC-EDMX] to indicate the version of the data service CSDL annotations (attributes in the data service metadata namespace) used by the document.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0">
+            <!-- Apply XSLT to get the edmx, edm, and m namespace from metadata document. -->
+            <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']"/>
+            <start>
+              <element name="edmx:Edmx">
+                <ref name="anyAttributes" />
+                <element name="edmx:DataServices">
+                  <attribute name="m:DataServiceVersion">
+                    <choice>
+                      <value>1.0</value>
+                      <value>2.0</value>
+                      <value>3.0</value>
+                    </choice>
+                  </attribute>
+                  <ref name="anyContent" />
+                </element>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template name="make-namespace-node">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ concat($prefix, ':dummy-for-xmlns') }" namespace="{ $uri }"/>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edmx'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edm'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'m'" />
+            <!-- Get m namespace using namespace axis rather than using the query. This is because in some instances m namespace is not on edmx element. -->
+            <xsl:with-param name="uri" select="string(//*/namespace::m)" />
+          </xsl:call-template>
+        </xsl:template>
+        <xsl:template name="make-namespace-node-other-than">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ $prefix }">
+            <xsl:value-of select="$uri"/>
+          </xsl:attribute>
+        </xsl:template>
+        <!-- Call make-namespace-node-other-than to make an anonymous namespace. -->
+        <xsl:template match="*[local-name()='Edmx']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node-other-than">
+            <xsl:with-param name="prefix" select="'ns'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema'])" />
+          </xsl:call-template>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>DataServiceVersion attribute MUST be in the data service metadata namespace and SHOULD be present on a &lt;edmx:DataServices&gt; element [MC-EDMX] to indicate the version of the data service CSDL annotations (attributes in the data service metadata namespace) used by the document.</errormessage>
+  </rule>
+</rules>

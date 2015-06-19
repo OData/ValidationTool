@@ -1,0 +1,35 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.4005" category="core" target="error" v4specificationsection ="19" version="v4" requirementlevel="must" format="JsonLight" projection="false">
+    <description>The JSON object of error response object MUST contain name/value pairs with the names code and message in V4.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "odata.error" : {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "code" : {
+        "type" : "any",
+        "required" : true,
+        },
+        "message" : {
+        "type" : "any",
+        "required" : true,
+        },
+        }
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The JSON object of error response object MUST contain name/value pairs with the names code and message in V4.</errormessage>
+  </rule>
+</rules>

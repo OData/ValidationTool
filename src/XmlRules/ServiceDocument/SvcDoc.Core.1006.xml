@@ -1,0 +1,17 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.1006" category="core" target="servicedoc" specificationsection ="2.2.3.7.1" requirementlevel="must" format="json">
+    <description>JSON Service Documents MUST be identified using the "application/json" media type.</description>
+    <action processor="headerregex">
+      <header field ="Content-Type">
+        <!-- Apply regular expression to find the media type from HTTP header. -->
+        <regex>.*application/json.*</regex>
+      </header>
+    </action>
+    <errormessage>JSON Service Documents MUST be identified using the "application/json" media type.</errormessage>
+  </rule>
+</rules>

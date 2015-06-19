@@ -1,0 +1,173 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1004" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="7.3" v4specification="odataatom" requirementlevel="must" format="atom" mle="true" metadata="true">
+    <description>If the entity represents an AtomPub Media Link Entry, the &lt;m:properties&gt; element MUST contain one child element for each EDMSimpleType and ComplexType property of the EntityType instance. Each child element representing a property MUST be defined in the data service namespace and the element name must be the same as the property.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+            <!-- Apply XSLT to get the edmx, edm, and m namespace from metadata document. -->
+            <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']"/>
+            <start>
+              <element>
+                <!-- Ignore entry element. -->
+                <anyName />
+                <ref name="anyAttributes" />
+                <interleave>
+                  <zeroOrMore>
+                    <!-- Ignore elements other than m:properties. -->
+                    <ref name="anyElement" />
+                  </zeroOrMore>
+                  <element name="m:properties">
+                    <interleave>
+                      <!-- Apply XSLT to get all properties from metadata using $ENTITYTYPE$ macro. -->
+                      <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+                    </interleave>
+                  </element>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:variable name="ns">
+          <xsl:value-of select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/@Namespace"/>
+        </xsl:variable>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+          <xsl:for-each select="*[local-name()='Property']">
+            <xsl:choose>
+              <xsl:when test="not(@*[name()='m:FC_KeepInContent']='false')">
+                <xsl:choose>
+                  <xsl:when test="@Nullable='true'">
+                    <optional>
+                      <element>
+                        <xsl:attribute name="name">
+                          <xsl:value-of select="concat('d:', @Name)" />
+                        </xsl:attribute>
+                        <ref name="anyAttributes" />
+                        <ref name="anyContent" />
+                        <text/>
+                      </element>
+                    </optional>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <element>
+                      <xsl:attribute name="name">
+                        <xsl:value-of select="concat('d:', @Name)" />
+                      </xsl:attribute>
+                      <ref name="anyAttributes" />
+                      <ref name="anyContent" />
+                      <text/>
+                    </element>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
+            </xsl:choose>
+          </xsl:for-each>
+          <xsl:if test="@BaseType != ''">
+            <xsl:variable name="basetype">
+              <xsl:value-of select="@BaseType"/>
+            </xsl:variable>
+            <xsl:variable name="base">
+              <xsl:value-of select="substring-after($basetype, concat($ns, '.'))"/>
+            </xsl:variable>
+            <xsl:for-each select="//*[local-name()='EntityType'][@Name=$base]/*[local-name()='Property']">
+              <xsl:choose>
+                <xsl:when test="not(@*[name()='m:FC_KeepInContent']='false')">
+                  <xsl:choose>
+                    <xsl:when test="@Nullable='true'">
+                      <optional>
+                        <element>
+                          <xsl:attribute name="name">
+                            <xsl:value-of select="concat('d:', @Name)" />
+                          </xsl:attribute>
+                          <ref name="anyAttributes" />
+                          <ref name="anyContent" />
+                          <text/>
+                        </element>
+                      </optional>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <element>
+                        <xsl:attribute name="name">
+                          <xsl:value-of select="concat('d:', @Name)" />
+                        </xsl:attribute>
+                        <ref name="anyAttributes" />
+                        <ref name="anyContent" />
+                        <text/>
+                      </element>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:for-each>
+          </xsl:if>
+        </xsl:template>
+        <!-- Code for dynamically generating the namespace for edmx, edm, and m. -->
+        <xsl:template name="make-namespace-node">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ concat($prefix, ':dummy-for-xmlns') }" namespace="{ $uri }"/>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edmx'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edm'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'m'" />
+            <!-- Get namespace using namespace axis rather than using the query. This is because in some instances m namespace is not on edmx element. -->
+            <xsl:with-param name="uri" select="string(//*/namespace::m)" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'d'" />
+            <xsl:with-param name="uri" select="string(//*/namespace::d)" />
+          </xsl:call-template>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>If the entity represents an AtomPub Media Link Entry, the &lt;m:properties&gt; element MUST contain one child element for each EDMSimpleType and ComplexType property of the EntityType instance. Each child element representing a property MUST be defined in the data service namespace and the element name must be the same as the property.</errormessage>
+  </rule>
+</rules>

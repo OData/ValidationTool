@@ -1,0 +1,41 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1018" category="core" target="entry" specificationsection ="2.2.6.3.3" requirementlevel="must" format="json" metadata="true" projection="false">
+    <description>Each property on the EntityType MUST be represented as a name/value pair, within the object.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "additionalProperties" : false,
+          "type" : "object",
+          "properties" : {
+
+          "d" : {
+          <!-- Set additionalProperties to true to allow any other object other than Property -->
+          "additionalProperties" : true,
+          "type" : "object",
+          "properties" : {               
+          <!-- Get all the Properties and NavigationProperties -->
+          <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>                    
+          }
+          }
+          
+          }
+          }
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']">
+          <xsl:for-each select="*[local-name()='Property']">
+            <!-- Set required to true to make sure all properties show up in the payload -->
+            "<xsl:value-of select="@Name"/>" : { "type" : "any", "required" : true  },
+          </xsl:for-each>
+        </xsl:template>        
+      </xsl:stylesheet>
+    </action>
+    <errormessage>Each property on the EntityType MUST be represented as a name/value pair, within the object.</errormessage>
+  </rule>
+</rules>

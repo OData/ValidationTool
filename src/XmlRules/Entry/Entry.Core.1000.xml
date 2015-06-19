@@ -1,0 +1,57 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1000" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="6" v4specification="odataatom" requirementlevel="must" format="atom">
+    <description>An EntityType instance MUST be represented as an &lt;atom:entry&gt; element.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom" >
+        <start>
+          <!-- Check whether or not the root element starts with atom:entry. -->
+          <element name="atom:entry">
+            <!-- Rest of the content is ignored. -->
+            <ref name="anyAttribute" />
+            <ref name="anyContent" />
+          </element>
+        </start>
+        <define name="anyContent">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+              <ref name="anyElement" />
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyAttribute">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>An EntityType instance MUST be represented as an &lt;atom:entry&gt; element.</errormessage>
+  </rule>
+</rules>

@@ -1,0 +1,87 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1005" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="10.2" v4specification="odataatom" requirementlevel="must" format="atom" mle="true" metadata="true">
+    <description>If the entity represents an AtomPub Media Link Entry, the &lt;m:properties&gt; element MUST be a direct child of the &lt;atom:entry&gt; element not under atom:content element.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+            <!-- Apply XSLT to get the edmx, edm, and m namespace from metadata document. -->
+            <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']"/>
+            <start>
+              <element>
+                <anyName />
+                <ref name="anyAttribute" />
+                <interleave>
+                  <zeroOrMore>
+                    <ref name="anyElement" />
+                  </zeroOrMore>
+                  <!-- Check to see whether or not atom:content and m:properties are at the saem level. -->
+                  <element name="atom:content">
+                    <ref name="anyAttribute" />
+                  </element>
+                  <element name="m:properties">
+                    <ref name="anyContent"/>
+                  </element>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttribute">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <!-- Code for dynamically generating the namespace for edmx, edm, and m. -->
+        <xsl:template name="make-namespace-node">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ concat($prefix, ':dummy-for-xmlns') }" namespace="{ $uri }"/>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'m'" />
+            <!-- Get namespace using namespace axis rather than using the query. This is because in some instances m namespace is not on edmx element. -->
+            <xsl:with-param name="uri" select="string(//*/namespace::m)" />
+          </xsl:call-template>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>If the entity represents an AtomPub Media Link Entry, the &lt;m:properties&gt; element MUST be a direct child of the &lt;atom:entry&gt; element not under atom:content element.</errormessage>
+  </rule>
+</rules>

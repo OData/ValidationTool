@@ -1,0 +1,102 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1002" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="6.5" v4specification="odataatom" requirementlevel="must" format="atom" mle="false" metadata="true">
+    <description>The &lt;atom:content&gt; element MUST contain one &lt;m:properties&gt; child element.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0"  xmlns:atom="http://www.w3.org/2005/Atom">
+            <!-- Apply XSLT to get the m namespace from metadata document. -->
+            <xsl:apply-templates select="*[local-name()='Edmx']"/>
+            <start>
+              <element>
+                <!-- Ignore the entry element. -->
+                <anyName />
+                <ref name="anyAttributes" />
+                <interleave>
+                  <element name="atom:content">
+                    <ref name="anyAttributes" />
+                    <!-- Check whether or not atom:content has only one m:properties. -->
+                    <element name="m:properties">
+                      <ref name="anyContent"/>
+                    </element>
+                  </element>
+                  <zeroOrMore>
+                    <ref name="anyElement_other_than_atom_content" />
+                  </zeroOrMore>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_atom_content">
+              <element>
+                <choice>
+                  <anyName>
+                    <except>
+                      <nsName ns="http://www.w3.org/2005/Atom" />
+                    </except>
+                  </anyName>
+                  <nsName ns="http://www.w3.org/2005/Atom">
+                    <except>
+                      <name>atom:content</name>
+                    </except>
+                  </nsName>
+                </choice>
+                <ref name="anyContent" />
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']" xmlns="http://relaxng.org/ns/structure/1.0">
+              <xsl:choose>
+                <xsl:when test="@Version &lt; 4">
+                  <xsl:attribute name="{concat('m', ':dummy-for-xmlns')}" namespace="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" />
+                </xsl:when>
+                <xsl:when test="@Version = 4.0">
+                  <xsl:attribute name="{concat('m', ':dummy-for-xmlns')}" namespace="http://docs.oasis-open.org/odata/ns/metadata" />
+                </xsl:when>
+              </xsl:choose>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>The &lt;atom:content&gt; element MUST contain one &lt;m:properties&gt; child element.</errormessage>
+  </rule>
+</rules>

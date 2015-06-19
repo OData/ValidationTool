@@ -1,0 +1,17 @@
+﻿<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Common.Core.4000" category="core" v4specificationsection ="4.1" version="v3_v4" requirementlevel="must" format="JsonLight" offline="false">
+    <description>Responses with a JSON MUST have a Content-Type header value of application/json.</description>
+    <action processor="headerregex">
+      <header field ="Content-Type">
+        <!-- Apply regular expression to find the media type from HTTP header. -->
+        <regex>.*application/json.*</regex>
+      </header>
+    </action>
+    <errormessage>Responses with a JSON MUST have a Content-Type header value of application/json.</errormessage>
+  </rule>
+</rules>

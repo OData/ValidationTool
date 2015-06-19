@@ -1,0 +1,43 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.1008" category="core" target="servicedoc" specificationsection ="2.2.6.3.12" requirementlevel="should" format="json" metadata="true">
+    <description>A data service MUST represent each EntitySet in its associated Entity Data Model as an arrary element.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "type": "object",
+          "properties" : {
+          "d": {
+          "additionalProperties" : false,
+          "type": "object",
+          "properties" : {
+          "EntitySets" : {
+          "type" : "array",
+          "items" : [
+          <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityContainer']"/>
+          ]
+          }
+          }
+          }
+          }
+          }
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityContainer']">
+          <xsl:for-each select="*[local-name()='EntitySet']">
+            { "type" : "string",
+            "pattern" : "<xsl:value-of select="@Name"/>" },
+          </xsl:for-each>
+          { "type" : "string",
+          "pattern" : "any" },
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>A data service MUST represent each EntitySet in its associated Entity Data Model as an arrary element.</errormessage>
+  </rule>
+</rules>

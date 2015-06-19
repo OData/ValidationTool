@@ -1,0 +1,39 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.4089" category="core" target="entry" v4specificationsection ="7.3" requirementlevel="must" metadata="true" format="JsonLight" version="v3_v4">
+    <description>A collection of primitive values or complex values is represented as a JSON array.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "additionalProperties" : true,
+          "type" : "object",
+          "properties" : {     
+          <!-- Get all the Properties with collection type -->
+          <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+          }
+          }
+        </xsl:template>        
+        
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']">
+          <xsl:for-each select="*[local-name()='Property']">
+            <!-- select type of property -->
+            <xsl:variable name="type">
+              <xsl:value-of select="@Type"/>
+            </xsl:variable>
+              <xsl:if test="starts-with($type, 'Collection(')">                
+                <!-- select property with collection type-->
+                "<xsl:value-of select="@Name"/>" : {"type" : "array"},
+              </xsl:if>
+          </xsl:for-each>      
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>A collection of primitive values or complex values is represented as a JSON array.</errormessage>
+  </rule>
+</rules>

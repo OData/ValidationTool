@@ -1,0 +1,33 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.4006" category="core" target="ServiceDoc" v4specificationsection ="5" version="v3_v4" requirementlevel="must" format="JsonLight">
+    <description>Each element in the value array MUST be a JSON object with at least two name/value pairs, "name" and "url".</description>
+    <action processor ="jsonschema">
+      <jsonschema>
+        {
+        "type": "object",
+        "additionalProperties" : true,
+        "properties" : {
+        "value" : {
+        "additionalProperties" : true,
+        "type" : "array",
+        "required" : true,
+        "items" : {
+        "type" : "object",
+        "properties" : {
+        "name" : { "required" : true},
+        "url" : { "required" : true}
+        }
+        }
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>Each element in the value array MUST be a JSON object with at least two name/value pairs, "name" and "url".</errormessage>
+  </rule>
+</rules>

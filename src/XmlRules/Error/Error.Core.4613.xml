@@ -1,0 +1,137 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.4613" category="core" target="error" v4specificationsection="19.5.3" version="v4" requirementlevel="must" format="xml">
+    <description>The metadata:detail element of metadata:details element MUST contain a metadata:message element.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+        <start>
+          <element name="m:error">
+            <interleave>
+              <zeroOrMore>
+                <element name="m:details">
+                  <interleave>
+                    <oneOrMore>
+                      <element name="m:detail">
+                        <interleave>
+                          <element name="m:message">
+                            <ref name="anyContent" />
+                          </element>
+                          <zeroOrMore>
+                            <ref name="anyNotMsgElement" />
+                          </zeroOrMore>
+                        </interleave>
+                        <ref name="anyContentNotElements" />
+                      </element>
+                    </oneOrMore>
+                    <zeroOrMore>
+                      <ref name="anyNotDetailElement" />
+                    </zeroOrMore>
+                  </interleave>
+                  <ref name="anyContentNotElements" />
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <ref name="anyNotDetailsElement" />
+              </zeroOrMore>
+            </interleave>
+            <ref name="anyContentNotElements" />
+          </element>
+        </start>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyContent">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+              <ref name="anyElement" />
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyNotDetailsElement">
+          <element>
+            <anyName>
+              <except>
+                <name>m:details</name>
+              </except>
+            </anyName>
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyNotDetailElement">
+          <element>
+            <anyName>
+              <except>
+                <name>m:detail</name>
+              </except>
+            </anyName>
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyNotMsgElement">
+          <element>
+            <anyName>
+              <except>
+                <name>m:message</name>
+              </except>
+            </anyName>
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyContentNotElements">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+            </choice>
+          </zeroOrMore>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>The metadata:detail element of metadata:details element MUST contain a metadata:message element.</errormessage>
+  </rule>
+</rules>

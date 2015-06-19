@@ -1,0 +1,26 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.4001" category="core" target="ServiceDoc" v4specificationsection ="5" version ="v4" requirementlevel="must" format="JsonLight">
+    <description>A service document in JSON must have at least two properties; odata.context and value in V4.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "additionalProperties" : true,
+        "type": "object",
+        "properties" : {
+        "@odata.context" : {
+        "required":true
+        },
+        "value" :{
+        "required":true}
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>A service document in JSON must have at least two properties; odata.context and value in V4.</errormessage>
+  </rule>
+</rules>

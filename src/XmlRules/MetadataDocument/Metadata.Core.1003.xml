@@ -1,0 +1,208 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Metadata.Core.1003" category="core" target="metadata" specificationsection ="2.2.3.7.2" requirementlevel="must" format="xml" version="V1_V2_V3" metadata="true">
+    <description>HttpMethod attribute MUST be used on a &lt;FunctionImport&gt; element [MC-CSDL] to indicate the HTTP method which is to be used to invoke the ServiceOperation exposing the FunctionImport.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0">
+            <!-- Apply XSLT to get the edmx, edm, and m namespace from metadata document. -->
+            <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']"/>
+            <start>
+              <element>
+                <!-- Ignore the Edmx element. -->
+                <anyName />
+                <ref name="anyAttributes" />
+                <element>
+                  <!-- Ignore the DataServices element. -->
+                  <anyName />
+                  <ref name="anyAttributes" />
+                  <zeroOrMore>
+                    <element>
+                      <!-- Ignore the Schema element. -->
+                      <anyName />
+                      <ref name="anyAttributes" />
+                      <interleave>
+                        <zeroOrMore>
+                          <optional>
+                            <element name="edm:EntityContainer">
+                              <ref name="anyAttributes" />
+                              <interleave>
+                                <zeroOrMore>
+                                  <element name="edm:FunctionImport">
+                                    <attribute name="m:HttpMethod">
+                                      <choice>
+                                        <value>POST</value>
+                                        <value>GET</value>
+                                      </choice>
+                                    </attribute>
+                                    <!-- Ignore all other attributes. -->
+                                    <ref name="anyAttributes_other_than_m_HttpMethod" />
+                                    <zeroOrMore>
+                                      <!-- Ignore all other elements. -->
+                                      <ref name="anyElement" />
+                                    </zeroOrMore>
+                                  </element>
+                                </zeroOrMore>
+                                <zeroOrMore>
+                                  <ref name="anyElement_other_than_edm_FunctionImport_without_m_HttpMethod" />
+                                </zeroOrMore>
+                              </interleave>
+                            </element>
+                          </optional>
+                        </zeroOrMore>
+                        <zeroOrMore>
+                          <!-- Elements here must not be EntityContainer. -->
+                          <ref name="anyElement_other_than_edm_EntityContainer" />
+                        </zeroOrMore>
+                      </interleave>
+                    </element>
+                  </zeroOrMore>
+                </element>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_other_than_m_HttpMethod">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>m:HttpMethod</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_edm_EntityContainer">
+              <element>
+                <choice>
+                  <anyName>
+                    <except>
+                      <nsName>
+                        <!-- Apply XSLT to get the edm namespace from metadata document. -->
+                        <xsl:apply-templates select="*[local-name()='Edmx']"/>
+                      </nsName>
+                    </except>
+                  </anyName>
+                  <nsName>
+                    <!-- Apply XSLT to get the edm namespace from metadata document. -->
+                    <xsl:apply-templates select="*[local-name()='Edmx']"/>
+                    <except>
+                      <name>edm:EntityContainer</name>
+                    </except>
+                  </nsName>
+                </choice>
+                <ref name="anyAttributes"/>
+                <text/>
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_edm_FunctionImport_without_m_HttpMethod">
+              <element>
+                <choice>
+                  <anyName>
+                    <except>
+                      <nsName>
+                        <!-- Apply XSLT to get the edm namespace from metadata document. -->
+                        <xsl:apply-templates select="*[local-name()='Edmx']"/>
+                      </nsName>
+                    </except>
+                  </anyName>
+                  <nsName>
+                    <!-- Apply XSLT to get the edm namespace from metadata document. -->
+                    <xsl:apply-templates select="*[local-name()='Edmx']"/>
+                    <except>
+                      <name>edm:FunctionImport</name>
+                    </except>
+                  </nsName>
+                </choice>
+                <ref name="anyAttributes_other_than_m_HttpMethod"/>
+                <text/>
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template name="make-namespace-node">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ concat($prefix, ':dummy-for-xmlns') }" namespace="{ $uri }"/>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edmx'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'edm'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema'])" />
+          </xsl:call-template>
+          <xsl:call-template name="make-namespace-node">
+            <xsl:with-param name="prefix" select="'m'" />
+            <!-- Get m namespace using namespace axis rather than using the query. This is because in some instances m namespace is not on edmx element. -->
+            <xsl:with-param name="uri" select="string(//*/namespace::m)" />
+          </xsl:call-template>
+        </xsl:template>
+        <xsl:template name="make-namespace-node-other-than">
+          <xsl:param name="prefix"/>
+          <xsl:param name="uri"/>
+          <xsl:attribute name="{ $prefix }">
+            <xsl:value-of select="$uri"/>
+          </xsl:attribute>
+        </xsl:template>
+        <!-- Call make-namespace-node-other-than to make an anonymous namespace. -->
+        <xsl:template match="*[local-name()='Edmx']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:call-template name="make-namespace-node-other-than">
+            <xsl:with-param name="prefix" select="'ns'" />
+            <xsl:with-param name="uri" select="namespace-uri(/*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema'])" />
+          </xsl:call-template>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>HttpMethod attribute MUST be used on a &lt;FunctionImport&gt; element [MC-CSDL] to indicate the HTTP method which is to be used to invoke the ServiceOperation exposing the FunctionImport.</errormessage>
+  </rule>
+</rules>

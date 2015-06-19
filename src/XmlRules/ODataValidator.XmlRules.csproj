@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{15CF871C-65FC-4335-977C-67B343316FBF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <OutputPath>$(_NTTREE)\ODataValidationService\rulestore\</OutputPath>
+    <RootNamespace>Rules</RootNamespace>
+    <AssemblyName>Rules</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RuleEngine\ODataValidator.RuleEngine.csproj">
+      <Project>{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}</Project>
+      <Name>ODataValidator.RuleEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Rules.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Common.Core.1002.xml" />
+    <Content Include="Common\Common.Core.1003.xml" />
+    <Content Include="Common\Common.Core.1004.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Common\Common.Core.1005.xml" />
+    <Content Include="Common\Common.Core.1006.xml" />
+    <Content Include="Common\Common.Core.1007.xml" />
+    <Content Include="Common\Common.Core.1008.xml" />
+    <Content Include="Common\Common.Core.1009.xml" />
+    <Content Include="Common\Common.Core.4000.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Common\Common.Core.4004.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="EntityReference\EntityReference.Core.4302.xml" />
+    <Content Include="EntityReference\EntityReference.Core.4333.xml" />
+    <Content Include="EntityReference\EntityReference.Core.4334.xml" />
+    <Content Include="EntityReference\EntityReference.Core.4335.xml" />
+    <Content Include="EntityReference\EntityReference.Core.4336.xml" />
+    <Content Include="Entry\Entry.Core.1000.xml" />
+    <Content Include="Entry\Entry.Core.1001.xml" />
+    <Content Include="Entry\Entry.Core.1002.xml" />
+    <Content Include="Entry\Entry.Core.1003.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.1004.xml" />
+    <Content Include="Entry\Entry.Core.1005.xml" />
+    <Content Include="Entry\Entry.Core.1006.xml" />
+    <Content Include="Entry\Entry.Core.1007.xml" />
+    <Content Include="Entry\Entry.Core.1008.xml" />
+    <Content Include="Entry\Entry.Core.1009.xml" />
+    <Content Include="Entry\Entry.Core.1010.xml" />
+    <Content Include="Entry\Entry.Core.1011.xml" />
+    <Content Include="Entry\Entry.Core.1013.xml" />
+    <Content Include="Entry\Entry.Core.1014.xml" />
+    <Content Include="Entry\Entry.Core.1015.xml" />
+    <Content Include="Entry\Entry.Core.1018.xml" />
+    <Content Include="Entry\Entry.Core.1019.xml" />
+    <Content Include="Entry\Entry.Core.1020.xml" />
+    <Content Include="Entry\Entry.Core.1021.xml" />
+    <Content Include="Entry\Entry.Core.1022.xml" />
+    <Content Include="Entry\Entry.Core.1024.xml" />
+    <Content Include="Entry\Entry.Core.1025.xml" />
+    <Content Include="Entry\Entry.Core.1026.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.1027.xml" />
+    <Content Include="Entry\Entry.Core.1028.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.1029.xml" />
+    <Content Include="Entry\Entry.Core.3093.xml" />
+    <Content Include="Entry\Entry.Core.3098.xml" />
+    <Content Include="Entry\Entry.Core.3301.xml" />
+    <Content Include="Entry\Entry.Core.4065.xml" />
+    <Content Include="Entry\Entry.Core.4066.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.4089.xml" />
+    <Content Include="Entry\Entry.Core.4090.xml" />
+    <Content Include="Entry\Entry.Core.4093.xml" />
+    <Content Include="Entry\Entry.Core.4098.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.4103.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.4301.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Entry\Entry.Core.4604.xml" />
+    <Content Include="Entry\Entry.Core.4628.xml" />
+    <Content Include="Entry\Entry.Core.4632.xml" />
+    <Content Include="Entry\Entry.Core.4633.xml" />
+    <Content Include="Entry\Entry.Core.4645.xml" />
+    <Content Include="Entry\Entry.Core.4646.xml" />
+    <Content Include="Entry\Entry.Core.4650.xml" />
+    <Content Include="Error\Error.Core.3001.xml" />
+    <Content Include="Error\Error.Core.3002.xml" />
+    <Content Include="Error\Error.Core.3004.xml" />
+    <Content Include="Error\Error.Core.3005.xml" />
+    <Content Include="Error\Error.Core.3006.xml" />
+    <Content Include="Error\Error.Core.3100.xml" />
+    <Content Include="Error\Error.Core.3101.xml" />
+    <Content Include="Error\Error.Core.4000.xml" />
+    <Content Include="Error\Error.Core.4001.xml" />
+    <Content Include="Error\Error.Core.4003.xml" />
+    <Content Include="Error\Error.Core.4004.xml" />
+    <Content Include="Error\Error.Core.4005.xml" />
+    <Content Include="Error\Error.Core.4006.xml" />
+    <Content Include="Error\Error.Core.4100.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Error\Error.Core.4101.xml" />
+    <Content Include="Error\Error.Core.4609.xml" />
+    <Content Include="Error\Error.Core.4610.xml" />
+    <Content Include="Error\Error.Core.4611.xml" />
+    <Content Include="Error\Error.Core.4612.xml" />
+    <Content Include="Error\Error.Core.4613.xml" />
+    <Content Include="Error\Error.Core.4614.xml" />
+    <Content Include="Feed\Feed.Core.1000.xml" />
+    <Content Include="Feed\Feed.Core.1001.xml" />
+    <Content Include="Feed\Feed.Core.1002.xml" />
+    <Content Include="Feed\Feed.Core.1005.xml" />
+    <Content Include="Feed\Feed.Core.3008.xml" />
+    <Content Include="Feed\Feed.Core.3108.xml" />
+    <Content Include="Feed\Feed.Core.3208.xml" />
+    <Content Include="Feed\Feed.Core.3308.xml" />
+    <Content Include="Feed\Feed.Core.4006.xml" />
+    <Content Include="Feed\Feed.Core.4007.xml" />
+    <Content Include="Feed\Feed.Core.4008.xml" />
+    <Content Include="Feed\Feed.Core.4012.xml" />
+    <Content Include="Feed\Feed.Core.4108.xml" />
+    <Content Include="Feed\Feed.Core.4208.xml" />
+    <Content Include="Feed\Feed.Core.4308.xml" />
+    <Content Include="MetadataDocument\Metadata.Core.1001.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="MetadataDocument\Metadata.Core.1002.xml" />
+    <Content Include="MetadataDocument\Metadata.Core.1003.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="MetadataDocument\Metadata.Core.1004.xml" />
+    <Content Include="MetadataDocument\Metadata.Core.1005.xml" />
+    <Content Include="MetadataDocument\Metadata.Core.1006.xml" />
+    <Content Include="MetadataDocument\Metadata.Core.1007.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.1000.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.1001.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.1002.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.1003.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ServiceDocument\SvcDoc.Core.1004.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ServiceDocument\SvcDoc.Core.1006.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.1007.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.1008.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.3001.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.4000.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.4001.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.4004.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.4005.xml" />
+    <Content Include="ServiceDocument\SvcDoc.Core.4006.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ServiceDocument\SvcDoc.Core.4007.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IndividualProperty\" />
+  </ItemGroup>
+  <Target Name="Build" DependsOnTargets="BuildProjectDependencies;ODataOpenSourceProject" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir ..\..\..\ODataValidationService\bin\rulestore
+copy ..\..\Common\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\ServiceDocument\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\MetadataDocument\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\Feed\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\Entry\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\Error\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\IndividualProperty\* ..\..\..\ODataValidationService\bin\rulestore\* /Y
+copy ..\..\EntityReference\* ..\..\..\ODataValidationService\bin\rulestore\* /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

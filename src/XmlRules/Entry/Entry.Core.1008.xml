@@ -1,0 +1,106 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1008" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="6.3" v4specification="odataatom" requirementlevel="must" format="atom" metadata="true">
+    <description>The value of the &lt;atom:term&gt; attribute MUST be the namespace qualified name of the EntityType of the instance represented by the &lt;atom:entry&gt; element.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+            <start>
+              <element>
+                <anyName />
+                <ref name="anyAttributes" />
+                <interleave>
+                  <element name="atom:category">
+                    <attribute name="term">
+                      <xsl:apply-templates select="*[local-name()='Edmx']"/>
+                    </attribute>
+                    <ref name="anyAttributes_other_than_atom_term" />
+                  </element>
+                  <zeroOrMore>
+                    <ref name="anyElement_other_than_atom_category" />
+                  </zeroOrMore>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyContent">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                  <text />
+                  <ref name="anyElement" />
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_other_than_atom_term">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>term</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_atom_category">
+              <element>
+                <choice>
+                  <anyName>
+                    <except>
+                      <nsName ns="http://www.w3.org/2005/Atom" />
+                    </except>
+                  </anyName>
+                  <nsName ns="http://www.w3.org/2005/Atom">
+                    <except>
+                      <name>atom:category</name>
+                    </except>
+                  </nsName>
+                </choice>
+                <ref name="anyContent" />
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+          <value>
+            <xsl:value-of select="'$NSENTITYTYPE$'" />
+          </value>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>The value of the &lt;atom:term&gt; attribute MUST be the namespace qualified name of the EntityType of the instance represented by the &lt;atom:entry&gt; element.</errormessage>
+  </rule>
+</rules>

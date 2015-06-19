@@ -1,0 +1,21 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.4000" category="core" target="servicedoc" v4specificationsection ="5" version ="v3_v4" requirementlevel="must" format="JsonLight">
+    <description>A service document in JSON is represented as a single JSON object.</description>
+    <action processor="jsonschema">
+      <jsonschema>
+        {
+        "additionalProperties" : true,
+        "type": "object",
+        "properties" : {
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>A service document in JSON is represented as a single JSON object.</errormessage>
+  </rule>
+</rules>

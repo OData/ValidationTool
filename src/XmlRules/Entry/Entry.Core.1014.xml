@@ -1,0 +1,147 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1014" category="core" target="entry" specificationsection ="2.2.6.2.2" v4specificationsection="8.1.1.2" v4specification="odataatom" requirementlevel="must" format="atom" metadata="true" projection="false" version="V1_V2">
+    <description>The &lt;atom:link&gt; element for NavigationProperty MUST contain an atom:href attribute with value equal to the URI which identifies the NavigationProperty on the EntityType.</description>
+    <action processor="xslt+rng">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>
+        <xsl:template match="/">
+          <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+            <start>
+              <element>
+                <anyName />
+                <ref name="anyAttributes" />
+                <interleave>
+                  <!-- Apply XSLT with macro $LSURI$ and $ENTITYTYPE$ to generate RNG fro each NavigationProperty. -->
+                  <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+                  <zeroOrMore>
+                    <choice>
+                      <!-- Any element that is not atom:link. -->
+                      <ref name="anyElement_other_than_atom_link" />
+                      <!-- Any element that is atom:link with attribute rel equal to self, edit, or edit-media. -->
+                      <ref name="anyElement_of_atom_link_with_attribute_rel_value_equal_self_or_edit_or_editmedia" />
+                    </choice>
+                  </zeroOrMore>
+                </interleave>
+              </element>
+            </start>
+            <define name="anyAttributes">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName />
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_other_than_atom_href">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>href</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyAttributes_other_than_atom_rel_with_value_equal_self_or_edit_or_editmedia">
+              <zeroOrMore>
+                <choice>
+                  <attribute>
+                    <anyName>
+                      <except>
+                        <name>rel</name>
+                      </except>
+                    </anyName>
+                  </attribute>
+                  <attribute>
+                    <name>rel</name>
+                    <choice>
+                      <value>self</value>
+                      <value>edit</value>
+                      <value>edit-media</value>
+                    </choice>
+                  </attribute>
+                </choice>
+              </zeroOrMore>
+            </define>
+            <define name="anyElement">
+              <element>
+                <anyName />
+                <zeroOrMore>
+                  <choice>
+                    <attribute>
+                      <anyName />
+                    </attribute>
+                    <text />
+                    <ref name="anyElement" />
+                  </choice>
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_other_than_atom_link">
+              <element>
+                <choice>
+                  <anyName>
+                    <except>
+                      <nsName ns="http://www.w3.org/2005/Atom" />
+                    </except>
+                  </anyName>
+                  <nsName ns="http://www.w3.org/2005/Atom">
+                    <except>
+                      <name>atom:link</name>
+                    </except>
+                  </nsName>
+                </choice>
+                <ref name="anyAttributes" />
+                <text />
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+            <define name="anyElement_of_atom_link_with_attribute_rel_value_equal_self_or_edit_or_editmedia">
+              <element name="atom:link">
+                <ref name="anyAttributes_other_than_atom_rel_with_value_equal_self_or_edit_or_editmedia" />
+                <text />
+                <zeroOrMore>
+                  <ref name="anyElement" />
+                </zeroOrMore>
+              </element>
+            </define>
+          </grammar>
+        </xsl:template>
+        <xsl:variable name="uri_substring">
+          $LSURI$
+        </xsl:variable>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']" xmlns="http://relaxng.org/ns/structure/1.0">
+          <xsl:choose>
+            <xsl:when test="(*[local-name()='NavigationProperty'])">
+              <group>
+                <xsl:for-each select="*[local-name()='NavigationProperty']">
+                  <element name="atom:link">
+                    <attribute name="href">
+                      <value>
+                        <xsl:value-of select="concat(concat(normalize-space($uri_substring), '/'), @Name)" />
+                      </value>
+                    </attribute>
+                    <ref name="anyAttributes_other_than_atom_href" />
+					<mixed><zeroOrMore><ref name="anyElement"/></zeroOrMore></mixed>
+                  </element>
+                </xsl:for-each>
+              </group>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>The &lt;atom:link&gt; element for NavigationProperty MUST contain an atom:href attribute with value equal to the URI which identifies the NavigationProperty on the EntityType.</errormessage>
+  </rule>
+</rules>

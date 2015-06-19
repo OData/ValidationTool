@@ -1,0 +1,60 @@
+﻿<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1021" category="core" target="entry" specificationsection ="2.2.6.3.3" requirementlevel="shouldnot" format="json" metadata="true" version="V1_V2">
+    <description>Name/value pairs not representing a property defined on the EntityType SHOULD NOT be included.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "additionalProperties" : false,
+          "type" : "object",
+          "properties" : {
+
+          "d" : {
+          <!-- Set additionalProperties to false to disaollow any additional property -->
+          "additionalProperties" : false,
+          "type" : "object",
+          "properties" : {
+          "__metadata" : { "type" : "any", "required" : false  },
+          <!-- Get all the Properties and NavigationProperties -->
+          <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+          }
+          }
+
+          }
+          }
+        </xsl:template>
+        <xsl:variable name="ns">
+          <xsl:value-of select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/@Namespace"/>
+        </xsl:variable>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']">
+          <xsl:for-each select="*[local-name()='Property']">
+            <!-- Set required to true to make sure all properties show up in the payload -->
+            "<xsl:value-of select="@Name"/>" : { "type" : "any", "required" : true  },
+          </xsl:for-each>
+          <!-- Check if BaseType is used. If it is, then loop through the BaseType proeprties and add them to the list. -->
+          <xsl:if test="@BaseType != ''">
+            <xsl:variable name="basetype">
+              <xsl:value-of select="@BaseType"/>
+            </xsl:variable>
+            <xsl:variable name="base">
+              <xsl:value-of select="substring-after($basetype, concat($ns, '.'))"/>
+            </xsl:variable>
+            <xsl:for-each select="//*[local-name()='EntityType'][@Name=$base]/*[local-name()='Property']">
+              "<xsl:value-of select="@Name"/>" : { "type" : "any", "required" : true  },
+            </xsl:for-each>
+          </xsl:if>
+          <xsl:for-each select="*[local-name()='NavigationProperty']">
+            "<xsl:value-of select="@Name"/>" : { "type" : "any", "required" : false },
+          </xsl:for-each>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>Name/value pairs not representing a property defined on the EntityType SHOULD NOT be included.</errormessage>
+  </rule>
+</rules>

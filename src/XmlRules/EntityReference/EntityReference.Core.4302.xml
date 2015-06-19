@@ -1,0 +1,21 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="EntityReference.Core.4302" category="core" v4specificationsection ="13" version="v4" requirementlevel="must" format="JsonLight" target="EntityRef">
+    <description>A entity reference is serialized as a JSON object.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>A entity reference is serialized as a JSON object.</errormessage>
+  </rule>
+</rules>

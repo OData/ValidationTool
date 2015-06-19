@@ -1,0 +1,23 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.4001" category="core" v4specificationsection="19" requirementlevel="must" format="JsonLight" version="v4" target="error">
+    <description>The error response object MUST have a single name/value pair.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : false,       
+        "properties" : { 
+        "error" : {}
+        }         
+        }
+      </jsonschema>
+    </action>
+    <errormessage>The error response object MUST have a single name/value pair.</errormessage>
+  </rule>
+</rules>
+

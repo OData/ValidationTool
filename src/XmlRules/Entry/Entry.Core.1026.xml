@@ -1,0 +1,48 @@
+﻿<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.1026" category="core" target="entry" specificationsection ="2.2.6.3.3" requirementlevel="must" format="json" metadata="true">
+    <description>The "type" name/value pair MUST be included if the EntityType of the EntityType instance represented by the JSON object is part of an inheritance hierarchy.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "additionalProperties" : false,
+          "type" : "object",
+          "properties" : {
+
+          "d" : {
+          <!-- Set additionalProperties to true to allow any other object other than Property -->
+          "additionalProperties" : true,
+          "type" : "object",
+          "properties" : {
+          <xsl:apply-templates select="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+          }
+          }
+
+          }
+          }
+        </xsl:template>
+        <xsl:template match="*[local-name()='Edmx']/*[local-name()='DataServices']/*[local-name()='Schema']/*[local-name()='EntityType'][@Name='$ENTITYTYPE$']">
+          "__metadata" : {
+          "additionalProperties" : true,
+          "type" : "object",
+          "properties" : {
+          <!-- Check to see if the entitytype is part of an inheritance hierarchy or not -->
+          <xsl:if test="@BaseType != ''">
+            "type" : { "type" : "string", "enum" : ["$NSENTITYTYPE$"], "required" : true },
+          </xsl:if>
+          }
+          }
+
+          }
+          }
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+  </rule>
+</rules>

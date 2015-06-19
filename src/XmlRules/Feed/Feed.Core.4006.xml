@@ -1,0 +1,21 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Feed.Core.4006" category="core" v4specificationsection ="12" version="v3_v4" requirementlevel="must" format="JsonLight" target="feed">
+    <description>A collection of entities is represented as a JSON object.</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type" : "object",
+        "additionalProperties" : true,
+        "properties" : {
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>A collection of entities is represented as a JSON object.</errormessage>
+  </rule>
+</rules>

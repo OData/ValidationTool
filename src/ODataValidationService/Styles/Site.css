@@ -1,0 +1,472 @@
+﻿/* 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+*/
+
+body 
+{
+    background: #FFFFFF;
+    font-family: "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    color: #000000;
+    font-size: 14px;
+    margin: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
+#display > li > div p > i > b:nth-child(1)
+{
+    color: green;
+    cursor: pointer;
+}
+
+#display > li > div > ul > li > p.subrulehttpinfo > p {
+    margin-bottom: 0px
+}
+
+#display > li > div p > i > b:nth-child(1):hover
+{
+    content:"testtest";
+}
+
+.menu 
+{
+    font-weight: bold;
+    font-size: 15px; 
+    color: #444444;
+}
+.menu a 
+{
+    color: #F89C36;
+    text-decoration: none;
+}
+
+a 
+{
+    color: #F89C36;
+    text-decoration: none;
+}
+
+h2.subtitle
+{
+    display: inline;
+    font-family: "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    font-size: 18px;
+    margin-left: 5px;
+    margin-right: 3px;
+}
+
+h3.subtitle
+{
+    display: inline;
+    font-family: "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    margin-left: 5px;
+    margin-right: 3px;
+}
+
+h2.resultSummary
+{
+    font-family: "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    font-size: 15px;
+    margin-left: 25px;
+}
+
+#completionMessage
+{
+    margin: 5px;
+    margin-left: 25px;
+}
+
+#informational
+{
+    margin: 5px;
+    margin-left: 25px;
+    font-family: "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic; 
+}
+
+#completionMessage p
+{
+    font-family: "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    color: #000000;
+    font-weight: bold;
+}
+
+input[type=checkbox][value=rerun]
+{
+	/* Double-sized Checkboxes */
+	transform: scale(1.0); /* IE */
+	/*-moz-transform: scale(1.0);  FF */
+	-webkit-transform: scale(1.0); /* Safari and Chrome */
+	/*-o-transform: scale(1.0); /* Opera */
+	display: block;
+	float: left;
+	padding: 0;
+	border: 1px solid #C6C6C6;
+	border-radius: 1em;
+	width: 1em;
+	height: 1em;
+	font-size: 1em;
+	cursor: pointer;
+	position: relative;
+	overflow: visible;
+	background-color: #FFF;
+	margin-left: -38px;
+}
+
+input[type=checkbox][value=rerun]:hover {
+    border-color: #666;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.1);
+}
+
+UL.resultsList LI { list-style: none; margin-right: 5px; margin-left: -16px; padding-left: 22px; padding-bottom:10px;}
+UL.resultsList LI span { display: inline-block; zoom: 1; margin-left:-22px; position: absolute; width:16px; height: 20px; }
+
+UL LI.errorResult          span { background: url(../Images/fail_16.png) no-repeat 0 2px;} 
+UL LI.warningResult        span { background: url(../Images/warning_16.png) no-repeat 0 2px; }
+UL LI.successResult        span { background: url(../Images/pass_16.png) no-repeat 0 2px;}
+UL LI.recommendationResult span { background: url(../Images/recommend_16.png) no-repeat 0 2px; }
+UL LI.notApplicableResult  span { background: url(../Images/inapplicable_16.png) no-repeat 0 2px; }
+UL LI.skipResult           span { background: url(../Images/skip_16.png) no-repeat 0 2px; }
+UL LI.abortedResult        span { background: url(../Images/abort_16.png) no-repeat 0 2px; }
+
+div.subresult {
+	margin-left: 14px;
+	background-color: #edf5ef;
+    /*word-wrap:
+    word-break:break-word;*/
+}
+
+#display > li > button {
+	background-color:#edf5ef;
+	border-radius:6px;
+	display:inline-block;
+	cursor:pointer;
+	padding:0px;
+	margin:0px;
+	border:0px;
+	font-family:arial;
+	font-size:12px;
+	color: green;
+	text-decoration:none;
+}
+
+#display > li > div > ul > li {
+    margin-left: -41px;
+}
+
+p.subrulehttpinfo
+{
+	margin:0px;
+	margin-left: 24px;
+}
+
+div#wrapper
+{
+    background: #FFFFFF;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    border-collapse: collapse; 
+}
+
+div#topBar
+{
+    background: none repeat scroll 0 0 #F89C36;
+    margin: 0px;
+    padding-bottom: 0px;
+    width: 100%;
+    height: 10px;
+    border-bottom: 3px solid #000000;
+}
+
+div#header
+{
+    margin: 1%;
+}
+
+div#version
+{
+    width: 20%;
+    float: left;
+}
+
+.menu
+{
+    text-align: right;
+}
+
+.menu li
+{
+    list-style:none;
+    display:inline;
+}
+
+#infotop
+{
+    margin: 24px auto; 
+    width: 650px; 
+}
+
+div#infobody 
+{
+   width: 80%;
+   min-width: 650px;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+div#logo
+{
+    background: #FFFFFF;
+    margin-left: 13%;
+    padding-top: 40px;
+    padding-bottom: 50px;
+    width: auto;
+}
+
+div#live_input, div#ConformanceLevel, div#metadataValidation
+{
+    background-color: #F7F7F7;
+    border-style: solid;
+    border-width: 1px;
+    border: 1px solid #CECECE;
+    padding: 1.5em 0.75em;
+}
+
+div#format, div#scope, div#live_versioning, div#amount, div#metadata_versioning
+{
+    /*margin-left: 15%;*/
+    margin-right: 15%;
+    padding-top: 6px;
+}
+
+div#v1_v2, div#v3, div#v4, div#m_v1_v2, div#m_v3, div#m_v4
+{
+    margin-left: 0px;
+    margin-right: 15%;
+    padding-top: 4px;
+}
+
+div#div_jsonmin, div#div_jsonfull, div#div_readWrite, div#div_readOnly, div#div_MinimalLevel, div#div_IntermediateLevel, div#div_AdvancedLevel
+{
+    display:inline;
+}
+
+input#odataUri, #svcUrl, #serviceUri
+{
+    padding: 8px;
+    color: #000000;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #CCCCCC;
+    width: 83%;
+}
+
+button#liveValidateButton, button#offlineValidateButton, button#ConformanceValidation, button#metadataValidateButton
+{
+    border-width: 2px;
+    border-style: solid;
+    border-color: #7499C7;
+    padding: 6px;
+    font-weight: bold;
+    color: #333333;
+}
+
+div#recorddiv {
+    font-size: medium;
+    font-weight: bold;
+}
+div#statusInfo > p.errorMsg
+{
+    margin: 0 auto 0;
+    color: red;
+}
+div#statusInfo
+{
+    background-color: #FFFFB7;
+    text-align: left;
+    text-indent: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #CECECE;
+    border-top: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
+    display: none;
+}
+
+UL LI.sourceLine  { list-style-type: none; background-color: #F7F7F7; padding: 5px; white-space: pre-wrap; word-wrap: break-word; }
+UL#sourceList  { margin-left:-14px; }
+
+table.rules-table {border: 1px solid #CCC;margin-bottom: 20px; } 
+.rules-table td {padding: 4px; margin: 3px; border: 1px solid #ccc;}
+.rules-table th {background-color: #FF9900; color: #FFF; font-weight: bold;}
+
+table.general-table {border: 1px solid #CCC;margin-bottom: 20px;
+    width: 646px;
+} 
+.general-table td {padding: 4px; margin: 3px; border: 1px solid #ccc;}
+.general-table th {background-color: #FF9900; color: #FFF; font-weight: bold;}
+
+#tabs_container {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+#tabs_container ul.tabs {
+	list-style: none;
+	border-bottom: 1px solid #ccc;
+	height: 21px;
+	margin: 0;
+}
+
+#tabs_container ul.tabs li {
+	float: left;
+}
+#tabs_container ul.tabs li a {
+	padding: 3px 10px;
+	display: block;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	margin-right: 2px;
+	text-decoration: none;
+	background-color: #efefef;
+}
+#tabs_container ul.tabs li.active a {
+	background-color: #fff;
+	padding-top: 4px;
+}
+
+div.tab_contents_container {
+	border: 1px solid #ccc;
+	border-top: none;
+	padding: 10px;
+    
+}
+
+div.tab_contents {
+	display: none;
+}
+
+div.tab_contents_active {
+ 	display: block;
+	word-wrap: break-word;
+	word-break: break-word;
+}
+
+div.clear {
+	clear: both;
+}
+
+#payload_text, #meta_text {
+	width: 97%;
+	border:1px solid #999999;
+}
+
+#meta_icon {
+	height: 12px;
+}
+
+#metadata_prompt {
+	color: #000000;
+}
+
+#infotop .separator 
+{
+    margin-top: 4px;   
+}
+
+#infobody .separator 
+{
+    margin-top: 10px;   
+}
+
+.cont
+{
+    display: inline;
+}
+
+#closeButton {
+    top: 11px;
+    position: fixed;
+    right: 12px;
+    display: inline;
+    cursor: pointer;
+    z-index: 3;
+}
+
+div#topbar
+{
+    margin: 19px 0 12px 0;
+}
+
+fieldset {
+    border-width: 3px 0 0 0;
+    border-color: #FFFFFF;
+	padding-left: 20px;
+	padding-top:  20px;
+    word-wrap:break-word;
+    word-break: break-all;
+    /*float:left;*/
+}
+
+fieldset:nth-child(1)
+{
+    /* width:25%; */
+}
+fieldset:nth-child(2)
+{
+    /* width:68%; */
+}
+fieldset > legend
+{
+	font-size: 13.5px;
+	margin-left: 32px;
+	font-weight: 800;
+}
+
+fieldset > label{
+    font-style: inherit;
+
+}
+
+div.requestheader {
+    /* margin-left: 30px; */
+    /* margin-top: 20px; */
+}
+textarea {
+    width: 90%;
+    resize: none;
+}
+fieldset > button {
+    margin-left: 14px;
+}
+fieldset > pre
+{
+    white-space: -moz-pre-wrap; /* Mozilla, supported since 1999 */
+    white-space: -pre-wrap; /* Opera */
+    white-space: -o-pre-wrap; /* Opera */
+    white-space: pre-wrap; /* CSS3 - Text module (Candidate Recommendation) http://www.w3.org/TR/css3-text/#white-space */
+    word-wrap: break-word; /* IE 5.5+ */
+}
+button.subrule_rerun{
+	background-color:#edf5ef;
+	border-radius:6px;
+	display:inline-block;
+	cursor:pointer;
+	padding:0px;
+	margin:0px;
+	border:0px;
+	font-family:arial;
+	font-size:12px;
+	color: green;
+	text-decoration:none;
+}

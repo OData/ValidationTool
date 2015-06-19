@@ -1,0 +1,38 @@
+﻿ <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Entry.Core.4103" category="core" target="entry" v4specificationsection ="8.3" requirementlevel="must" format="JsonLight" version="v3_v4" metadata="true">
+    <description>An expanded navigation property is represented as a name/value pair.</description>
+    <action processor="xslt+jsonschema">
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:output method="text"/>
+        <xsl:template match="/">
+          {
+          "additionalProperties" : true,
+          "type" : "object",
+          "properties" : {
+          
+          <!-- Get all the NavigationProperties -->
+          <xsl:apply-templates select="//*[local-name()='EntityType'][@Name='$ENTITYTYPE$']"/>
+          }
+          }
+        </xsl:template>
+
+        <xsl:template match="//*[local-name()='EntityType'][@Name='$ENTITYTYPE$']">
+          <xsl:for-each select="*[local-name()='NavigationProperty']">
+
+            <!-- select the property name of the NavigationProperty -->
+            "<xsl:value-of select="@Name" />" : {
+            "type" : "any",
+            "required" : false,
+            },
+          </xsl:for-each>
+        </xsl:template>
+      </xsl:stylesheet>
+    </action>
+    <errormessage>An expanded navigation property is represented as a name/value pair.</errormessage>
+  </rule>
+</rules>

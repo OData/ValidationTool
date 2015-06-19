@@ -1,0 +1,75 @@
+﻿<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Error.Core.4610" category="core" target="error" v4specificationsection="19.4" version="v4" requirementlevel="may" format="xml">
+    <description>The metadata:error element MAY contain a metadata:target element.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+        <start>
+          <element name="m:error">
+            <interleave>
+              <zeroOrMore>
+                <element name="m:target">
+                  <zeroOrMore>
+                    <ref name="anyElement" />
+                  </zeroOrMore>
+                  <ref name="anyContentNotElements" />
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <ref name="anyOtherElement" />
+              </zeroOrMore>
+            </interleave>
+            <ref name="anyContentNotElements" />
+          </element>
+        </start>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyOtherElement">
+          <element>
+            <anyName>
+              <except>
+                <name>m:target</name>
+              </except>
+            </anyName>
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyContentNotElements">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+            </choice>
+          </zeroOrMore>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>The metadata:error element MAY contain a metadata:target element.</errormessage>
+  </rule>
+</rules>

@@ -1,0 +1,791 @@
+<!-- 
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OData Validator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link type="text/css" href="Styles/Site.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="Scripts/datajs-0.0.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="Scripts/tab.js"></script>
+    <script type="text/javascript" src="Scripts/validation-helper.js"></script>
+    
+</head>
+<body onkeydown="pressEnterKey()">
+    <script id="jobStatusInfoTmpl" type="text/x-jQuery-tmpl">
+        <div>
+            <p id='jobType' class='cont'>{{html resourceType}}</p>
+            &nbsp;&nbsp;<p id='status' class='cont'>${status}</p>
+            &nbsp;&nbsp;<p id='issueCount' class='cont' />
+        </div>
+    </script>
+    <script id="simpleStatusInfoTmpl" type="text/x-jQuery-tmpl">
+        <div>
+            <p id='status' class='cont'>${status}</p>
+        </div>
+    </script>
+    <script id="resultTemplate" type="text/x-jQuery-tmpl">
+    <div>
+        <a name="${anchor}" />
+        <div class="resultbody">
+            <div id='summary' class='summary'>
+                <h2 id='type' class="subtitle">${toTypeDesc(ResourceType)}: </h2>
+                <h3 id='uri' class="subtitle">${Uri}</h3>
+                <div id='id' style="display: none">${Id}</div>
+            </div>
+            <div id='informational'></div>
+            <div id="completionMessage" />
+            <div class="results">
+                <img class="resultsIcon" src="Images/arrow_down.gif" alt="Result arrow"/>
+                <h3 class="subtitle">Results</h3>
+                <h3 id="resultsCount" class="subtitle"></h3>
+                <select id="Select1" title="filter" onchange='filterResult(this);'>
+                    <option value="all">all</option>
+                    <option value="errorResult warningResult">error + warning</option>
+                    <option value="warningResult">warning</option>
+                </select>
+
+                <input id="RerunRule" title="(Un)Check All" type="checkbox" onclick='filterCheck(this)' value="rerunrule" style ="transform: scale(1.5); /* IE */ -webkit-transform: scale(1.5); vertical-align: middle;">
+                <button>Rerun</button>
+
+                <div id="resultsView">
+                    <div>
+                        <ul id="display" class="resultsList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class='sources'>
+                <img class="sourceIcon" src="Images/arrow_down.gif"/>
+                <h3 class="subtitle">Source</h3>
+                <div>
+                        <ul id='display'>
+                        </ul>
+                    </div>
+                </div>
+                <div class='separator' />
+            </div>
+        </div>
+    </script>
+    <script id="conformanceLevelTemplate" type="text/x-jQuery-tmpl">
+        <div>
+            <b></b>
+            <select id="Select2" title="filter" onchange='filterResult(this);'>
+                <option value="all">all</option>
+                <option value="errorResult warningResult">error + warning</option>
+                <option value="warningResult">warning</option>
+            </select>
+
+            <input id="RerunRule" title="(Un)Check All" type="checkbox" onclick='filterCheck(this)' value="rerunrule" style ="transform: scale(1.5); /* IE */ -webkit-transform: scale(1.5); vertical-align: middle;">
+            <button>Rerun</button>
+            <br />
+            <div class="Minimal" style="display: inline">
+                <img class="sourceIcon" src="Images/arrow_down.gif" />
+                <h3 class="subtitle">OData Minimal Conformance Level</h3>
+                <h3 id="minimalRulesCount" class="subtitle"></h3>
+                <button>
+                </button>
+                <div id="resultsView1">
+                    <div>
+                        <ul id="display" class="resultsList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="InterMediate" style="display: none">
+                <img class="sourceIcon" src="Images/arrow_down.gif" />
+                <h3 class="subtitle">OData Intermediate Conformance Level</h3>
+                <h3 id="interRulesCount" class="subtitle"></h3><button></button>
+                <div id="resultsView2">
+                    <div>
+                        <ul id="display" class="resultsList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="Advanced" style="display: none">
+                <img class="sourceIcon" src="Images/arrow_down.gif" />
+                <h3 class="subtitle">OData Advanced Conformance Level</h3>
+                <h3 id="advancedRulesCount" class="subtitle"></h3><button></button>
+                <div id="resultsView3">
+                    <div>
+                        <ul id="display" class="resultsList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <div id="wrapper">
+        <div id="topBar">
+        </div>
+        <div id="header">
+            <div id="version">
+                Release - v1.06
+            </div>
+            <div id="navigation">
+                <ul class="menu">
+                    <li><a href=".">Home</a> |</li>
+                    <li>Validation | </li>
+                    <li><a href="roadmap.htm">Roadmap</a> |</li>
+                    <li><a href="feedback.htm">Feedback</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="infotop">
+            <div id="logo">
+                <img src="Images/ODataLogo.png" alt="logo" />
+            </div>
+            <div id="tabs_container">
+                <ul class="tabs">
+                    <li class="active"><a href="#" rel="#tab_1_contents" class="tab">By Uri</a> </li> 
+                    <li><a href="#" rel="#tab_2_contents" class="tab">By Direct Input</a></li>
+                    <li><a href="#" rel="#tab_3_contents" class="tab">Conformance Level</a></li>
+                    <li><a href="#" rel="#tab_4_contents" class="tab">Metadata Validation</a></li>
+                 </ul>
+                <div class="tab_contents_container">
+                    <div id="tab_1_contents" class="tab_contents tab_contents_active">
+                        <div id="live_input">
+                            <input id="odataUri" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
+                                onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                            <button id="liveValidateButton">
+                                Validate</button>
+                            <br />
+                            <div id="format">
+                                <div id="div_atom" style="display:inline;">
+                                    <input id="atompub" type="radio" name="formatGroup" value="atompub" onclick="displayHide_control()" />
+                                    <label for="atompub">AtomPub/XML</label>
+                                </div>
+                                <div id="div_json" style="display: none">
+                                    <input id="json" type="radio" name="formatGroup" value="json" />
+                                    <label for="json">
+                                        JSON (Verbose)</label>
+                                </div>
+                                <div id="div_jsonmin">
+                                    <input id="jsonmin" type="radio" checked="checked" name="formatGroup" value="json" />
+                                    <label for="jsonmin">
+                                        JSON-Min</label>
+                                </div>
+                                <div id="div_jsonfull">
+                                    <input id="jsonfull" type="radio" name="formatGroup" value="json" />
+                                    <label for="jsonfull">
+                                        JSON-Full</label>
+                                </div>
+                            </div>
+                            <div id="scope" title="It validates by crawling from service document to metadata document, then the first feed, and then the first entry.">
+                                <input id="crawling" type="checkbox" value="tocrawl" />
+                                <label for="crawling">
+                                    Crawling</label>
+                            </div>
+                            <div id="live_versioning">
+                                <div id="v1_v2">
+                                    <input id="v1_v2Compliance" type="radio" name="versionGroup" value="v1_v2Compliance" onclick="displayHide_control()" />
+                                    <label for="v1_v2Compliance">
+                                        OData v1.0 and v2.0 service endpoint</label>
+                                </div>
+                                <div id="v3">
+                                    <input id="v3Compliance" type="radio" name="versionGroup" value="v3Compliance" onclick="displayHide_control()" />
+                                    <label for="v3Compliance">
+                                        OData v3.0 service endpoint</label>
+                                </div>
+                                <div id="v4">
+                                    <input id="v4Compliance" type="radio" checked="checked" name="versionGroup" value="v4Compliance" onclick="displayHide_control()" />
+                                    <label for="v4Compliance">
+                                        OData v4.0 service endpoint</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab_2_contents" class="tab_contents">
+                        <div id="offline_input">
+                            <b>Payload input: </b>
+                            <input style="font-size:10px;  margin-left: 20px; margin-bottom:3px;" type="file" id="payload" name="files[]" onchange='selectLocalTxt(event)'/>
+                            <br />
+                            <script>
+                                function selectLocalTxt(evt) {
+                                    var file = evt.target.files[0]; // FileList object
+                                    if (file.size > 10000) {
+                                        alert("select file too large");
+                                        return;
+                                    }
+
+                                    if (!file.type.match('text.*')) {
+                                        alert("not text file");
+                                        return;
+                                    }
+
+                                    var reader = new FileReader();
+
+                                    // Closure to capture the file information.
+                                    reader.onload = (function(theFile) {
+                                        return function(e) {
+                                            // Render thumbnail.
+                                            var textarea = $(evt.srcElement).nextAll("textarea")[0];//nextElementSibling;
+                                            if (!textarea) {
+                                                textarea = $(evt.srcElement).nextAll("div")[0].firstElementChild;
+                                            }
+                                            textarea.value = e.target.result;
+                                        };
+                                    })(file);
+
+                                    // Read in the image file as a data URL.
+                                    reader.readAsText(file);
+                                }
+                                </script>
+                            <textarea id="payload_text" rows="6" wrap="off" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.payload_text_help; }"
+                                onfocus="if (this.value == validatorConf.payload_text_help) { this.value =''; }">paste here the response payload in atompub/xml or json format in full</textarea>
+                            <br />
+                            <div class="separator">
+                            </div>
+                            <!--  OData version of payload input:-->
+                            <!--  <br />-->
+                            <div id='offline_versioning'>
+                                OData version of payload input:
+                                <input id="offlineV1" type="radio" name="odataversion" value="1.0" onclick="controlOfflineFormat()" />v1
+                                <input id="offlineV2" type="radio" name="odataversion" value="2.0" onclick="controlOfflineFormat()" />v2
+                                <input id="offlineV3" type="radio" name="odataversion" value="3.0" onclick="controlOfflineFormat()" />v3
+                                <input id="offlineV4" type="radio" checked="checked" name="odataversion" value="4.0" onclick="controlOfflineFormat()" />v4
+                                <input id="unknownVersion" type="radio" name="odataversion" value="*" onclick="controlOfflineFormat()" />Don't Know
+                            </div>
+                            <div id="offline_format">
+                                Metadata type(For JSON light only):
+                                <input id="offlineMin" type="radio" checked="checked" name="payloadFormat" value="offline_min" />Minimal
+                                <input id="offlineFull" type="radio" name="payloadFormat" value="offline_full" />Full                               
+                            </div>
+                            <br />
+                            <div class="separator">
+                            </div>
+                            <div>
+                                <img id="meta_icon" src="Images/arrow_right.gif" alt="Meta arrow" />
+                                <a id="metadata_prompt"><b>Metadata document(optional)</b></a> 
+                                <input style="font-size:10px; margin-left: 20px;  margin-bottom:3px; display:none;" type="file" id="metadata" name="files[]" onchange='selectLocalTxt(event);'/>
+                                <br />
+                                <div id="display" style="display: none">
+                                    <textarea id="meta_text" rows="6" wrap="off" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.meta_text_help; }"
+                                        onfocus="if (this.value == validatorConf.meta_text_help) { this.value =''; }">paste here the metadata document content in xml format in full if you have one</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <center><button id="offlineValidateButton">
+                            Validate</button></center>
+                    </div>
+                    <div id="tab_3_contents" class="tab_contents">
+                        <div id="ConformanceLevel">
+                            <!--   Support OData v4 service with JSON format only:
+                            <br /> <br />-->
+                            <input id="svcUrl" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
+                                onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                            <button id="ConformanceValidation">
+                                Validate</button>
+                            <br />
+                            <br />
+                            <div id="levelType">
+                                 <label>Level: </label>
+                                <div id="div_MinimalLevel">
+                                    <input id="Radio_MinimalLevel" title="Only Validate Conformance Minimal Level Rules" type="radio" name="levelGroup" value="Minimal" checked="checked" />
+                                    <label for="Radio_MinimalLevel">Minimal</label>
+                                </div>
+                                <div id="div_IntermediateLevel">
+                                    <input id="Radio_IntermediateLevel" title="Validate Conformance Minimal&Intermediate Level Rules" type="radio" name="levelGroup" value="Minimal,Intermediate" />
+                                    <label for="Radio_IntermediateLevel">Intermediate</label>
+                                </div>
+                                <div id="div_AdvancedLevel">
+                                    <input id="Radio_AdvancedLevel" title="Validate All Conformance Level Rules" type="radio" name="levelGroup" value="Minimal,Intermediate,Advanced" />
+                                    <label for="Radio_AdvancedLevel">Advanced</label>
+                                </div>
+                            </div>
+                             <br />      
+                            <div id="serviceType">
+                                 <label>OData Service: </label>
+                                <div id="div_readWrite">
+                                    <input id="readWrite" type="radio" name="typeGroup" value="Read-Write"  checked="checked" />
+                                    <label for="readwrite">Read-Write</label>
+                                </div>
+                                <div id="div_readOnly">
+                                    <input id="readOnly" type="radio" name="typeGroup" value="Read-Only" />
+                                    <label for="readonly">
+                                        Read-Only</label>
+                                </div>
+                            </div>                      
+                              <br />
+                            <span style="padding-left: 0px;"><b>Note</b>: Support conformance level validation for OData version 4.0 service with JSON format only!</span>
+                        </div>
+                    </div>
+                    <div id="tab_4_contents" class="tab_contents">
+                        <div id="metadataValidation">
+                            <input id="serviceUri" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
+                                onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                            <button id="metadataValidateButton">
+                                Validate</button>
+                            <br />
+                            <div id="metadata_versioning">
+                                <div id="m_v1_v2">
+                                    <input id="v1_v2_Radio" type="radio" name="mVersionGroup" value="v1_v2Compliance" />
+                                    <label for="v1_v2Compliance">
+                                        OData v1.0 and v2.0 service endpoint</label>
+                                </div>
+                                <div id="m_v3">
+                                    <input id="v3_Radio" type="radio" name="mVersionGroup" value="v3Compliance" />
+                                    <label for="v3Compliance">
+                                        OData v3.0 service endpoint</label>
+                                </div>
+                                <div id="m_v4">
+                                    <input id="v4_Radio" type="radio" checked="checked" name="mVersionGroup" value="v4Compliance" />
+                                    <label for="v4Compliance">
+                                        OData v4.0 service endpoint</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="statusInfo">
+            </div>
+            <div id="recorddiv">
+            </div>
+        </div>
+        <div id="infobody">
+        </div>
+    </div>
+    <!-- START OF SmartSource Data Collector TAG -->
+    <!-- Copyright (c) 1996-2009 WebTrends Inc.  All rights reserved. -->
+    <!-- Version: MS.3.2.1 -->
+    <script src="scripts/wt.js" type="text/javascript"></script>
+    <!-- ----------------------------------------------------------------------------------- -->
+    <!-- Warning: The two script blocks below must remain inline. Moving them to an external -->
+    <!-- JavaScript include file can cause serious problems with cross-domain tracking.      -->
+    <!-- ----------------------------------------------------------------------------------- -->
+    <script type="text/javascript">
+        //<![CDATA[
+        var _tag = new WebTrends();
+        _tag.dcsid = "dcsc97avu10000kn75ujgpso2_7j5n";
+        _tag.fpcdom = ".odata.org";
+        _tag.dcsGetId();
+        _tag.trackevents = true;
+        //]]>>
+        if (!(window.File && window.FileReader && window.FileList)) {
+            $("#offline_input input[type='file']").css("visibility", "hidden");
+        }
+    </script>
+    <script type="text/javascript">
+        //<![CDATA[
+        // Add custom parameters here.
+        //_tag.DCSext.param_name=param_value;
+        _tag.dcsCollect();
+        //]]>>
+    </script>
+    <script language="javascript" type="text/javascript">
+        function displayHide_buttonsIninfobody(isHide) {
+            var rerunButton = $("#infobody button");
+            var selectButton = $("#infobody select");
+            var checkAllButton = $("#infobody input");
+            if (rerunButton != null && selectButton != null && checkAllButton != null) {
+                if (isHide == true) {
+                    rerunButton.attr("disabled", true);
+                    selectButton.attr("disabled", true);
+                    checkAllButton.attr("disabled", true);
+                }
+                else {
+                    rerunButton.attr("disabled", false);
+                    selectButton.attr("disabled", false);
+                    checkAllButton.attr("disabled", false);
+                }
+            }
+        }
+
+        function displayHide_conformanceResultPart() {
+            var minimalRadio = document.getElementById("Radio_MinimalLevel");
+            var intermediateRadio = document.getElementById("Radio_IntermediateLevel");
+            var advanceRadio = document.getElementById("Radio_AdvancedLevel");
+
+            var div_minimalResult = document.getElementsByClassName("Minimal")[0];
+            var div_intermediateResult = document.getElementsByClassName("InterMediate")[0];
+            var div_advancedResult = document.getElementsByClassName("Advanced")[0];
+
+            if (minimalRadio.checked) {
+                div_intermediateResult.style.display = "none";
+                div_advancedResult.style.display = "none";
+            }
+            else if (intermediateRadio.checked) {
+                div_intermediateResult.style.display = "inline";
+                div_advancedResult.style.display = "none";
+            }
+            else if (advanceRadio.checked) {
+                div_intermediateResult.style.display = "inline";
+                div_advancedResult.style.display = "inline";
+            }
+        }
+
+        function displayHide_control() {
+            var v3Radio = document.getElementById("v3Compliance");
+            var v4Radio = document.getElementById("v4Compliance");
+            var v1_v2Radio = document.getElementById("v1_v2Compliance");
+
+            var div_atom = document.getElementById("div_atom");
+            var div_json = document.getElementById("div_json");
+            var div_jsonmin = document.getElementById("div_jsonmin");
+            var div_jsonfull = document.getElementById("div_jsonfull");
+
+            var radio_atompub = document.getElementById("atompub");
+            var radio_json = document.getElementById("json");
+            var radio_jsonmin = document.getElementById("jsonmin");
+
+            if (v1_v2Radio.checked) {
+                div_json.style.display = "inline";
+                div_jsonmin.style.display = "none";
+                div_jsonfull.style.display = "none";
+
+                if (!radio_atompub.checked) {
+                    radio_json.checked = true;
+                }
+            }
+            else if (v3Radio.checked) {
+                div_json.style.display = "inline";
+                div_jsonmin.style.display = "inline";
+                div_jsonfull.style.display = "inline";
+            }
+            else {
+                if (radio_json.checked) {
+                    radio_jsonmin.checked = true;
+                }
+                div_json.style.display = "none";
+                div_jsonmin.style.display = "inline";
+                div_jsonfull.style.display = "inline";
+            }
+        }
+
+        function controlOfflineFormat() {
+            var offlineV3Radio = document.getElementById("offlineV3");
+            var offlineV4Radio = document.getElementById("offlineV4");
+            var div_offline_format = document.getElementById("offline_format");
+
+            if (offlineV3Radio.checked || offlineV4Radio.checked) {
+                div_offline_format.style.display = "block";
+            } else {
+                div_offline_format.style.display = "none";
+            }
+        }
+
+        function pressEnterKey()
+        {
+            if (event.keyCode == 13) {
+                //if another job is running now
+                if ($('#tabs_container').hasClass('busy')) {
+                    return;
+                }
+                var activeValidateButton = $("#tabs_container .tab_contents_active button[id*='Validat']");
+                if (activeValidateButton.attr('disabled') == false) {
+                    //trigger the validation button click on current active tab.
+                    $("#tabs_container .tab_contents_active button[id*='Validat']").click();
+                }
+            }
+        }
+
+        function reloadUriJob() {
+            var jobid = this.MasterJobId;
+            var request = {
+                method: "GET",
+                requestUri: "odatavalidator/ExtValidationJobs(guid'" + jobid + "')"
+            }
+            disableTabSwitch();
+            OData.request(request, function (data) {
+
+                function SetFormatRadio(format) {
+                    var format = format.split(";");
+                    var formatRadios = $('input[name=formatGroup]');
+                    if (format.length == 1) {
+                        if (format[0] == "json")
+                            formatRadios.filter('[id=json]').attr('checked', true);
+                        else
+                            formatRadios.filter('[id=atompub]').attr('checked', true);
+                        return;
+                    }
+
+                    if (typeof String.prototype.startsWith != 'function') {
+                        String.prototype.startsWith = function (str) {
+                            return this.slice(0, str.length) == str;
+                        };
+                    }
+                    if (format[0] == "atompub") {
+                        formatRadios.filter('[id=atompub]').attr('checked', true);
+                        return;
+                    }
+
+                    var metadata = format[1].split('=');
+                    if (metadata[1].startsWith("minimal")) formatRadios.filter('[id=jsonmin]').attr('checked', true);
+                    else if (metadata[1].startsWith("full")) formatRadios.filter('[id=jsonfull]').attr('checked', true);
+                    else if (metadata[1].startsWith("verbose")) formatRadios.filter('[id=json]').attr('checked', true);
+                }
+
+                function setVersion(header) {
+
+                    var versionRadios = $('input[name=versionGroup]');
+                    if (header == "") {
+                        versionRadios.filter('[value=v1_v2Compliance]').attr('checked', true);
+                        return;
+                    }
+
+                    version = header.split(";")[0].split(":")[1];
+                    if (version == "1.0")
+                        versionRadios.filter('[value=v1_v2Compliance]').attr('checked', true);
+                    else {
+                        if (version == "4.0")
+                            versionRadios.filter('[value=v4Compliance]').attr('checked', true);
+                        else
+                            versionRadios.filter('[value=v3Compliance]').attr('checked', true);
+                    }
+                }
+
+                function dealwithchoice(data) {
+                    $("#odataUri").val(data.Uri);
+                    setVersion(data.ReqHeaders);
+                    SetFormatRadio(data.Format);
+                    displayHide_control();
+                }
+                dealwithchoice(data);
+
+                var request = {
+                    method: "GET",
+                    requestUri: "odatavalidator/Reload?jobIdStr='" + jobid + "'"
+                }
+
+                OData.request(request, function (data) {
+                    var crawlingJob = false;
+                    if (data.results.length > 1) {
+                        document.getElementById('crawling').checked = true;
+                        crawlingJob = true;
+                    }
+
+                    alertReceiveResponse();
+                    $.each(data.results, function () {
+                        var job = { 'Uri': this.Uri, 'ResourceType': this.ResourceType, 'Id': this.DerivativeJobId, 'RuleCount': this.RuleCount, 'Issues': this.Issues };
+                        validatorApp.jobsInQ.push(job);
+                    });
+
+                    validatorApp.jobsInQ.reverse();
+
+                    $('#infotop #statusInfo').empty();
+                    $('#infotop #statusInfo').show();
+                    startJob(!crawlingJob);
+                });
+            });
+            
+        }
+
+        function reloadMetadataJob() {
+            var jobid = this.MasterJobId;
+            var request = {
+                method: "GET",
+                requestUri: "odatavalidator/ExtValidationJobs(guid'" + jobid + "')"
+            }
+            disableTabSwitch();
+            OData.request(request, function (data) {
+               
+                function setVersion(header) {
+
+                    var versionRadios = $('input[name=mVersionGroup]');
+                    if (header == "") {
+                        versionRadios.filter('[value=v1_v2Compliance]').attr('checked', true);
+                        return;
+                    }
+
+                    version = header.split(";")[0].split(":")[1];
+                    if (version == "1.0")
+                        versionRadios.filter('[value=v1_v2Compliance]').attr('checked', true);
+                    else {
+                        if (version == "4.0")
+                            versionRadios.filter('[value=v4Compliance]').attr('checked', true);
+                        else
+                            versionRadios.filter('[value=v3Compliance]').attr('checked', true);
+                    }
+                }
+
+                function dealwithchoice(data) {
+                    $("#serviceUri").val(data.Uri);
+                    setVersion(data.ReqHeaders);
+                    displayHide_control();
+                }
+                dealwithchoice(data);
+
+                var request = {
+                    method: "GET",
+                    requestUri: "odatavalidator/Reload?jobIdStr='" + jobid + "'"
+                }
+
+                OData.request(request, function (data) {
+
+                    alertReceiveResponse();
+                    $.each(data.results, function () {
+                        var job = { 'Uri': this.Uri, 'ResourceType': this.ResourceType, 'Id': this.DerivativeJobId, 'RuleCount': this.RuleCount, 'Issues': this.Issues };
+                        validatorApp.jobsInQ.push(job);
+                    });
+
+                    $('#infotop #statusInfo').empty();
+                    $('#infotop #statusInfo').show();
+                    startJob(true);
+                });
+            });
+
+        }
+
+        function reloadDirectTextJob() {
+            var jobid = this.MasterJobId;
+            var request = {
+                method: "GET",
+                requestUri: "odatavalidator/ExtValidationJobs(guid'" + jobid + "')"
+            }
+            disableTabSwitch();
+            OData.request(request, function (data) {
+
+                function dealwithchoice(data) {
+                    if (data.PayloadText != "") {
+                        $("#payload_text").val(data.PayloadText);
+                    }
+                    if (data.MetadataText != "") {
+                        $("#meta_text").val(data.MetadataText);
+                        $("#meta_icon").trigger("click");
+                    }
+
+                    //unknown
+                    var headers = data.ReqHeaders.split(";");
+                    var version = headers[0].split(":")[1].trim();
+                    var versionRadios = $('input[name=odataversion]');
+                    versionRadios.filter('[value=' + version + ']').attr('checked', true);
+
+                    if ((version == "3.0" || version == "4.0") && headers[2]) {
+                        var payloadFormatRadios = $('input[name=payloadFormat]');
+                        var metadata = headers[2].split('=')[1];
+
+                        if (metadata.indexOf("minimal")>=0)
+                            payloadFormatRadios.filter('[value=offline_min]').attr('checked', true);
+                        else if (metadata.indexOf("full") >=0)
+                            payloadFormatRadios.filter('[value=offline_full]').attr('checked', true);
+                    }
+                    controlOfflineFormat();
+                }
+
+                dealwithchoice(data);
+
+                alertReceiveResponse();
+
+                validatorApp.jobsInQ = [];
+                validatorApp.currentJob = { 'Uri': data.Uri, 'ResourceType': data.ResourceType, 'Id': data.ID, 'RuleCount': data.RuleCount };
+                $('#infotop #statusInfo').empty();
+                $('#infotop #statusInfo').show();
+                validatorApp.currJobDetail = offlineValidation(validatorApp.currentJob);
+                loadPayload(validatorApp.currentJob.Id);
+
+                alertSendoutRequest();
+            });
+        }
+
+        function reloadConformanceJob() {
+            var jobid = this.MasterJobId;
+            var request = {
+                method: "GET",
+                requestUri: "odatavalidator/ExtValidationJobs(guid'" + jobid + "')"
+            }
+            disableTabSwitch();
+            OData.request(request, function (data) {
+
+                function dealwithchoice(data) {
+                    $("#svcUrl").val(data.Uri);
+                    var rwRadios = $('input[name=typeGroup]');
+                    if (data.ServiceType == "ReadOnly") rwRadios.filter('[value=Read-Only]').attr('checked', true);
+                    else if (data.ServiceType == "ReadWrite") rwRadios.filter('[value=Read-Write]').attr('checked', true);
+                    var levelRadios = $('input[name=levelGroup]');
+                    for (var i = 0; i< levelRadios.length; i++)
+                    {
+                        if (data.LevelTypes == levelRadios[i].value) {
+                            levelRadios[i].setAttribute('checked', true);
+                        }
+                    }
+                }
+                dealwithchoice(data);
+
+                var request = {
+                    method: "GET",
+                    requestUri: "odatavalidator/Reload?jobIdStr='" + jobid + "'"
+                }
+
+                var OriginalURI = "odatavalidator/UriValidationJobs"
+                    + "?Uri='" + encodeURIComponent($("#svcUrl").val())
+                    + "'&Format='json;odata.metadata=full'"
+                    + "&Headers='OData-Version:4.0;'"
+                    + "&isConformance='" + getSelectedResourceType() + "'"
+                    + "&levelTypes='" + getSelectedConformanceLevel() + "'";
+
+                conformanceResults.OriginalURI = OriginalURI;
+
+                alertSendoutRequest();
+                OData.request(request, function (data) {
+                    alertReceiveResponse();
+
+                    if (data.results.length == 1 && data.results[0].Issues) {
+                        $('#infotop #statusInfo').empty();
+                        var jobStatusInfo = { 'status': data.results[0].Issues };
+                        $('#jobStatusInfoTmpl').tmpl(jobStatusInfo).appendTo('#infotop #statusInfo');
+                        return;
+                    }
+
+                    $.each(data.results, function () {
+                        var job = { 'Uri': this.Uri, 'ResourceType': this.ResourceType, 'Id': this.DerivativeJobId, 'RuleCount': this.RuleCount, 'Issues': this.Issues };
+                        validatorApp.jobsInQ.push(job);
+                        conformanceResults.conformanceJobIDs.push(job.Id);
+                        
+                    });
+
+                    $('#infotop #statusInfo').empty();
+                    $('#infotop #statusInfo').show();
+                    loadConformanceLevelRules();
+                    
+                    var d = data.results[0];
+                    validatorApp.currentJob = { 'Uri': d.Uri, 'ResourceType': d.ResourceType, 'Id': d.DerivativeJobId, 'RuleCount': d.RuleCount, 'Issues': d.Issues };
+                });
+            });
+        }
+
+        if (window.location.hash.length) {
+            $("#tabs_container > ul > li > a").attr("href", window.location.hash);
+            var tid = window.location.hash.substr(1);
+            var request = {
+                method: "GET",
+                requestUri: "odatavalidator/Records(" + tid + ")"
+            }
+
+            OData.request(request, function (data) {
+                data.ID;
+                console.log(data);
+
+                var li4a = $("#tabs_container > ul > li:nth-child(4) > a")[0];
+                var li3a = li4a.parentNode.previousElementSibling.firstElementChild;
+                var li2a = li3a.parentNode.previousElementSibling.firstElementChild;
+                var li1a = li2a.parentNode.previousElementSibling.firstElementChild;
+                
+                li4a.MasterJobId = data.MasterJobId4;
+                li3a.MasterJobId = data.MasterJobId3;
+                li2a.MasterJobId = data.MasterJobId2;
+                li1a.MasterJobId = data.MasterJobId1;
+
+                li4a.reload = reloadMetadataJob;
+                li3a.reload = reloadConformanceJob;
+                li2a.reload = reloadDirectTextJob;
+                li1a.reload = reloadUriJob;
+
+                $($(".tab")[data.ActiveTabNum - 1]).trigger("click");
+            });
+        }
+    </script>
+</body>
+<noscript>
+    <div>
+        <img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://m.webtrends.com/dcsc97avu10000kn75ujgpso2_7j5n/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=MS.3.0.0" /></div>
+</noscript>
+<!-- END OF SmartSource Data Collector TAG -->
+</html>

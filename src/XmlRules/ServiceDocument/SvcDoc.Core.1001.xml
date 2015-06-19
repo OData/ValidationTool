@@ -1,0 +1,93 @@
+﻿  <!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="SvcDoc.Core.1001" category="core" target="servicedoc" specificationsection ="2.2.6.2.7" v4specificationsection="5.1" v4specification="odataatom" requirementlevel="should" format="xml">
+    <description>A data service SHOULD represent all available collections in a single &lt;app:workspace&gt; element.</description>
+    <action processor="rng">
+      <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app">
+        <start>
+          <element>
+            <!-- service level element can be ignored since the workspace element is the focus here. -->
+            <anyName />
+            <ref name="anyAttributes" />
+            <element name="app:workspace">
+              <element name="atom:title">
+                <ref name="anyAttributes" />
+                <text/>
+              </element>
+              <zeroOrMore>
+                <element name="app:collection">
+                  <attribute name="href">
+                    <text />
+                  </attribute>
+                  <element name="atom:title">
+                    <ref name="anyAttributes" />
+                    <text/>
+                  </element>
+                  <zeroOrMore>
+                    <ref name="anyElement_other_than_atom_title" />
+                  </zeroOrMore>
+                </element>
+              </zeroOrMore>
+            </element>
+          </element>
+        </start>
+        <define name="anyAttributes">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyElement">
+          <element>
+            <anyName />
+            <zeroOrMore>
+              <choice>
+                <attribute>
+                  <anyName />
+                </attribute>
+                <text />
+                <ref name="anyElement" />
+              </choice>
+            </zeroOrMore>
+          </element>
+        </define>
+        <define name="anyContent">
+          <zeroOrMore>
+            <choice>
+              <attribute>
+                <anyName />
+              </attribute>
+              <text />
+              <ref name="anyElement" />
+            </choice>
+          </zeroOrMore>
+        </define>
+        <define name="anyElement_other_than_atom_title">
+          <element>
+            <choice>
+              <anyName>
+                <except>
+                  <nsName ns="http://www.w3.org/2005/Atom" />
+                </except>
+              </anyName>
+              <nsName ns="http://www.w3.org/2005/Atom">
+                <except>
+                  <name>atom:title</name>
+                </except>
+              </nsName>
+            </choice>
+            <ref name="anyContent" />
+          </element>
+        </define>
+      </grammar>
+    </action>
+    <errormessage>A data service SHOULD represent all available collections in a single &lt;app:workspace&gt; element.</errormessage>
+  </rule>
+</rules>

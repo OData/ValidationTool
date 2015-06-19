@@ -1,0 +1,24 @@
+<!--
+  Copyright (c) Microsoft Corporation. All rights reserved.
+  Licensed under the MIT License. See License.txt in the project root for license information.
+-->
+
+<rules>
+  <rule id="Common.Core.1005" category="core" requirementlevel="must" format="json" target="entry">
+    <description>JSON Entry payload must starts with "d".</description>
+    <action processor="jsonschema" >
+      <jsonschema>
+        {
+        "type": "object",
+        "additionalProperties" : false,
+        "properties" : {
+        "d": {
+
+        }
+        }
+        }
+      </jsonschema>
+    </action>
+    <errormessage>JSON Entry payload must starts with "d".</errormessage>
+  </rule>
+</rules>
