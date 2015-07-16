@@ -1,0 +1,80 @@
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 2000
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 28 May 2014 06:52:22 GMT
+Set-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+{
+    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People",
+    "@odata.count": 20,
+    "value": [
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('sandyosborn')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('sandyosborn')",
+            "UserName": "sandyosborn",
+            "FirstName": "Sandy",
+            "LastName": "Osborn",
+            "Emails": [
+                "Sandy@example.com",
+                "Sandy@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('ursulabright')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('ursulabright')",
+            "UserName": "ursulabright",
+            "FirstName": "Ursula",
+            "LastName": "Bright",
+            "Emails": [
+                "Ursula@example.com",
+                "Ursula@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('genevievereeves')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('genevievereeves')",
+            "UserName": "genevievereeves",
+            "FirstName": "Genevieve",
+            "LastName": "Reeves",
+            "Emails": [
+                "Genevieve@example.com",
+                "Genevieve@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('kristakemp')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('kristakemp')",
+            "UserName": "kristakemp",
+            "FirstName": "Krista",
+            "LastName": "Kemp",
+            "Emails": [
+                "Krista@example.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        }
+    ]
+}

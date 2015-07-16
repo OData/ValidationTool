@@ -1,0 +1,26 @@
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 2000
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 28 May 2014 06:52:22 GMT
+Set-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+{
+    "error": {
+        "code": "InternalServerError",
+        "message": "Bad Request - Error in query syntax.",
+        "innererror": {
+            "message": "Bad Request - Error in query syntax.",
+            "type": "Microsoft.OData.Core.ODataException",
+            "stacktrace": "   at Microsoft.OData.Core.UriParser.Parsers.SegmentKeyHandler.CreateKeySegment(ODataPathSegment segment, KeySegment previousKeySegment, SegmentArgumentParser key)\r\n   at Microsoft.OData.Core.UriParser.Parsers.SegmentKeyHandler.TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, String parenthesisExpression, ODataPathSegment& keySegment, Boolean enableUriTemplateParsing)\r\n   at Microsoft.OData.Core.UriParser.Parsers.ODataPathParser.TryBindKeyFromParentheses(String parenthesesSection)\r\n   at Microsoft.OData.Core.UriParser.Parsers.ODataPathParser.TryCreateSegmentForNavigationSource(String identifier, String parenthesisExpression)\r\n   at Microsoft.OData.Core.UriParser.Parsers.ODataPathParser.CreateFirstSegment(String segmentText)\r\n   at Microsoft.OData.Core.UriParser.Parsers.ODataPathParser.ParsePath(ICollection`1 segments)\r\n   at Microsoft.OData.Core.UriParser.Parsers.ODataPathFactory.BindPath(ICollection`1 segments, ODataUriParserConfiguration configuration)\r\n   at Microsoft.OData.Core.UriParser.ODataUriParser.ParsePathImplementation()\r\n   at Microsoft.OData.Core.UriParser.ODataUriParser.Initialize()\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.QueryHandler.DispatchHandler()\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.RequestHandler.Process(Stream requestStream)\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.RootRequestHandler.Process(Stream requestStream)"
+        }
+    }
+}

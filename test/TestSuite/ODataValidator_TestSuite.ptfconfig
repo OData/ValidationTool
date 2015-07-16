@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TestSite xmlns="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig.xsd">
+  <Properties>
+    <!-- Test suite properties which value not changed when running in different test environments -->
+     <!--<Property name="TD-VERSION" value="12.4.2013"/>-->
+  </Properties>
+
+  <Adapters>
+    <Adapter xsi:type="managed" name="IValidatorAdapter" adaptertype="Microsoft.Protocols.TestSuites.Validator.ValidatorAdapter"/>
+  </Adapters>
+  
+ <TestLog defaultprofile="MinimumLog">
+    <Sinks>
+      <!-- File log sink. Id is name, directory is the dir which log will stored in. file is the name of log. -->
+      <File id="Debug" directory="." file="ODataValidator_DebugLog.txt" format="text"/>
+      <File id="FileLog" directory="." file="ODataValidator_Log.xml" format="xml"/>
+      <Sink id="Beacon" type="Microsoft.Protocols.TestTools.Logging.BeaconLogSink"/>
+    </Sinks>
+    <Profiles>
+      <!-- Name of the profile. extends indicates the profile will be included.-->
+      <Profile name="Verbose" extends="Error">
+        <!-- Show for debugging, useful log when debugging-->
+        <Rule kind="CheckSucceeded" sink="Debug" delete="false" />
+        <Rule kind="Comment" sink="Debug" delete="false" />
+        <Rule kind="Checkpoint" sink="Debug" delete="false" />
+        <Rule kind="Debug" sink="Debug" delete="false" />
+
+        <!--Xml log, fully detailed log, also used for generating the test result report -->
+        <Rule kind="CheckSucceeded" sink="FileLog" delete="false" />
+        <Rule kind="CheckFailed" sink="FileLog" delete="false" />
+        <Rule kind="Comment" sink="FileLog" delete="false" />
+        <Rule kind="Checkpoint" sink="FileLog" delete="false" />
+        <Rule kind="Debug" sink="FileLog" delete="false" />
+        <Rule kind="EnterMethod" sink="FileLog" delete="false" />
+        <Rule kind="ExitMethod" sink="FileLog" delete="false" />
+        <Rule kind="TestPassed" sink="FileLog" delete="false" />
+        <Rule kind="TestFailed" sink="FileLog" delete="false" />
+        <Rule kind="TestUnknown" sink="FileLog" delete="false" />
+
+        <!-- beacon log, will be captured by Netmon-->
+        <Rule kind="Checkpoint" sink="Beacon" delete="false" />
+        <Rule kind="EnterMethod" sink="Beacon" delete="false" />
+        <Rule kind="ExitMethod" sink="Beacon" delete="false" />
+      </Profile>
+      <!-- Name of the profile.-->
+      <Profile name="MinimumLog">
+        <!--Xml log. -->
+        <Rule kind="CheckFailed" sink="FileLog" delete="false" />
+        <Rule kind="EnterMethod" sink="FileLog" delete="false" />
+        <Rule kind="ExitMethod" sink="FileLog" delete="false" />
+        <Rule kind="TestPassed" sink="FileLog" delete="false" />
+        <Rule kind="TestFailed" sink="FileLog" delete="false" />
+        <Rule kind="TestUnknown" sink="FileLog" delete="false" />
+        <Rule kind="Checkpoint" sink="FileLog" delete="false" />
+        <Rule kind="Comment" sink="FileLog" delete="false" />
+        <!-- beacon log, will be captured by Netmon-->
+        <Rule kind="EnterMethod" sink="Beacon" delete="false" />
+        <Rule kind="ExitMethod" sink="Beacon" delete="false" />
+      </Profile>
+    </Profiles>
+  </TestLog>
+</TestSite>

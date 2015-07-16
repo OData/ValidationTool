@@ -1,0 +1,104 @@
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:1074
+Content-Type:application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Tue, 12 Aug 2014 07:17:12 GMT
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People('russellwhyte')/Trips",
+"value": [
+{
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Trip",
+"@odata.id": "People('russellwhyte')/Trips(0)",
+"@odata.editLink": "People('russellwhyte')/Trips(0)",
+"TripId": 0,
+"ShareId@odata.type": "#Guid",
+"ShareId": "9d9b2fa0-efbf-490e-a5e3-bac8f7d47354",
+"Description": "Trip from San Francisco to New York City. Nice trip with two friends. It is a 4 days' trip. We actually had a client meeting, but we also took one to go sightseeings in New York.",
+"Name": "Trip in US",
+"Budget@odata.type": "#Single",
+"Budget": 3000,
+"StartsAt@odata.type": "#DateTimeOffset",
+"StartsAt": "2014-01-01T00:00:00Z",
+"EndsAt@odata.type": "#DateTimeOffset",
+"EndsAt": "2014-01-04T00:00:00Z",
+"Tags@odata.type": "#Collection(String)",
+"Tags": [
+"Trip in New York",
+"business",
+"sightseeing"
+],
+"Photos@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(0)/Photos/$ref",
+"Photos@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(0)/Photos",
+"PlanItems@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(0)/PlanItems/$ref",
+"PlanItems@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(0)/PlanItems",
+"#Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople",
+"target": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(0)/Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople"
+}
+},
+{
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Trip",
+"@odata.id": "People('russellwhyte')/Trips(1003)",
+"@odata.editLink": "People('russellwhyte')/Trips(1003)",
+"TripId": 1003,
+"ShareId@odata.type": "#Guid",
+"ShareId": "f94e9116-8bdd-4dac-ab61-08438d0d9a71",
+"Description": "Trip from Shanghai to Beijing",
+"Name": "Trip in Beijing",
+"Budget@odata.type": "#Single",
+"Budget": 2000,
+"StartsAt@odata.type": "#DateTimeOffset",
+"StartsAt": "2014-02-01T00:00:00Z",
+"EndsAt@odata.type": "#DateTimeOffset",
+"EndsAt": "2014-02-04T00:00:00Z",
+"Tags@odata.type": "#Collection(String)",
+"Tags": [
+"Travel",
+"Beijing"
+],
+"Photos@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1003)/Photos/$ref",
+"Photos@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1003)/Photos",
+"PlanItems@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1003)/PlanItems/$ref",
+"PlanItems@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1003)/PlanItems",
+"#Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople",
+"target": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1003)/Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople"
+}
+},
+{
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Trip",
+"@odata.id": "People('russellwhyte')/Trips(1007)",
+"@odata.editLink": "People('russellwhyte')/Trips(1007)",
+"TripId": 1007,
+"ShareId@odata.type": "#Guid",
+"ShareId": "9ce142c3-5fd6-4a71-848e-5220ebf1e9f3",
+"Description": "Happy honeymoon trip",
+"Name": "Honeymoon",
+"Budget@odata.type": "#Single",
+"Budget": 2650,
+"StartsAt@odata.type": "#DateTimeOffset",
+"StartsAt": "2014-02-01T00:00:00Z",
+"EndsAt@odata.type": "#DateTimeOffset",
+"EndsAt": "2014-02-04T00:00:00Z",
+"Tags@odata.type": "#Collection(String)",
+"Tags": [
+"Travel",
+"honeymoon"
+],
+"Photos@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1007)/Photos/$ref",
+"Photos@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1007)/Photos",
+"PlanItems@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1007)/PlanItems/$ref",
+"PlanItems@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1007)/PlanItems",
+"#Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople",
+"target": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips(1007)/Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople"
+}
+}
+]
+}

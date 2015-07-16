@@ -1,0 +1,111 @@
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 9383
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 28 May 2014 06:51:09 GMT
+Set-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+{
+    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#Photos",
+    "@odata.nextLink": "http://services.odata.org/V4/TripPinService/Photos?%24format=application%2fjson%3bodata.metadata%3dfull&%24skiptoken=8",
+    "value": [
+        {
+	    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#MediaPhoto/$entity",
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(1)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(1)",
+            "@odata.mediaEditLink": "Photos(1)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCD47F1\"",
+            "Id@odata.type": "#Int64",
+            "Id": "-INF",
+            "Name": "My Photo 1"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(11)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(11)",
+            "@odata.mediaEditLink": "Photos(11)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 11,
+            "Name": "Trip Photo 11"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(12)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(12)",
+            "@odata.mediaEditLink": "Photos(12)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 12,
+            "Name": "Trip Photo 12"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(13)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(13)",
+            "@odata.mediaEditLink": "Photos(13)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 13,
+            "Name": "Trip Photo 13"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(14)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(14)",
+            "@odata.mediaEditLink": "Photos(14)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 14,
+            "Name": "Trip Photo 14"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(2)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(2)",
+            "@odata.mediaEditLink": "Photos(2)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 2,
+            "Name": "My Photo 2"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(21)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(21)",
+            "@odata.mediaEditLink": "Photos(21)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 21,
+            "Name": "Trip Photo 21"
+        },
+        {
+            "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+            "@odata.id": "http://services.odata.org/V4/TripPinService/Photos(22)",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(22)",
+            "@odata.mediaEditLink": "Photos(22)/$value",
+            "@odata.mediaContentType": "image/jpeg",
+            "@odata.mediaEtag": "W/\"08D17DCFEDCFAB77\"",
+            "Id@odata.type": "#Int64",
+            "Id": 22,
+            "Name": "Trip Photo 22"
+        }
+    ]
+}

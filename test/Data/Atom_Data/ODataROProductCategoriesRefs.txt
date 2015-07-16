@@ -1,0 +1,32 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 372
+Content-Type: application/atom+xml;type=feed;charset=utf-8
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Set-Cookie: ARRAffinity=d52654e1cc1055197e32d25965126e2ebf20d1e5938dbf139fa3d3670df447b0;Path=/;Domain=services.odata.org
+Date: Thu, 06 Nov 2014 08:22:57 GMT
+
+<feed xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://services.odata.org/V4/OData/OData.svc/$metadata#Collection($ref)" xmlns="http://www.w3.org/2005/Atom">
+<m:annotation term="contoso.PhoneNumbers" m:type="Collection(String)">
+<element>(203)555-1718</element>
+<element>(203)555-1719</element>
+</m:annotation>
+<m:annotation term="ODataDemo.Product.Display" target="Suppliers(0)/Telephones(0)" m:type="Boolean">true</m:annotation>
+<m:annotation term="com.contoso.address" m:type="#ODataDemo.Address" xmlns:d="http://docs.oasis-open.org/odata/ns/data">
+<d:Street>2817 Milton Dr.</d:Street>
+<d:City>Albuquerque</d:City>
+<d:State>NM</d:State>
+<d:ZipCode>87110</d:ZipCode>
+<d:Country>USA</d:Country>
+</m:annotation>
+<m:ref id="http://services.odata.org/V4/OData/OData.svc/Categories(0)" />
+<m:ref id="http://services.odata.org/V4/OData/OData.svc/Categories(1)" />
+</feed>

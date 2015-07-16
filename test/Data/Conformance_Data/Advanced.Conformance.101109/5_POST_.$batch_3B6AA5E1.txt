@@ -1,0 +1,36 @@
+// comments 
+Accepted
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 518
+Cache-Control: no-cache
+Content-Type: multipart/mixed; boundary=batchresponse_d447e7ff-e5d2-41fc-b8bf-fe540f851f8f
+Date: Tue, 12 Aug 2014 10:05:51 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+--batchresponse_d447e7ff-e5d2-41fc-b8bf-fe540f851f8f
+Content-Type: multipart/mixed; boundary=changesetresponse_fb68165c-cda5-4bb7-a1ab-da07000d78a4
+
+--changesetresponse_fb68165c-cda5-4bb7-a1ab-da07000d78a4
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_fb68165c-cda5-4bb7-a1ab-da07000d78a4--
+--batchresponse_d447e7ff-e5d2-41fc-b8bf-fe540f851f8f--
+

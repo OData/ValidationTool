@@ -1,0 +1,21 @@
+Cache-Control:no-cache
+Content-Length:1654
+Content-Type:application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Tue, 12 Aug 2014 07:00:48 GMT
+ETag:W/"08D18407C578C5F5"
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+"error": {
+"code": "UnsupportedMediaType",
+"message": "The MIME type 'application/atom xml' requires a semi-colon character (';') before a parameter definition.",
+"innererror": {
+"message": "The MIME type 'application/atom xml' requires a semi-colon character (';') before a parameter definition.",
+"type": "Microsoft.OData.Core.ODataContentTypeException",
+"stacktrace": "   at Microsoft.OData.Core.HttpUtils.ReadMediaTypes(String text)\r\n   at Microsoft.OData.Core.HttpUtils.MediaTypesFromString(String text)\r\n   at Microsoft.OData.Core.MediaTypeUtils.GetContentTypeFromSettings(ODataMessageWriterSettings settings, ODataPayloadKind payloadKind, MediaTypeResolver mediaTypeResolver, MediaType& mediaType, Encoding& encoding)\r\n   at Microsoft.OData.Core.ODataMessageWriter.EnsureODataFormatAndContentType()\r\n   at Microsoft.OData.Core.ODataMessageWriter.SetHeaders(ODataPayloadKind payloadKind)\r\n   at Microsoft.OData.Core.ODataMessageWriter.SetOrVerifyHeaders(ODataPayloadKind payloadKind)\r\n   at Microsoft.OData.Core.ODataMessageWriter.WriteToOutput[TResult](ODataPayloadKind payloadKind, Action verifyHeaders, Func`2 writeFunc)\r\n   at Microsoft.OData.Core.ODataMessageWriter.CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.QueryHandler.Process(IODataRequestMessage requestMessage, IODataResponseMessage responseMessage)\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.RequestHandler.Process(Stream requestStream)\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.RootRequestHandler.Process(Stream requestStream)"
+}
+}
+}

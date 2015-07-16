@@ -1,0 +1,45 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 826
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Date: Wed, 22 Oct 2014 09:19:35 GMT
+
+<entry xml:base="http://services.odata.org/V4/OData/OData.svc/" m:context="http://services.odata.org/V4/OData/OData.svc/$metadata#PersonDetails/$entity" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<id>http://services.odata.org/V4/OData/OData.svc/PersonDetails(0)</id>
+<category term="#ODataDemo.PersonDetail" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="PersonDetail" href="PersonDetails(0)"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Person" type="application/xml" title="Person" href="PersonDetails(0)/Person/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Person" type="application/atom+xml;type=entry" title="Person" href="PersonDetails(0)/Person"/>
+<title/>
+<updated>2014-10-31T09:35:14Z</updated>
+<author>
+<name/>
+</author>
+<link rel="http://docs.oasis-open.org/odata/ns/edit-media/Photo" title="Photo" href="PersonDetails(0)/Photo" m:etag=""nCP1Tf4Uax96eYIWjvoC/6ZflG8=""/>
+<content type="application/xml">
+<m:properties>
+<d:PersonID m:type="Int32">0</d:PersonID>
+<d:Age m:type="Byte">21</d:Age>
+<d:Gender m:type="Boolean">false</d:Gender>
+<d:Phone>(505) 555-5939</d:Phone>
+<d:Address m:type="#ODataDemo.Address">
+<d:Street>2817 Milton Dr.</d:Street>
+<d:City>Albuquerque</d:City>
+<d:State>NM</d:State>
+<d:ZipCode>87110</d:ZipCode>
+<d:Country>USA</d:Country>
+</d:Address>
+</m:properties>
+</content>
+</entry>

@@ -1,0 +1,38 @@
+X-Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:444
+Content-Type:application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Wed, 06 Aug 2014 07:34:18 GMT
+ETag:W/"08D17F4C1D5FC3BD"
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People/$entity",
+"@odata.id": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+"@odata.etag": "W/\"08D17F4C1D5FC3BD\"",
+"@odata.editLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+"UserName": "russellwhyte",
+"FirstName": "Russell",
+"LastName": "Whyte",
+"Emails@odata.type": "#Collection(String)",
+"Emails": [
+"Russell@example.com",
+"Russell@contoso.com"
+],
+"AddressInfo": [
+{
+"Address": "187 Suffolk Ln.",
+"City": {
+"CountryRegion": "United States",
+"Name": "Boise",
+"Region": "ID"
+}
+}
+],
+"Gender": "Male",
+"Concurrency": 635428987323007900
+}

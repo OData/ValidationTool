@@ -1,0 +1,44 @@
+// comments 
+OK
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 1095
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Tue, 12 Aug 2014 10:05:37 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+{
+  "@odata.context": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$metadata#Products/$entity",
+  "@odata.type": "#ODataDemo.Product",
+  "@odata.id": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/Products(11)",
+  "@odata.editLink": "Products(11)",
+  "ID": 11,
+  "Name": "Bread",
+  "Description": "Whole grain bread",
+  "ReleaseDate@odata.type": "#DateTimeOffset",
+  "ReleaseDate": "1992-01-01T00:00:00Z",
+  "DiscontinuedDate": null,
+  "Rating@odata.type": "#Int16",
+  "Rating": 4,
+  "Price": 2.5,
+  "Categories@odata.associationLink": "Products(11)/Categories/$ref",
+  "Categories@odata.navigationLink": "Products(11)/Categories",
+  "Supplier@odata.associationLink": "Products(11)/Supplier/$ref",
+  "Supplier@odata.navigationLink": "Products(11)/Supplier",
+  "ProductDetail@odata.associationLink": "Products(11)/ProductDetail/$ref",
+  "ProductDetail@odata.navigationLink": "Products(11)/ProductDetail",
+  "#ODataDemo.Discount": {
+    "title": "Discount",
+    "target": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/Products(11)/Discount"
+  }
+}

@@ -1,0 +1,36 @@
+// comments 
+BadRequest
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 1742
+Cache-Control: private
+Content-Type: application/xml;charset=utf-8
+Date: Tue, 12 Aug 2014 10:05:48 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message>An error occurred while processing this request.</m:message>
+  <m:innererror>
+    <m:message>The MIME type 'undefine;boundary=batch_4e1a76dc-b738-4aa4-9f93-df661d0a4c9f' requires a '/' character between type and subtype, such as 'text/plain'.</m:message>
+    <m:type>Microsoft.OData.Core.ODataContentTypeException</m:type>
+    <m:stacktrace>   at Microsoft.OData.Core.HttpUtils.ReadMediaTypeAndSubtype(String mediaTypeName, Int32&amp; textIndex, String&amp; type, String&amp; subType)
+   at Microsoft.OData.Core.HttpUtils.ReadMediaTypes(String text)
+   at Microsoft.OData.Core.MediaTypeUtils.ParseContentType(String contentTypeHeader, String&amp; charset)
+   at Microsoft.OData.Core.MediaTypeUtils.GetFormatFromContentType(String contentTypeName, ODataPayloadKind[] supportedPayloadKinds, MediaTypeResolver mediaTypeResolver, MediaType&amp; mediaType, Encoding&amp; encoding, ODataPayloadKind&amp; selectedPayloadKind)
+   at Microsoft.OData.Core.MediaTypeUtils.GetFormatFromContentType(String contentTypeHeader, ODataPayloadKind[] supportedPayloadKinds, MediaTypeResolver mediaTypeResolver, MediaType&amp; mediaType, Encoding&amp; encoding, ODataPayloadKind&amp; selectedPayloadKind, String&amp; batchBoundary)
+   at Microsoft.OData.Core.ODataMessageReader.ProcessContentType(ODataPayloadKind[] payloadKinds)
+   at Microsoft.OData.Core.ODataMessageReader.ReadFromInput[T](Func`2 readFunc, ODataPayloadKind[] payloadKinds)
+   at Microsoft.OData.Core.ODataMessageReader.CreateODataBatchReader()
+   at Microsoft.OData.Service.DataService`1.HandleBatchRequest()</m:stacktrace>
+  </m:innererror>
+</m:error>

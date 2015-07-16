@@ -1,0 +1,30 @@
+// 4_GET_.Products7$filter=undefined(Name,'Bread')_EC8E2B6A
+BadRequest
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 1505
+Cache-Control: private
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Tue, 12 Aug 2014 10:06:04 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+{
+  "error": {
+    "code": "",
+    "message": "An unknown function with name 'undefined' was found. This may also be a function import or a key lookup on a navigation property, which is not allowed.",
+    "innererror": {
+      "message": "An unknown function with name 'undefined' was found. This may also be a function import or a key lookup on a navigation property, which is not allowed.",
+      "type": "Microsoft.OData.Core.ODataException",
+      "stacktrace": "   at Microsoft.OData.Core.UriParser.Parsers.FunctionCallBinder.GetBuiltInFunctionSignatures(String functionName)\r\n   at Microsoft.OData.Core.UriParser.Parsers.FunctionCallBinder.BindAsBuiltInFunction(FunctionCallToken functionCallToken, BindingState state, List`1 argumentNodes)\r\n   at Microsoft.OData.Core.UriParser.Parsers.FunctionCallBinder.BindFunctionCall(FunctionCallToken functionCallToken, BindingState state)\r\n   at Microsoft.OData.Core.UriParser.Parsers.MetadataBinder.BindFunctionCall(FunctionCallToken functionCallToken)\r\n   at Microsoft.OData.Core.UriParser.Parsers.MetadataBinder.Bind(QueryToken token)\r\n   at Microsoft.OData.Core.UriParser.Parsers.FilterBinder.BindFilter(QueryToken filter)\r\n   at Microsoft.OData.Core.UriParser.ODataQueryOptionParser.ParseFilterImplementation(String filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)\r\n   at Microsoft.OData.Core.UriParser.ODataQueryOptionParser.ParseFilter()\r\n   at Microsoft.OData.Service.Parsing.RequestExpressionParser.ParseFilter()"
+    }
+  }
+}

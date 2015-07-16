@@ -1,0 +1,64 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 826
+Content-Type: application/xml;type=entry;charset=utf-8
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Date: Wed, 22 Oct 2014 09:19:35 GMT
+
+<entry xml:base="http://services.odata.org/V4/OData/OData.svc/" m:context="http://services.odata.org/V4/OData/OData.svc/$metadata#Products/$entity" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<id>http://services.odata.org/V4/OData/OData.svc/Products(0)</id>
+<category term="#ODataDemo.Product" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="Product" href="Products(0)"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Categories" type="application/xml" title="Categories" href="Products(0)/Categories/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Categories" type="application/atom+xml;type=feed" title="Categories" href="Products(0)/Categories">
+<m:annotation term="com.contoso.display.style" m:type="#com.contoso.display.styleType"> 
+<d:order m:type="Int32">2</d:order>
+</m:annotation>
+</link>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Supplier" type="application/xml" title="Supplier" href="Products(0)/Supplier/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Supplier" type="application/atom+xml;type=entry" title="Supplier" href="Products(0)/Supplier"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/ProductDetail" type="application/xml" title="ProductDetail" href="Products(0)/ProductDetail/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/ProductDetail" type="application/atom+xml;type=entry" title="ProductDetail" href="Products(0)/ProductDetail"/>
+<title/>
+<updated>2014-10-22T09:19:35Z</updated>
+<author>
+<name/>
+</author>
+<content type="application/xml">
+<m:properties>
+<d:ID m:type="Int32">0</d:ID>
+<m:annotation term="com.contoso.display.style" target="Name" m:type="#com.contoso.display.styleType"> 
+<d:title m:type="Boolean">true</d:title>
+<d:order m:type="Int32">1</d:order>
+</m:annotation>
+<d:Name>Bread</d:Name>
+<d:Description>Whole grain bread</d:Description>
+<d:ReleaseDate m:type="DateTimeOffset">1992-01-01T00:00:00Z</d:ReleaseDate>
+<d:DiscontinuedDate m:null="true"/>
+<d:Rating m:type="Int16">4</d:Rating>
+<d:Price m:type="Double">2.5</d:Price>
+</m:properties>
+</content>
+<m:annotation term="com.contoso.display.highlight" m:type="Boolean">true</m:annotation>
+<m:annotation term="com.contoso.PersonalInfo.PhoneNumbers" m:type="Collection(String)">
+    <element>(203)555-1718</element>
+    <element>(203)555-1719</element>
+</m:annotation>
+<m:annotation term="com.contoso.address" m:type="#ODataDemo.Address">
+<d:Street>2817 Milton Dr.</d:Street>
+<d:City>Albuquerque</d:City>
+<d:State>NM</d:State>
+<d:ZipCode>87110</d:ZipCode>
+<d:Country>USA</d:Country>
+</m:annotation>
+</entry>

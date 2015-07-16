@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A86AE1A8-55DE-4C75-B571-059792A8B2CF}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		ODataValidatorTest.vsmdi = ODataValidatorTest.vsmdi
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator_Adapter", "Adapter\ODataValidator_Adapter.csproj", "{E2C24EA9-56D4-4B80-B90F-A4F909D2DFB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator_Service", "Service\ODataValidator_Service.csproj", "{DDE23A54-8471-47B7-A9C2-755F197A31E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator_TestSuite", "TestSuite\ODataValidator_TestSuite.csproj", "{EA3E62C4-3806-464D-84B5-A8E022694995}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator.ValidationService", "..\src\ODataValidationService\ODataValidator.ValidationService.csproj", "{A2C87755-312A-4D1D-994A-066B05618C45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator.CodeRules", "..\src\CodeRules\ODataValidator.CodeRules.csproj", "{A1A00CDB-3BB3-4881-9B7A-4D6196C37E37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator.XmlRules", "..\src\XmlRules\ODataValidator.XmlRules.csproj", "{15CF871C-65FC-4335-977C-67B343316FBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataValidator.RuleEngine", "..\src\RuleEngine\ODataValidator.RuleEngine.csproj", "{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = ODataValidatorTest.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2C24EA9-56D4-4B80-B90F-A4F909D2DFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2C24EA9-56D4-4B80-B90F-A4F909D2DFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2C24EA9-56D4-4B80-B90F-A4F909D2DFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2C24EA9-56D4-4B80-B90F-A4F909D2DFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDE23A54-8471-47B7-A9C2-755F197A31E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDE23A54-8471-47B7-A9C2-755F197A31E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDE23A54-8471-47B7-A9C2-755F197A31E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDE23A54-8471-47B7-A9C2-755F197A31E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3E62C4-3806-464D-84B5-A8E022694995}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3E62C4-3806-464D-84B5-A8E022694995}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3E62C4-3806-464D-84B5-A8E022694995}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3E62C4-3806-464D-84B5-A8E022694995}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2C87755-312A-4D1D-994A-066B05618C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2C87755-312A-4D1D-994A-066B05618C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2C87755-312A-4D1D-994A-066B05618C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2C87755-312A-4D1D-994A-066B05618C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1A00CDB-3BB3-4881-9B7A-4D6196C37E37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1A00CDB-3BB3-4881-9B7A-4D6196C37E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1A00CDB-3BB3-4881-9B7A-4D6196C37E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1A00CDB-3BB3-4881-9B7A-4D6196C37E37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15CF871C-65FC-4335-977C-67B343316FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15CF871C-65FC-4335-977C-67B343316FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15CF871C-65FC-4335-977C-67B343316FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15CF871C-65FC-4335-977C-67B343316FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

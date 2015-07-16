@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 482
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+Content-Encoding: gzip
+ETag: W/"08D1BC9CFEC0368F"
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Thu, 23 Oct 2014 05:59:48 GMT
+
+<entry xml:base="http://services.odata.org/v4/TripPinService/" m:context="http://services.odata.org/v4/TripPinService/$metadata#Photos/$entity" m:etag="W/&quot;08D1C3B1EEB79B04&quot;" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<id>http://services.odata.org/V4/TripPinService/Photos(1)</id>
+<category term="#TripPin.Photo" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit-media" title="Photo" href="Photos(6)/$value"/>
+<content type="image/jpeg" src="Photo(1)/$value"/>
+<m:properties>
+<d:ID m:type="Int64">1</d:ID>
+<d:Name>My Photo 1</d:Name>
+</m:properties>
+</entry>

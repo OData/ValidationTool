@@ -1,0 +1,123 @@
+// comments 
+OK
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 16671
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 27 Aug 2014 09:55:04 GMT
+Set-Cookie: ARRAffinity=dd38eb0579bb64a288e9fbf4116f147c63e1049979dbda54a90c15d75c4d5372;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+{
+  "@odata.context": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$metadata#Suppliers",
+  "@odata.count": 3,
+  "value": [
+    {
+      "@odata.type": "#ODataDemo.Supplier",
+      "@odata.id": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/Suppliers(1)",
+      "@odata.etag": "W/\"0\"",
+      "@odata.editLink": "Suppliers(0)",
+      "ID": 0,
+      "Name": "Tokyo Traders",
+      "Address": {
+        "@odata.type": "#ODataDemo.Address",
+        "Street": "NE 40th",
+        "City": "Redmond",
+        "State": "WA",
+        "ZipCode": "98052",
+        "Country": "USA"
+      },
+      "Location@odata.type": "#GeographyPoint",
+      "Location": {
+        "type": "Point",
+        "coordinates": [
+          -122.107711791992,
+          47.6472206115723
+        ],
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "EPSG:4326"
+          }
+        }
+      },
+      "Concurrency": 0,
+      "Products@odata.associationLink": "Suppliers(0)/Products/$ref",
+      "Products@odata.navigationLink": "Suppliers(0)/Products"
+    },
+    {
+      "@odata.type": "#ODataDemo.Supplier",
+      "@odata.id": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/Suppliers(1)",
+      "@odata.etag": "W/\"5\"",
+      "@odata.editLink": "Suppliers(1)",
+      "ID": 1,
+      "Name": "Exotic Liquids",
+      "Address": {
+        "@odata.type": "#ODataDemo.Address",
+        "Street": "NE 228th",
+        "City": "Sammamish",
+        "State": "WA",
+        "ZipCode": "98074",
+        "Country": "USA"
+      },
+      "Location@odata.type": "#GeographyPoint",
+      "Location": {
+        "type": "Point",
+        "coordinates": [
+          -122.03547668457,
+          47.6316604614258
+        ],
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "EPSG:4326"
+          }
+        }
+      },
+      "Concurrency": 5,
+      "Products@odata.associationLink": "Suppliers(1)/Products/$ref",
+      "Products@odata.navigationLink": "Suppliers(1)/Products"
+    },
+    {
+      "@odata.type": "#ODataDemo.Supplier",
+      "@odata.id": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/Suppliers(1)",
+      "@odata.etag": "W/\"5\"",
+      "@odata.editLink": "Suppliers(2)",
+      "ID": 2,
+      "Name": "Exotic Liquids",
+      "Address": {
+        "@odata.type": "#ODataDemo.Address",
+        "Street": "NE 228th",
+        "City": "Sammamish",
+        "State": "WA",
+        "ZipCode": "98074",
+        "Country": "USA"
+      },
+      "Location@odata.type": "#GeographyPoint",
+      "Location": {
+        "type": "Point",
+        "coordinates": [
+          -122.03547668457,
+          47.6316604614258
+        ],
+        "crs": {
+          "type": "name",
+          "properties": {
+            "name": "EPSG:4326"
+          }
+        }
+      },
+      "Concurrency": 5,
+      "Products@odata.associationLink": "Suppliers(2)/Products/$ref",
+      "Products@odata.navigationLink": "Suppliers(2)/Products"
+    }
+  ]
+}

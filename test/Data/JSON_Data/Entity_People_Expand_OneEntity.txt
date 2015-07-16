@@ -1,0 +1,42 @@
+Cache-Control:no-cache
+Content-Length:0
+Content-Type:application/octet-stream
+Date:Fri, 08 Aug 2014 07:06:04 GMT
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People/$entity",
+"@odata.id": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+"@odata.etag": "W/\"08D180EC28B35A30\"",
+"@odata.editLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+"UserName": "russellwhyte",
+"FirstName": "Russell",
+"LastName": "Whyte",
+"Emails": [
+"Russell@example.com",
+"Russell@contoso.com"
+],
+"AddressInfo": [
+{
+"Address": "187 Suffolk Ln.",
+"City": {
+"CountryRegion": "United States",
+"Name": "Boise",
+"Region": "ID"
+}
+}
+],
+"Gender": "Male",
+"Concurrency": 635430774219430400,
+"Photo": {
+"@odata.id": "http://services.odata.org/V4/TripPinService/Photos(2)",
+"@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(2)",
+"@odata.mediaContentType": "image/jpeg",
+"@odata.mediaEtag": "W/\"08D180EC28B0F898\"",
+"Id": 2,
+"Name": "My Photo 2"
+}
+}

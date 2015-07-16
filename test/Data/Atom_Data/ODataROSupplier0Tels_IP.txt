@@ -1,0 +1,25 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 335
+Content-Type: application/xml;charset=utf-8
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Set-Cookie: ARRAffinity=f52a868fbb9bda30202dea2c82bfa2f9350871e50836757efd92afab45cf9549;Path=/;Domain=services.odata.org
+Date: Mon, 20 Oct 2014 09:23:55 GMT
+
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://services.odata.org/V4/OData/OData.svc/$metadata#Collection(Edm.String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:type="Collection(Edm.String)">
+<m:annotation term="contoso.PhoneNumbers" m:type="Collection(String)">
+<element>(203)555-1718</element>
+<element>(203)555-1719</element>
+</m:annotation>
+<m:annotation term="ODataDemo.Product.Display" m:target="Suppliers(0)/Telephones(0)" m:type="Boolean">true</m:annotation>
+<m:element>(203)555-1718</m:element>
+<m:element>(203)555-1719</m:element>
+</m:value>

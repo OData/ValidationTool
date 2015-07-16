@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TestSite xmlns="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig http://schemas.microsoft.com/windows/ProtocolsTest/2007/07/TestConfig.xsd">
+
+  <Properties>
+    <!-- Properties related to test environment -->
+    <Property name="ExtensionStorePath" value="D:\EnlistCode\InteropO15Dev\TestSuites\SQL\ODATAValidator\src\ODataValidationService\bin\extensions"/>
+    <Property name="RulestorePath" value="D:\EnlistCode\InteropO15Dev\TestSuites\SQL\ODATAValidator\src\ODataValidationService\bin\rulestore"/>
+    <Property name="ConnectionString" value="metadata=res://*/ValidationService.csdl|res://*/ValidationService.ssdl|res://*/ValidationService.msl;provider=System.Data.SqlClient;provider connection string=&quot;Data Source=.;Initial Catalog=ODataValidationSuite;Integrated Security=True;MultipleActiveResultSets=True&quot;"/>
+    
+    <Property name="Response_Path" value="Data\JSON_Data\" />
+    <Property name="Conformance_Response_Data_Path" value="Data\Conformance_Data\" />
+    <Property name="Atom_Response_Data_Path" value="Data\Atom_Data\" />
+  </Properties>
+ 
+</TestSite>

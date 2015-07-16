@@ -1,0 +1,29 @@
+Access-Control-Allow-Headers:Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Allow-Methods:GET
+Access-Control-Allow-Origin:*
+Access-Control-Expose-Headers:DataServiceVersion
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:341
+Content-Type:application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Tue, 12 Aug 2014 10:04:59 GMT
+OData-Version:4.0;
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Content-Type-Options:nosniff
+X-Powered-By:ASP.NET
+
+
+{
+"@odata.context": "http://services.odata.org/V4/OData/OData.svc/$metadata#Persons/$entity",
+"@odata.type": "#ODataDemo.Customer",
+"@odata.id": "http://services.odata.org/V4/OData/OData.svc/Persons(3)",
+"@odata.editLink": "Persons(3)/ODataDemo.Customer",
+"ID": 3,
+"Name": "Liz Nixon",
+"TotalExpense@odata.type": "#Decimal",
+"TotalExpense": 99.99,
+"PersonDetail@odata.associationLink": "Persons(3)/ODataDemo.Customer/PersonDetail/$ref",
+"PersonDetail@odata.navigationLink": "Persons(3)/ODataDemo.Customer/PersonDetail"
+}

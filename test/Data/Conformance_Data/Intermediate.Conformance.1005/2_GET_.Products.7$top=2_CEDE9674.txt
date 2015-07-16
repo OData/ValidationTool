@@ -1,0 +1,42 @@
+// comments 
+OK
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 421
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Tue, 12 Aug 2014 10:06:01 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+{
+  "@odata.context": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$metadata#Products",
+  "value": [
+    {
+      "ID": 0,
+      "Name": "Bread",
+      "Description": "Whole grain bread",
+      "ReleaseDate": "1992-01-01T00:00:00Z",
+      "DiscontinuedDate": null,
+      "Rating": 4,
+      "Price": 2.5
+    },
+    {
+      "ID": 1,
+      "Name": "Milk",
+      "Description": "Low fat milk",
+      "ReleaseDate": "1995-10-01T00:00:00Z",
+      "DiscontinuedDate": null,
+      "Rating": 3,
+      "Price": 3.5
+    }
+  ]
+}

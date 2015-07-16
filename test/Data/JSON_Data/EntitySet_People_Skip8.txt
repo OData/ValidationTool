@@ -1,0 +1,158 @@
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 2000
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 28 May 2014 06:52:22 GMT
+Set-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+{
+    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People",
+    "@odata.count": 20,
+    "@odata.nextLink": "http://services.odata.org/v4/TripPinService/People?%24count=true&%24skiptoken=16",
+    "value": [
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('marshallgaray')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('marshallgaray')",
+            "UserName": "marshallgaray",
+            "FirstName": "Marshall",
+            "LastName": "Garay",
+            "Emails": [
+                "Marshall@example.com",
+                "Marshall@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('ryantheriault')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('ryantheriault')",
+            "UserName": "ryantheriault",
+            "FirstName": "Ryan",
+            "LastName": "Theriault",
+            "Emails": [
+                "Ryan@example.com",
+                "Ryan@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('elainestewart')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('elainestewart')",
+            "UserName": "elainestewart",
+            "FirstName": "Elaine",
+            "LastName": "Stewart",
+            "Emails": [
+                "Elaine@example.com",
+                "Elaine@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('salliesampson')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('salliesampson')",
+            "UserName": "salliesampson",
+            "FirstName": "Sallie",
+            "LastName": "Sampson",
+            "Emails": [
+                "Sallie@example.com",
+                "Sallie@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "87 Polk St. Suite 5",
+                    "City": {
+                        "Country": "United States",
+                        "Name": "San Francisco",
+                        "Region": "CA"
+                    }
+                },
+                {
+                    "Address": "89 Chiaroscuro Rd.",
+                    "City": {
+                        "Country": "United States",
+                        "Name": "Portland",
+                        "Region": "OR"
+                    }
+                }
+            ],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('jonirosales')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('jonirosales')",
+            "UserName": "jonirosales",
+            "FirstName": "Joni",
+            "LastName": "Rosales",
+            "Emails": [
+                "Joni@example.com",
+                "Joni@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('georginabarlow')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('georginabarlow')",
+            "UserName": "georginabarlow",
+            "FirstName": "Georgina",
+            "LastName": "Barlow",
+            "Emails": [
+                "Georgina@example.com",
+                "Georgina@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('angelhuffman')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('angelhuffman')",
+            "UserName": "angelhuffman",
+            "FirstName": "Angel",
+            "LastName": "Huffman",
+            "Emails": [
+                "Angel@example.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('laurelosborn')",
+            "@odata.etag": "W/\"08D175EA5218001C\"",
+            "@odata.editLink": "http://services.odata.org/V4/TripPinService/People('laurelosborn')",
+            "UserName": "laurelosborn",
+            "FirstName": "Laurel",
+            "LastName": "Osborn",
+            "Emails": [
+                "Laurel@example.com",
+                "Laurel@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Female",
+            "Concurrency": 635418671696052200
+        }
+    ]
+}

@@ -1,0 +1,613 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 15205
+Content-Type: application/xml;charset=utf-8
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Tue, 05 Aug 2014 02:45:40 GMT
+
+
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml">
+     <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Measures.V1.xml">
+     <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.TripPin" Alias="HelloTest">
+      <EnumType Name="PersonGender">
+        <Member Name="Male" Value="0"/>
+        <Member Name="Female" Value="1"/>
+        <Member Name="Unknown" Value="2"/>
+      </EnumType>
+	  <EnumType Name="TestFileAccess" UnderlyingType="Edm.Int32" IsFlags="true">
+		  <Member Name="Read"   Value="1" />
+		  <Member Name="Write"  Value="2" />
+		  <Member Name="Create" Value="4" />
+		  <Member Name="Delete" Value="8" />
+	  </EnumType>
+	  <EnumType Name="TestIsFlageFalse" UnderlyingType="Edm.Int32" IsFlags="false">
+		  <Member Name="Read"   Value="1" />
+		  <Member Name="Write"  Value="2" /> 
+	  </EnumType>
+	  	  <EnumType Name="TestIsFlageFalseNoValue" UnderlyingType="Edm.Int32" IsFlags="false">
+		  <Member Name="Read" />
+		  <Member Name="Write" /> 
+	  </EnumType>
+	    <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
+		  <Annotation Term="HelloTest.TestTermForTD" String="Centimeters" />
+		</TypeDefinition>
+		 
+		<TypeDefinition Name="Weight" UnderlyingType="Edm.Int32">
+		  <Annotation Term="HelloTest.TestTermForTD" String="Kilograms" />
+		</TypeDefinition>
+ 
+		<ComplexType Name="Size">
+		  <Property Name="Height" Type="Edm.Double" />
+		  <Property Name="Weight" Type="Edm.Double" />
+		</ComplexType>
+      <ComplexType Name="City">
+        <Property Name="CountryRegion" Type="Edm.String" Nullable="false"/>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+        <Property Name="Region" Type="Edm.String" Nullable="false"/>
+      </ComplexType>
+      <ComplexType Name="Location" OpenType="true">
+        <Property Name="Address" Type="Edm.String" Nullable="false"/>
+        <Property Name="City" Type="Microsoft.OData.SampleService.Models.TripPin.City" Nullable="false"/>
+      </ComplexType>
+      <ComplexType Name="EventLocation" BaseType="Microsoft.OData.SampleService.Models.TripPin.Location" OpenType="true">
+        <Property Name="BuildingInfo" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="AirportLocation" BaseType="Microsoft.OData.SampleService.Models.TripPin.Location" OpenType="true">
+        <Property Name="Loc" Type="Edm.GeographyPoint" Nullable="false" SRID="4326"/>
+        <Property Name="Line" Type="Edm.GeographyLineString" />
+		<Property Name="BuildingInfo" Type="HelloTest.EventLocation"/>
+		<NavigationProperty Name="Airline" Type="Microsoft.OData.SampleService.Models.TripPin.Airline" Nullable="false"/>
+      </ComplexType>
+      <EntityType Name="Photo" HasStream="true">
+        <Key>
+          <PropertyRef Name="Id"/>
+        </Key>
+        <Property Name="Id" Type="Edm.Int64" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Permissions">
+            <EnumMemberReference Name="Org.OData.Core.V1.Permission/Read"/>
+          </Annotation>
+        </Property>
+        <Property Name="Name" Type="Edm.String"/>
+		<Property Name="Style" Type="Edm.String" Nullable="true"/>
+		<Property Name="TestProperty4139" Type="Edm.String" Nullable="false"/>
+        <Annotation Term="Org.OData.Core.V1.AcceptableMediaTypes">
+          <Collection>
+            <String>image/jpeg</String>
+          </Collection>
+        </Annotation>
+      </EntityType>
+      <EntityType Name="Person" OpenType="true">
+        <Key>
+          <PropertyRef Name="UserName"/>
+        </Key>
+        <Property Name="UserName" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Permissions">
+            <EnumMemberReference Name="Org.OData.Core.V1.Permission/Read"/>
+          </Annotation>
+        </Property>
+        <Property Name="FirstName" Type="Edm.String" Nullable="false"/>
+        <Property Name="LastName" Type="Edm.String" Nullable="false"/>
+        <Property Name="Emails" Type="Collection(Edm.String)" Nullable="false"/>
+        <Property Name="AddressInfo" Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Location)" Nullable="false"/>
+        <Property Name="Gender" Type="Microsoft.OData.SampleService.Models.TripPin.PersonGender"/>
+		<Property Name="Style" Type="Edm.String" Nullable="true"/>
+		<Property Name="PersonEmail4145" Type="Edm.String" Nullable="true"/>
+		<Property Name="TestProperty4139" Type="Edm.String" Nullable="false"/>
+        <Property Name="Concurrency" Type="Edm.Int64" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Computed" Bool="true"/>
+        </Property>
+		<NavigationProperty Name="Photo" Type="Microsoft.OData.SampleService.Models.TripPin.Photo" >
+			<ReferentialConstraint Property="Style" ReferencedProperty="Style" Nullable="true"/>
+		</NavigationProperty>
+        <NavigationProperty Name="Friends" Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Person)">
+			<OnDelete Action="Cascade" />
+			<ReferentialConstraint Property="PersonEmail4145" ReferencedProperty="Emails"/>
+		</NavigationProperty>
+        <NavigationProperty Name="NP4139" Type="Microsoft.OData.SampleService.Models.TripPin.Photo" Nullable="false">
+			<ReferentialConstraint Property="TestProperty4139" ReferencedProperty="TestProperty4139"/>
+		</NavigationProperty>
+		
+		<NavigationProperty Name="Trips" Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)" ContainsTarget="true"/>
+      </EntityType>
+      <EntityType Name="Airline">
+        <Key>
+          <PropertyRef Name="AirlineCode"/>
+        </Key>
+        <Property Name="AirlineCode" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Permissions">
+            <EnumMemberReference Name="Org.OData.Core.V1.Permission/Read"/>
+          </Annotation>
+        </Property>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+	  <EntityType Name="Empty">
+		<Key>
+			<PropertyRef Name="Name"/>
+		</Key>
+        <Property Name="NotSupposedToAppear" Type="Edm.String" Nullable="false"/>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+	  </EntityType>
+      <EntityType Name="Airport">
+        <Key>
+          <PropertyRef Name="IcaoCode"/>
+        </Key>
+        <Property Name="IcaoCode" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Permissions">
+            <EnumMemberReference Name="Org.OData.Core.V1.Permission/Read"/>
+          </Annotation>
+        </Property>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+        <Property Name="IataCode" Type="Edm.String" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Immutable" Bool="true"/>
+        </Property>
+        <Property Name="Location" Type="Microsoft.OData.SampleService.Models.TripPin.AirportLocation" Nullable="false"/>
+      </EntityType>
+       <EntityType Name="ArrialsTest4189">
+        <Key>
+          <PropertyRef Name="Info/Name" Alias="CityName"/>
+        </Key>
+        <Property Name="Info" Type="Microsoft.OData.SampleService.Models.TripPin.City" Nullable="false"/>
+        <Property Name="Location" Type="Microsoft.OData.SampleService.Models.TripPin.AirportLocation" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="PlanItem">
+        <Key>
+          <PropertyRef Name="PlanItemId"/>
+        </Key>
+        <Property Name="PlanItemId" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Permissions">
+            <EnumMemberReference Name="Org.OData.Core.V1.Permission/Read"/>
+          </Annotation>
+        </Property>
+        <Property Name="ConfirmationCode" Type="Edm.String" MaxLength="20" Precision="0"/>
+        <Property Name="StartsAt" Type="Edm.DateTimeOffset" Precision="0"/>
+        <Property Name="EndsAt" Type="Edm.DateTimeOffset" Precision="11"/>
+        <Property Name="Duration" Type="Edm.Duration" />
+      </EntityType>
+      <EntityType Name="PublicTransportation" BaseType="Microsoft.OData.SampleService.Models.TripPin.PlanItem">
+	    <Key>
+          <PropertyRef Name="FlightNO"/>
+        </Key>
+		<Property Name="FlightNO" Type="Edm.String" Nullable="false"/>
+        <Property Name="SeatNumber" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="Flight" BaseType="Microsoft.OData.SampleService.Models.TripPin.PublicTransportation">
+	    <Key>
+			<PropertyRef Name="FlightNumber"/>
+		</Key>
+        <Property Name="FlightNumber" Type="Edm.String" Nullable="false"/>
+        <NavigationProperty Name="From" Type="Microsoft.OData.SampleService.Models.TripPin.Airport" Nullable="false"/>
+        <NavigationProperty Name="To" Type="Microsoft.OData.SampleService.Models.TripPin.Airport" Nullable="false"/>
+        <NavigationProperty Name="Airline" Type="Microsoft.OData.SampleService.Models.TripPin.Airline" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Event" BaseType="Microsoft.OData.SampleService.Models.TripPin.PlanItem" OpenType="true">
+	  	<Property Name="Description" Type="Edm.String"/>
+		<Property Name="OccursAt" Type="Microsoft.OData.SampleService.Models.TripPin.EventLocation" Nullable="false"/>
+		<Property Name="Price" Type="Edm.Decimal" Precision="3" Scale="2" />
+      </EntityType>
+      <EntityType Name="Trip">
+        <Key>
+          <PropertyRef Name="TripId"/>
+        </Key>
+        <Property Name="TripId" Type="Edm.Int32" Nullable="false">
+          <Annotation Term="Org.OData.Core.V1.Permissions">
+            <EnumMemberReference Name="Org.OData.Core.V1.Permission/Read"/>
+          </Annotation>
+        </Property>
+        <Property Name="ShareId" Type="Edm.Guid"/>
+        <Property Name="Description" Type="Edm.String"/>
+        <Property Name="Name" Type="Edm.String" Nullable="false"/>
+        <Property Name="Budget" Type="Edm.Single" Nullable="false">
+          <Annotation Term="Org.OData.Measures.V1.ISOCurrency" String="USD"/>
+          <Annotation Term="Org.OData.Measures.V1.Scale" Int="2"/>
+        </Property>
+        <Property Name="StartsAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="EndsAt" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="Tags" Type="Collection(Edm.String)" Nullable="false"/>
+        <NavigationProperty Name="Photos" Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Photo)" />
+        <NavigationProperty Name="PlanItems" Type="Collection(Microsoft.OData.SampleService.Models.TripPin.PlanItem)" ContainsTarget="true"/>
+		<NavigationProperty Name="PlanItemsTest" Type="Microsoft.OData.SampleService.Models.TripPin.Trip" ContainsTarget="true" Partner="PlanItemsTest"/>
+      </EntityType> 
+	  <EntityType Name="TestAbastractBase4167" Abstract="true">
+	  	<Key>
+			<PropertyRef Name="TestID"/>
+		</Key>
+		<Property Name="TestID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Description" Type="Edm.String"/>
+        <Property Name="OccursAt" Type="Microsoft.OData.SampleService.Models.TripPin.EventLocation" Nullable="false"/> 
+		<Property Name="Price" Type="Edm.Decimal" Precision="3" Scale="2" />
+      </EntityType>
+	  <EntityType Name="TestAbastractDerived4167" Abstract="true" BaseType="HelloTest.TestAbastractBase4167">
+	  	<Key>
+			<PropertyRef Name="Messages"/>
+		</Key>
+		<Property Name="Messages" Type="Edm.String" Nullable="false"/>
+      </EntityType> 
+	  <EntityType Name="Test4114" Abstract="true">
+	  	<Key>
+			<PropertyRef Name="Name"/>
+		</Key>
+		<Property Name="Name" Type="Edm.String" Nullable="false"/>
+		<NavigationProperty Name="NvigationProperty_B" Type="Microsoft.OData.SampleService.Models.TripPin.Test4121"  Partner="NvigationProperty4121_B"/>
+      </EntityType> 
+	  <EntityType Name="Test4121" BaseType="HelloTest.Trip"> 
+	  	<Key>
+			<PropertyRef Name="Test1"/>
+		</Key>
+		<Property Name="Test1" Type="Edm.String" Nullable="false" DefaultValue="Unspecified"/>
+		<NavigationProperty Name="NvigationProperty4121_B" Type="Microsoft.OData.SampleService.Models.TripPin.Test4114"  Partner="NvigationProperty_B"/> 
+      </EntityType> 
+      <Function Name="GetFavoriteAirline" IsBound="true" EntitySetPath="person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline" IsComposable="true">
+        <Parameter Name="person" Type="Microsoft.OData.SampleService.Models.TripPin.Person" Nullable="false"/>
+        <ReturnType Type="Microsoft.OData.SampleService.Models.TripPin.Airline" Nullable="false"/>
+      </Function>
+      <Function Name="GetInvolvedPeople" IsBound="true" IsComposable="true">
+        <Parameter Name="trip" Type="Microsoft.OData.SampleService.Models.TripPin.Trip" Nullable="false"/>
+        <ReturnType Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Person)" Nullable="false"/>
+      </Function>
+	  <Function Name="GetInvolvedPeople" IsBound="true">
+        <Parameter Name="trip4270" Type="Microsoft.OData.SampleService.Models.TripPin.Trip" Nullable="false"/>
+        <ReturnType Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Person)" Nullable="false"/>
+      </Function>
+      <Function Name="GetFriendsTrips" IsBound="true" EntitySetPath="person/Friends/Trips" IsComposable="true">
+        <Parameter Name="person" Type="Microsoft.OData.SampleService.Models.TripPin.Person" Nullable="false"/>
+        <Parameter Name="userName" Type="Edm.String" Nullable="false"/>
+        <ReturnType Type="Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)" Nullable="false"/>
+      </Function>
+      <Function Name="GetNearestAirport" IsComposable="true" IsBound="false">
+        <Parameter Name="lat" Type="Edm.Double" Nullable="false"/>
+        <Parameter Name="lon" Type="Edm.Double" Nullable="false"/>
+        <ReturnType Type="Microsoft.OData.SampleService.Models.TripPin.Airport" Nullable="true"/>
+      </Function>	  
+	  <Function Name="GetNearestAirport" IsBound="false">
+        <Parameter Name="lat" Type="Edm.Double"/>
+        <Parameter Name="lon" Type="Edm.Double"/>
+        <ReturnType Type="Microsoft.OData.SampleService.Models.TripPin.Airport" Nullable="true"/>
+      </Function>
+	  <Function Name="GetSize" IsBound="false">
+        <Parameter Name="AirlineCode" Type="Edm.String"/>
+        <ReturnType Type="HelloTest.Size" Nullable="false"/>
+      </Function>	  
+      <Action Name="ResetDataSource"/>
+      <Action Name="ShareTrip" IsBound="true">
+        <Parameter Name="person" Type="Microsoft.OData.SampleService.Models.TripPin.Person" Nullable="false"/>
+        <Parameter Name="userName" Type="Edm.String" Nullable="false"/>
+        <Parameter Name="tripId" Type="Edm.Int32" Nullable="false"/>
+      </Action>
+	  <Action Name="ActionFor4345" IsBound="false">
+        <Parameter Name="tripId" Type="Edm.Int32" Nullable="false"/>
+		<ReturnType Type="HelloTest.Size" Nullable="false"/>
+      </Action>
+	  <Action Name="ActionWithReturnEntityType" IsBound="false">
+        <Parameter Name="tripId" Type="Edm.Int32" Nullable="false"/>
+		<ReturnType Type="Microsoft.OData.SampleService.Models.TripPin.Airport" Nullable="false"/>
+      </Action>
+	  <Action Name="Test4245ShareTrip" IsBound="true" EntitySetPath="person/Friends/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline">
+        <Parameter Name="person" Type="Microsoft.OData.SampleService.Models.TripPin.Person" Nullable="false"/>
+        <Parameter Name="userName" Type="Edm.String" Nullable="false"/>
+        <Parameter Name="tripId" Type="Edm.Int32" Nullable="false"/>
+		<ReturnType Type="HelloTest.Airline"/>
+      </Action>
+      <EntityContainer Name="DefaultContainer">
+		<EntitySet Name="Empty" EntityType="Microsoft.OData.SampleService.Models.TripPin.Empty"/>
+        <EntitySet Name="Photos" EntityType="Microsoft.OData.SampleService.Models.TripPin.Photo">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Photos"/>
+          <Annotation Term="Org.OData.Capabilities.V1.SearchRestrictions">
+            <Record>
+              <PropertyValue Property="Searchable" Bool="true"/>
+              <PropertyValue Property="UnsupportedExpressions">
+                <EnumMemberReference Name="Org.OData.Capabilities.V1.SearchExpressions/none"/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Org.OData.Capabilities.V1.InsertRestrictions">
+            <Record>
+              <PropertyValue Property="Insertable" Bool="true"/>
+              <PropertyValue Property="NonInsertableNavigationProperties">
+                <Collection/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </EntitySet>
+
+        <EntitySet Name="People" EntityType="Microsoft.OData.SampleService.Models.TripPin.Person">
+          <NavigationPropertyBinding Path="Friends" Target="People"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Flight/Airline" Target="Airlines"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Flight/From" Target="Airports"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Flight/To" Target="Airports"/>
+          <NavigationPropertyBinding Path="Photo" Target="Photos"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Trip/Photos" Target="Photos"/>
+          <Annotation Term="Org.OData.Core.V1.OptimisticConcurrency">
+            <Collection>
+              <PropertyPath>Concurrency</PropertyPath>
+            </Collection>
+          </Annotation>
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="People"/>
+          <Annotation Term="Org.OData.Capabilities.V1.NavigationRestrictions">
+            <Record>
+              <PropertyValue Property="Navigability">
+                <EnumMemberReference Name="Org.OData.Capabilities.V1.NavigationType/None"/>
+              </PropertyValue>
+              <PropertyValue Property="RestrictedProperties">
+                <Collection>
+                  <Record>
+                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="Friends"/>
+                    <PropertyValue Property="Navigability">
+                      <EnumMemberReference Name="Org.OData.Capabilities.V1.NavigationType/Recursive"/>
+                    </PropertyValue>
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Org.OData.Capabilities.V1.SearchRestrictions">
+            <Record Type = "Microsoft.OData.SampleService.Models.TripPin.Airport">
+              <PropertyValue Property="Searchable" Bool="true"/>
+              <PropertyValue Property="UnsupportedExpressions">
+                <EnumMemberReference Name="Org.OData.Capabilities.V1.SearchExpressions/none"/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Org.OData.Capabilities.V1.InsertRestrictions">
+            <Record>
+              <PropertyValue Property="Insertable" Bool="true"/>
+              <PropertyValue Property="NonInsertableNavigationProperties">
+                <Collection>
+                  <NavigationPropertyPath>Trips</NavigationPropertyPath>
+                  <NavigationPropertyPath>Friends</NavigationPropertyPath>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </EntitySet>
+        <EntitySet Name="Airlines" EntityType="Microsoft.OData.SampleService.Models.TripPin.Airline">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Airlines"/>
+          <Annotation Term="Org.OData.Capabilities.V1.SearchRestrictions">
+            <Record>
+              <PropertyValue Property="Searchable" Bool="true"/>
+              <PropertyValue Property="UnsupportedExpressions">
+                <EnumMemberReference Name="Org.OData.Capabilities.V1.SearchExpressions/none"/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Org.OData.Capabilities.V1.InsertRestrictions">
+            <Record>
+              <PropertyValue Property="Insertable" Bool="true"/>
+              <PropertyValue Property="NonInsertableNavigationProperties">
+                <Collection/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </EntitySet>
+        <EntitySet Name="Airports" EntityType="Microsoft.OData.SampleService.Models.TripPin.Airport">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Airports"/>
+          <Annotation Term="Org.OData.Capabilities.V1.SearchRestrictions">
+            <Record>
+              <PropertyValue Property="Searchable" Bool="true"/>
+              <PropertyValue Property="UnsupportedExpressions">
+                <EnumMemberReference Name="Org.OData.Capabilities.V1.SearchExpressions/none"/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Org.OData.Capabilities.V1.InsertRestrictions">
+            <Record>
+              <PropertyValue Property="Insertable" Bool="false"/>
+              <PropertyValue Property="NonInsertableNavigationProperties">
+                <Collection/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+          <Annotation Term="Org.OData.Capabilities.V1.DeleteRestrictions">
+            <Record>
+              <PropertyValue Property="Deletable" Bool="false"/>
+              <PropertyValue Property="NonDeletableNavigationProperties">
+                <Collection/>
+              </PropertyValue>
+            </Record>
+          </Annotation>
+        </EntitySet>
+		<EntitySet Name="EntitySet4335" EntityType="Microsoft.OData.SampleService.Models.TripPin.ArrialsTest4189"> 
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.AirportLocation/Airline" Target="HelloTest.DefaultContainer/Airlines"/>
+		</EntitySet>
+		<EntitySet Name="EntitySet4328" EntityType="Microsoft.OData.SampleService.Models.TripPin.ArrialsTest4189"> 
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.AirportLocation/Airline" Target="Airlines"/>
+		</EntitySet>
+		<Singleton Name="Sigleton4328" Type="Microsoft.OData.SampleService.Models.TripPin.ArrialsTest4189"> 
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.AirportLocation/Airline" Target="Airlines"/>  
+		  <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Me"/>
+		</Singleton>
+        <Singleton Name="Me" Type="Microsoft.OData.SampleService.Models.TripPin.Person">
+          <NavigationPropertyBinding Path="Friends" Target="People"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Flight/Airline" Target="Airlines"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Flight/From" Target="Airports"/>
+          <NavigationPropertyBinding Path="Microsoft.OData.SampleService.Models.TripPin.Flight/To" Target="Airports"/>
+          <NavigationPropertyBinding Path="Photo" Target="Photos"/>
+		  <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Me"/>
+        </Singleton>
+        <FunctionImport Name="Test4352" Function="Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport" IncludeInServiceDocument="true" EntitySet="HelloTest.DefaultContainer/Airports"/>
+		<FunctionImport Name="Test4353" Function="HelloTest.GetSize" IncludeInServiceDocument="true">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"/>
+        </FunctionImport>
+        <FunctionImport Name="GetNearestAirport" Function="Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport" EntitySet="Airports" IncludeInServiceDocument="true">
+          <Annotation Term="Org.OData.Core.V1.ResourcePath" String="Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"/>
+        </FunctionImport>
+		<ActionImport Name="ActionImport4345" Action="Microsoft.OData.SampleService.Models.TripPin.ActionFor4345"/>
+		<ActionImport Name="ResetDataSource4344" Action="Microsoft.OData.SampleService.Models.TripPin.ActionWithReturnEntityType" EntitySet="HelloTest.DefaultContainer/Airports" />
+		<ActionImport Name="ResetDataSource4343" Action="Microsoft.OData.SampleService.Models.TripPin.ActionWithReturnEntityType" EntitySet="Airports">
+			<Parameter Name="lat" Type="Edm.Double" Nullable="false"/>
+			<Parameter Name="lon" Type="Edm.Double" Nullable="false"/> 
+		</ActionImport>
+        <Annotation Term="Org.OData.Core.V1.Description" String="TripPin service is a sample service for OData V4."/>
+      </EntityContainer>
+	  <Annotations Target="Microsoft.OData.SampleService.Models.TripPin.DefaultContainer">
+        <Annotation Term="Org.OData.Core.V1.DereferenceableIDs" Bool="true"/>
+        <Annotation Term="Org.OData.Core.V1.ConventionalIDs" Bool="true"/>
+        <Annotation Term="Org.OData.Capabilities.V1.ConformanceLevel">
+          <EnumMemberReference Name="Org.OData.Capabilities.V1.ConformanceLevelType/Advanced"/>
+        </Annotation>
+        <Annotation Term="Org.OData.Capabilities.V1.SupportedFormats">
+          <Collection>
+            <String>
+              application/json;odata.metadata=full;IEEE754Compatible=false;odata.streaming=true
+            </String>
+            <String>
+              application/json;odata.metadata=minimal;IEEE754Compatible=false;odata.streaming=true
+            </String>
+            <String>
+              application/json;odata.metadata=none;IEEE754Compatible=false;odata.streaming=true
+            </String>
+          </Collection>
+        </Annotation>
+        <Annotation Term="Org.OData.Capabilities.V1.AsynchronousRequestsSupported" Bool="true"/>
+        <Annotation Term="Org.OData.Capabilities.V1.BatchContinueOnErrorSupported" Bool="false"/>
+        <Annotation Term="Org.OData.Capabilities.V1.FilterFunctions">
+          <Collection>
+            <String>contains</String>
+            <String>endswith</String>
+            <String>startswith</String>
+            <String>length</String>
+            <String>indexof</String>
+            <String>substring</String>
+            <String>tolower</String>
+            <String>toupper</String>
+            <String>trim</String>
+            <String>concat</String>
+            <String>year</String>
+            <String>month</String>
+            <String>day</String>
+            <String>hour</String>
+            <String>minute</String>
+            <String>second</String>
+            <String>round</String>
+            <String>floor</String>
+            <String>ceiling</String>
+            <String>cast</String>
+            <String>isof</String>
+          </Collection>
+        </Annotation>
+      </Annotations>
+	  <Annotations Target="Microsoft.OData.SampleService.Models.TripPin.Trip/Description" Qualifier="Table" Alias = "AddTest">
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Binary>T0RhdGE</Binary>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Bool>true</Bool>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Date>2000-01-01</Date>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<DateTimeOffset>2000-01-01T16:00:00.000-09:00</DateTimeOffset>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Decimal>3.14</Decimal>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Duration>P11D23H59M59.999999999999S</Duration>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<EnumMember>HelloTest.TestFileAccess/Read</EnumMember>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Float>3.14</Float>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Guid>21EC2020-3AEA-1069-A2DD-08002B30309D</Guid>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Int>42</Int>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<TimeOfDay>21:45:00</TimeOfDay>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<String>Product Catalog</String>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<If>
+				<Path>IsFemale</Path>
+				<String>Female</String>
+				<String>Male</String>
+			</If>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+		<Apply Function="odata.concat">
+			<String>Product: </String>
+			<Path>ProductName</Path>
+			<String> (</String>
+			<Path>Available/Quantity</Path>
+			<String> </String>
+			<Path>Available/Unit</Path>
+			<String> available)</String>
+		</Apply>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<IsOf Type="HelloTest.Person">
+				<Path>Customer</Path>
+			</IsOf>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			<Null/>
+		</Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+		  <LabeledElement Name="CustomerFirstName" Path="Person" />
+	    </Annotation> 
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+		  <LabeledElementReference>HelloTest.CustomerFirstName</LabeledElementReference>
+		  <AnnotationPath>Trip/TripId/@Org.OData.Core.V1.Permissions</AnnotationPath>
+	    </Annotation>
+		<Annotation Term="Org.OData.Measures.V1.Unit">
+			  <Cast Type="Edm.Decimal">
+				<Path>Average</Path>
+			  </Cast>
+		</Annotation>	
+	  </Annotations>		
+	  <Annotations Target="Microsoft.OData.SampleService.Models.TripPin.Event/Description">
+		<Annotation Term="Org.OData.Measures.V1.Scale">
+			<Path>@HelloTest.IsURI#Address/Address2</Path>
+		</Annotation>
+	  </Annotations>
+	<EntityType Name="Test4171" BaseType="HelloTest.Person" OpenType="true"> 
+		<Key>
+			<PropertyRef Name="Address"/>
+			<PropertyRef Name="Address2" Type="Edm.String" Nullable="false"/>
+		</Key>
+		<Property Name="Address" Type="Edm.String" Nullable="false"/>
+		<Property Name="Address2" Type="Edm.String" Nullable="false"/>
+    </EntityType>
+	<ComplexType Name="Test4211Base" OpenType="true">
+        <Property Name="Address" Type="Edm.String" Nullable="false"/>
+        <Property Name="City" Type="Microsoft.OData.SampleService.Models.TripPin.City" Nullable="false"/>
+    </ComplexType>
+	<ComplexType Name="Test4211" BaseType="HelloTest.Test4211Base" OpenType="true">
+	</ComplexType>
+	<Term Name="IsURI" Type="Core.Tag" DefaultValue="true" BaseTerm="HelloTest.TestDefaultVaule4363" AppliesTo="Property"> 
+		  <Annotation Term="Core.Description">
+			<String>
+			  Properties and terms annotated with this term MUST contain a valid URI
+			</String>
+		  </Annotation>
+		  <Annotation Term="Core.RequiresType" String="Edm.String" />
+	</Term>	
+	<Term Name="TestDefaultVaule4363" Type="Edm.String" DefaultValue="This is a default string." AppliesTo="Property"> 
+		<Annotation Term="Core.Description">
+			<String>
+			  Properties and terms annotated with this term MUST contain a valid URI
+			</String>
+		  </Annotation> 
+	</Term>
+	<Term Name="TestTermForTD" Type="Edm.String" DefaultValue="This is a default string." AppliesTo="TypeDefinition"/> 
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

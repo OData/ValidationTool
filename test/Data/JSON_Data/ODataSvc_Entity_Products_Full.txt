@@ -1,0 +1,39 @@
+Access-Control-Allow-Headers:Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Allow-Methods:GET
+Access-Control-Allow-Origin:*
+Access-Control-Expose-Headers:DataServiceVersion
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:463
+Content-Type:application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Thu, 07 Aug 2014 07:01:13 GMT
+OData-Version:4.0;
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Content-Type-Options:nosniff
+X-Powered-By:ASP.NET
+
+
+{
+"@odata.context": "http://services.odata.org/V4/OData/OData.svc/$metadata#Products/$entity",
+"@odata.type": "#ODataDemo.Product",
+"@odata.id": "http://services.odata.org/V4/OData/OData.svc/Products(0)",
+"@odata.editLink": "Products(0)",
+"ID": "NaN",
+"Name": "Bread",
+"Description": "Whole grain bread",
+"ReleaseDate@odata.type": "#DateTimeOffset",
+"ReleaseDate": "1992-01-01T00:00:00Z",
+"DiscontinuedDate": null,
+"Rating@odata.type": "#Int16",
+"Rating": "-INF",
+"Price@odata.type": "#Double",
+"Price": "INF",
+"Categories@odata.associationLink": "Products(0)/Categories/$ref",
+"Categories@odata.navigationLink": "Products(0)/Categories",
+"Supplier@odata.associationLink": "Products(0)/Supplier/$ref",
+"Supplier@odata.navigationLink": "Products(0)/Supplier",
+"ProductDetail@odata.associationLink": "Products(0)/ProductDetail/$ref",
+"ProductDetail@odata.navigationLink": "Products(0)/ProductDetail"
+}
