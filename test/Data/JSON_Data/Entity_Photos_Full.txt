@@ -1,0 +1,25 @@
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:357
+Content-Type:application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Wed, 06 Aug 2014 06:49:11 GMT
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#Photos/$entity",
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Photo",
+"@odata.id": "http://services.odata.org/V4/TripPinService/Photos(1)",
+"@odata.readLink": "http://services.odata.org/V4/TripPinService/Photos(1)",
+"@odata.editLink": "http://services.odata.org/V4/TripPinService/Photos(1)",
+"@odata.mediaReadLink": "Photos(1)/$value",
+"@odata.mediaEditLink": "Photos(1)/$value",
+"@odata.mediaContentType": "image/jpeg",
+"@odata.mediaEtag": "W/\"08D17F4C1D5D5E32\"",
+"Id@odata.type": "#Int64",
+"Id": 1,
+"Name": "My Photo 1"
+}

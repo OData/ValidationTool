@@ -1,0 +1,24 @@
+// comments
+OK
+Access-Control-Allow-Headers:Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Allow-Methods:GET
+Access-Control-Allow-Origin:*
+Access-Control-Expose-Headers:DataServiceVersion
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:263
+Content-Type:application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Wed, 20 Aug 2014 09:10:29 GMT
+OData-Version:4.0;
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Content-Type-Options:nosniff
+X-Powered-By:ASP.NET
+
+
+{
+	"@odata.context": "http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$metadata#Categories/$entity",
+	"ID": 0,
+	"Name": "Food"
+}

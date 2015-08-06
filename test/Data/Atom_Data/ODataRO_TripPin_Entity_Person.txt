@@ -1,0 +1,62 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 482
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+Content-Encoding: gzip
+ETag: W/"08D1BC9CFEC0368F"
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Thu, 23 Oct 2014 05:59:48 GMT
+
+<entry xml:base="http://services.odata.org/v4/TripPinService/" m:context="http://services.odata.org/v4/TripPinService/$metadata#People/$entity" m:etag="W/&quot;0&quot;" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<id>http://services.odata.org/v4/TripPinService/People('russellwhyte')</id>
+<category term="#TripPin.Person" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="Person" href="People('russellwhyte')"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Friends" type="application/xml" title="Friends" href="People('russellwhyte')/Friends/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Friends" type="application/atom+xml;type=feed" title="Friends" href="People('russellwhyte')/Friends"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Trips" type="application/xml" title="Trips" href="People('russellwhyte')/Trips/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Trips" type="application/atom+xml;type=entry" title="Trips" href="People('russellwhyte')/Trips">
+<m:inline>
+<feed />
+</m:inline>
+</link>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Photo" type="application/xml" title="Photo" href="People('russellwhyte')/Photo/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Photo" type="application/atom+xml;type=entry" title="Photo" href="People('russellwhyte')/Photo"/>
+<title/>
+<updated>2014-10-22T09:19:35Z</updated>
+<author>
+<name/>
+</author>
+<content type="application/xml">
+<m:properties>
+<d:UserName>russellwhyte</d:UserName>
+<d:FirstName>Russell</d:FirstName>
+<d:LastName>Whyte</d:LastName>
+<d:Emails m:type="Collection(String)">
+<m:element>Russell@example.com</m:element> 
+<m:element>Russell@contoso.com</m:element> 
+</d:Emails>
+<d:TestEmails m:type="Collection(String)">
+<m:element m:null="true" />
+</d:TestEmails>
+<d:AddressInfo m:type="#Collection(Microsoft.OData.SampleService.Models.TripPin.Location)">
+<m:element m:type="#Microsoft.OData.SampleService.Models.TripPin.Location">
+<d:Address>187 Suffolk Ln.</d:Address>
+<d:City m:type="#Microsoft.OData.SampleService.Models.TripPin.City">
+<d:CountryRegion>United States</d:CountryRegion>
+<d:Name>Boise</d:Name>
+<d:Region>ID</d:Region>
+</d:City>
+</m:element>
+</d:AddressInfo>
+<d:TestCities m:type="#Collection(Microsoft.OData.SampleService.Models.TripPin.City)">
+<m:element m:type="#Microsoft.OData.SampleService.Models.TripPin.City" m:null="true" />
+</d:TestCities>
+<d:Gender m:type="#Microsoft.OData.SampleService.Models.TripPin.PersonGender">Male</d:Gender>
+<d:Concurrency m:type="Int64">635496410119905500</d:Concurrency>
+</m:properties>
+</content>
+</entry>

@@ -1,0 +1,30 @@
+// comments 
+OK
+OData-Version: 4.0
+Content-Length: 487
+Cache-Control: no-cache
+Content-Type: multipart/mixed; boundary=batchresponse_1761fc61-2d0b-420c-b2d5-6769b35c6270
+Date: Thu, 21 Aug 2014 09:53:56 GMT
+Set-Cookie: ARRAffinity=ef081d1e88250a21500713cd515fa554a40b318aa4f5dfa2d68e588840ff9f20;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+--batchresponse_1761fc61-2d0b-420c-b2d5-6769b35c6270
+Content-Type: multipart/mixed; boundary=changesetresponse_eef31c2f-3a6c-48c0-b725-a9917957bfe5
+
+--changesetresponse_eef31c2f-3a6c-48c0-b725-a9917957bfe5
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 204 No Content
+ETag: W/"08D18B3CF61AA03C"
+OData-Version: 4.0
+
+
+--changesetresponse_eef31c2f-3a6c-48c0-b725-a9917957bfe5--
+--batchresponse_1761fc61-2d0b-420c-b2d5-6769b35c6270--
+

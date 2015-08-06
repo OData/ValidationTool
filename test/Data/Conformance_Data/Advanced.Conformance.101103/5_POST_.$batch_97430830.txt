@@ -1,0 +1,62 @@
+// comments 
+Accepted
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 1798
+Cache-Control: no-cache
+Content-Type: multipart/mixed; boundary=batchresponse_4e8057cd-7324-4cdf-81f6-dbdef99a425a
+Date: Tue, 12 Aug 2014 10:05:40 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+--batchresponse_4e8057cd-7324-4cdf-81f6-dbdef99a425a
+Content-Type: multipart/mixed; boundary=changesetresponse_2744785d-db79-4581-96ce-1279ca8760d0
+
+--changesetresponse_2744785d-db79-4581-96ce-1279ca8760d0
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 400 Bad Request
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>Content-Type header value missing.</m:message></m:error>
+--changesetresponse_2744785d-db79-4581-96ce-1279ca8760d0--
+--batchresponse_4e8057cd-7324-4cdf-81f6-dbdef99a425a
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+{"@odata.context":"http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$metadata#Products/$entity","ID":11,"Name":"Bread","Description":"Whole grain bread","ReleaseDate":"1992-01-01T00:00:00Z","DiscontinuedDate":null,"Rating":4,"Price":2.5}
+--batchresponse_4e8057cd-7324-4cdf-81f6-dbdef99a425a
+Content-Type: multipart/mixed; boundary=changesetresponse_6be43d65-ced1-4667-a575-a5d427aa9745
+
+--changesetresponse_6be43d65-ced1-4667-a575-a5d427aa9745
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_6be43d65-ced1-4667-a575-a5d427aa9745--
+--batchresponse_4e8057cd-7324-4cdf-81f6-dbdef99a425a--
+

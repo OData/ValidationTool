@@ -1,0 +1,39 @@
+Access-Control-Allow-Headers:Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Allow-Methods:GET
+Access-Control-Allow-Origin:*
+Access-Control-Expose-Headers:DataServiceVersion
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:496
+Content-Type:application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Thu, 07 Aug 2014 08:00:47 GMT
+OData-Version:4.0;
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Content-Type-Options:nosniff
+X-Powered-By:ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/OData/OData.svc/$metadata#PersonDetails/$entity",
+"@odata.type": "#ODataDemo.PersonDetail",
+"@odata.id": "http://services.odata.org/V4/OData/OData.svc/PersonDetails(0)",
+"@odata.editLink": "PersonDetails(0)",
+"PersonID": 0,
+"Age@odata.type": "#Byte",
+"Age": 21,
+"Gender": false,
+"Phone": "(505) 555-5939",
+"Address": {
+"@odata.type": "#ODataDemo.Address",
+"Street": "2817 Milton Dr.",
+"City": "Albuquerque",
+"State": "NM",
+"ZipCode": "87110",
+"Country": "USA"
+},
+"Photo@odata.mediaEditLink": "PersonDetails(0)/Photo",
+"Photo@odata.mediaEtag": "\"nCP1Tf4Uax96eYIWjvoC/6ZflG8=\"",
+"Person@odata.associationLink": "PersonDetails(0)/Person/$ref",
+"Person@odata.navigationLink": "PersonDetails(0)/Person"
+}

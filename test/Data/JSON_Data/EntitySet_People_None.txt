@@ -1,0 +1,148 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 810
+Content-Type: application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Tue, 05 Aug 2014 08:29:53 GMT
+
+
+{
+    "@odata.nextLink": "http://services.odata.org/v4/trippinservice/People?%24format=application%2fjson%3bodata.metadata%3dnone&%24skiptoken=8",
+    "value": [
+        {
+            "UserName": "russellwhyte",
+            "FirstName": "Russell",
+            "LastName": "Whyte",
+            "Emails": [
+                "Russell@example.com",
+                "Russell@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "187 Suffolk Ln.",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Boise",
+                        "Region": "ID"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "scottketchum",
+            "FirstName": "Scott",
+            "LastName": "Ketchum",
+            "Emails": [
+                "Scott@example.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "2817 Milton Dr.",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Albuquerque",
+                        "Region": "NM"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "ronaldmundy",
+            "FirstName": "Ronald",
+            "LastName": "Mundy",
+            "Emails": [
+                "Ronald@example.com",
+                "Ronald@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "javieralfred",
+            "FirstName": "Javier",
+            "LastName": "Alfred",
+            "Emails": [
+                "Javier@example.com",
+                "Javier@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "89 Jefferson Way Suite 2",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Portland",
+                        "Region": "WA"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "willieashmore",
+            "FirstName": "Willie",
+            "LastName": "Ashmore",
+            "Emails": [
+                "Willie@example.com",
+                "Willie@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "vincentcalabrese",
+            "FirstName": "Vincent",
+            "LastName": "Calabrese",
+            "Emails": [
+                "Vincent@example.com",
+                "Vincent@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "55 Grizzly Peak Rd.",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Butte",
+                        "Region": "MT"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "clydeguess",
+            "FirstName": "Clyde",
+            "LastName": "Guess",
+            "Emails": [
+                "Clyde@example.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        },
+        {
+            "UserName": "keithpinckney",
+            "FirstName": "Keith",
+            "LastName": "Pinckney",
+            "Emails": [
+                "Keith@example.com",
+                "Keith@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428241792525000
+        }
+    ]
+}

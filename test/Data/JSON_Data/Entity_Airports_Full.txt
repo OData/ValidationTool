@@ -1,0 +1,49 @@
+Cache-Control:no-cache
+Content-Encoding:gzip
+Content-Length:450
+Content-Type:application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date:Mon, 11 Aug 2014 10:31:57 GMT
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+Vary:Accept-Encoding
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+  "@odata.context": "http://services.odata.org/V4/(S(zvz3xpkxr1bjxnk15arjdypf))/TripPinServiceRW/$metadata#Airports/$entity",
+  "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Airport",
+  "@odata.id": "http://services.odata.org/V4/(S(zvz3xpkxr1bjxnk15arjdypf))/TripPinServiceRW/Airports('KSFO')",
+  "@odata.editLink": "http://services.odata.org/V4/(S(zvz3xpkxr1bjxnk15arjdypf))/TripPinServiceRW/Airports('KSFO')",
+  "IcaoCode": "KSFO",
+  "Name": "San Francisco International Airport",
+  "IataCode": "SFO",
+  "Location": {
+    "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.AirportLocation",
+    "Address": "South McDonnell Road, San Francisco, CA 94128",
+    "City": {
+      "@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.City",
+      "CountryRegion": "United States",
+      "Name": "San Francisco",
+      "Region": "California"
+    },
+    "Loc@odata.type": "#GeographyPoint",
+    "Loc": {
+      "type": "Point",
+      "coordinates": [
+        -122.374722222222,
+        37.6188888888889
+      ],
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "EPSG:4326"
+        }
+      }
+    },
+    "Line@odata.type": "#GeographyLineString",
+    "Line": {
+      "type": "LineString",
+      "coordinates": []
+    }
+  }
+}

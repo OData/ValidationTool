@@ -1,0 +1,16 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 235
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true;charset=utf-8
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Wed, 02 Jul 2014 02:52:49 GMT
+
+{
+    "@odata.context": "http://odatasampleservices.azurewebsites.net/V4/TripPinService/$metadata#People('russellwhyte')/UserName",
+    "value": "russellwhyte"
+}

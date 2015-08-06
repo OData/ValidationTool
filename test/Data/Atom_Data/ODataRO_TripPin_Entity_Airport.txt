@@ -1,0 +1,74 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 482
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+Content-Encoding: gzip
+ETag: W/"08D1BC9CFEC0368F"
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Thu, 23 Oct 2014 05:59:48 GMT
+
+<entry xml:base="http://services.odata.org/v4/TripPinService/" m:context="http://services.odata.org/v4/TripPinService/$metadata#Airports/$entity" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<id>http://services.odata.org/V4/TripPinService/Airports('KSFO')</id>
+<category term="#TripPin.Airport" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="Airport" href="Airports('KSFO')"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/NPTest" type="application/xml" title="NPTest" href="Airports('KSFO')/NPTest/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/NPTest" m:context="navigation.test" type="application/atom+xml;type=feed" title="NPTest" href="Airports('KSFO')/NPTest"/>
+<title/>
+<updated>2014-10-22T09:19:35Z</updated>
+<author>
+<name/>
+</author>
+<content type="application/xml">
+<m:properties>
+<d:IcaoCode>KSFO</d:IcaoCode>
+<d:Name>San Francisco International Airport</d:Name>
+<d:Location m:type="#Microsoft.OData.SampleService.Models.TripPin.AirportLocation">
+<d:Address>South McDonnell Road, San Francisco, CA 94128</d:Address>
+<d:City m:type="#Microsoft.OData.SampleService.Models.TripPin.City">
+<d:CountryRegion>United States</d:CountryRegion>
+<d:Name>San Francisco</d:Name>
+<d:Region>California</d:Region>
+</d:City>
+<d:Loc m:type="#GeographyPoint">
+<gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+<gml:pos>-122.374722222222, 37.6188888888889</gml:pos>
+</gml:Point>
+</d:Loc>
+</d:Location>
+<d:Locations m:type="#Collection(Microsoft.OData.SampleService.Models.TripPin.AirportLocation)">
+<m:element m:type="#Microsoft.OData.SampleService.Models.TripPin.AirportLocation">
+<d:Address>South McDonnell Road, San Francisco, CA 94128</d:Address>
+<d:City m:type="#Microsoft.OData.SampleService.Models.TripPin.City">
+<d:CountryRegion>United States</d:CountryRegion>
+<d:Name>San Francisco</d:Name>
+<d:Region>California</d:Region>
+</d:City>
+<d:Loc m:type="#GeographyPoint">
+<gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+<gml:pos>-122.374722222222, 37.6188888888889</gml:pos>
+</gml:Point>
+</d:Loc>
+</m:element>
+</d:Locations>
+<d:TestInstance m:type="#Microsoft.OData.SampleService.Models.TripPin.Test">
+<d:Name>TestName</d:Name>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Friends" type="application/atom+xml;type=feed" title="Friends" href="Airports('KSFO')/TestInstance/Friends"/>
+</d:TestInstance>
+<d:TestInstances m:type="#Collection(Microsoft.OData.SampleService.Models.TripPin.Test)">
+<m:element m:type="#Microsoft.OData.SampleService.Models.TripPin.Test">
+<d:Name>TestName</d:Name>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Friends" type="application/atom+xml;type=feed" title="Friends" href="Airports('KSFO')/TestInstance/Friends"/>
+</m:element>
+<m:element m:type="#Microsoft.OData.SampleService.Models.TripPin.InheritedTest">
+<d:Name>InheritedTestName</d:Name>
+<d:Alias>TestAlias</d:Alias>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Friends" type="application/atom+xml;type=feed" title="Friends" href="Airports('KSFO')/TestInstance/Friends"/>
+</m:element>
+</d:TestInstances>
+</m:properties>
+</content>
+</entry>

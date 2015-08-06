@@ -1,0 +1,177 @@
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 2000
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 28 May 2014 06:52:22 GMT
+Set-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+{
+    "@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People",
+	"@odata.count":20,
+    "@odata.nextLink": "http://services.odata.org/v4/trippinservice/People?%24format=application%2fjson%3bodata.metadata%3dminimal&%24skiptoken=8",
+    "value": [
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('russellwhyte')",
+            "UserName": "russellwhyte",
+            "FirstName": "Russell",
+            "LastName": "Whyte",
+	    "Emails@odata.type": "#Collection(String)",
+            "Emails": [
+                "Russell@example.com",
+                "Russell@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "187 Suffolk Ln.",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Boise",
+                        "Region": "ID"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('scottketchum')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('scottketchum')",
+            "UserName": "scottketchum",
+            "FirstName": "Scott",
+            "LastName": "Ketchum",
+            "Emails": [
+                "Scott@example.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "2817 Milton Dr.",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Albuquerque",
+                        "Region": "NM"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('ronaldmundy')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('ronaldmundy')",
+            "UserName": "ronaldmundy",
+            "FirstName": "Ronald",
+            "LastName": "Mundy",
+            "Emails": [
+                "Ronald@example.com",
+                "Ronald@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('javieralfred')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('javieralfred')",
+            "UserName": "javieralfred",
+            "FirstName": "Javier",
+            "LastName": "Alfred",
+            "Emails": [
+                "Javier@example.com",
+                "Javier@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "89 Jefferson Way Suite 2",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Portland",
+                        "Region": "WA"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('willieashmore')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('willieashmore')",
+            "UserName": "willieashmore",
+            "FirstName": "Willie",
+            "LastName": "Ashmore",
+            "Emails": [
+                "Willie@example.com",
+                "Willie@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('vincentcalabrese')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('vincentcalabrese')",
+            "UserName": "vincentcalabrese",
+            "FirstName": "Vincent",
+            "LastName": "Calabrese",
+            "Emails": [
+                "Vincent@example.com",
+                "Vincent@contoso.com"
+            ],
+            "AddressInfo": [
+                {
+                    "Address": "55 Grizzly Peak Rd.",
+                    "City": {
+                        "CountryRegion": "United States",
+                        "Name": "Butte",
+                        "Region": "MT"
+                    }
+                }
+            ],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('clydeguess')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('clydeguess')",
+            "UserName": "clydeguess",
+            "FirstName": "Clyde",
+            "LastName": "Guess",
+            "Emails": [
+                "Clyde@example.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        },
+        {
+            "@odata.id": "http://services.odata.org/V4/TripPinService/People('keithpinckney')",
+            "@odata.etag": "W/\"08D17E87F207D4C9\"",
+            "@odata.editLink": "People('keithpinckney')",
+            "UserName": "keithpinckney",
+            "FirstName": "Keith",
+            "LastName": "Pinckney",
+            "Emails": [
+                "Keith@example.com",
+                "Keith@contoso.com"
+            ],
+            "AddressInfo": [],
+            "Gender": "Male",
+            "Concurrency": 635428144782234900
+        }
+    ]
+}

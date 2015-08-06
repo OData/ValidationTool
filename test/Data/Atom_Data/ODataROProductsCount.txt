@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 1
+Content-Type: text/plain;charset=utf-8
+Server: Microsoft-IIS/8.0
+DataServiceVersion: 2.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Set-Cookie: ARRAffinity=a82d40cb1a62615b8b53889a954fc70ba73c57eb07a8363028cca705354e0064;Path=/;Domain=services.odata.org
+Date: Tue, 28 Oct 2014 10:20:07 GMT
+
+12

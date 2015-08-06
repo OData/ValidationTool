@@ -1,0 +1,13 @@
+// comments 
+OK
+Preference-Applied: respond-async
+OData-Version: 4.0
+Content-Length: 0
+Cache-Control: no-cache
+Content-Type: application/octet-stream
+Date: Thu, 21 Aug 2014 10:17:05 GMT
+Location: http://odatasampleservices.azurewebsites.net/V4/OData/(S(woo55oie4mkbqdjser242w4q))/OData.svc/$async?$asyncToken=635442130255477400
+Set-Cookie: ARRAffinity=ef081d1e88250a21500713cd515fa554a40b318aa4f5dfa2d68e588840ff9f20;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET

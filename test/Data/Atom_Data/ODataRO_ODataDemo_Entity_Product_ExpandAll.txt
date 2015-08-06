@@ -1,0 +1,107 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 826
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Date: Wed, 22 Oct 2014 09:19:35 GMT
+
+<entry xml:base="http://services.odata.org/V4/OData/OData.svc/" m:context="http://services.odata.org/V4/OData/OData.svc/$metadata#Products/$entity" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<id>http://services.odata.org/V4/OData/OData.svc/Products(0)</id>
+<category term="#ODataDemo.Product" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="Product" href="Products(0)"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Categories" type="application/xml" title="Categories" href="Products(0)/Categories/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Categories" type="application/atom+xml;type=feed" title="Categories" href="Products(0)/Categories">
+<m:inline>
+<feed>
+<id>http://services.odata.org/V4/OData/OData.svc/Products(0)/Categories</id>
+<title type="text">Categories</title>
+<updated>2014-11-04T06:33:29Z</updated>
+<link rel="self" title="Categories" href="Products(0)/Categories"/>
+<entry>
+<id>http://services.odata.org/V4/OData/OData.svc/Categories(0)</id>
+<category term="#ODataDemo.Category" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="Category" href="Categories(0)"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Products" type="application/xml" title="Products" href="Categories(0)/Products/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Products" type="application/atom+xml;type=feed" title="Products" href="Categories(0)/Products"/>
+<title/>
+<updated>2014-11-04T06:33:29Z</updated>
+<author>
+<name/>
+</author>
+<content type="application/xml">
+<m:properties>
+<d:ID m:type="Int32">0</d:ID>
+<d:Name>Food</d:Name>
+</m:properties>
+</content>
+</entry>
+</feed>
+</m:inline>
+</link>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Supplier" type="application/xml" title="Supplier" href="Products(0)/Supplier/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Supplier" type="application/atom+xml;type=entry" title="Supplier" href="Products(0)/Supplier">
+<m:inline>
+<entry m:etag="W/&quot;0&quot;">
+<id>http://services.odata.org/V4/OData/OData.svc/Suppliers(1)</id>
+<category term="#ODataDemo.Supplier" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+<link rel="edit" title="Supplier" href="Suppliers(1)"/>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/Products" type="application/xml" title="Products" href="Suppliers(1)/Products/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/Products" type="application/atom+xml;type=feed" title="Products" href="Suppliers(1)/Products"/>
+<title/>
+<updated>2014-11-04T06:33:29Z</updated>
+<author>
+<name/>
+</author>
+<content type="application/xml">
+<m:properties>
+<d:ID m:type="Int32">1</d:ID>
+<d:Name>Tokyo Traders</d:Name>
+<d:Address m:type="#ODataDemo.Address">
+<d:Street>NE 40th</d:Street>
+<d:City>Redmond</d:City>
+<d:State>WA</d:State>
+<d:ZipCode>98052</d:ZipCode>
+<d:Country>USA</d:Country>
+</d:Address>
+<d:Location m:type="GeographyPoint">
+<gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+<gml:pos>47.6472206115723 -122.107711791992</gml:pos>
+</gml:Point>
+</d:Location>
+<d:Concurrency m:type="Int32">0</d:Concurrency>
+</m:properties>
+</content>
+</entry>
+</m:inline>
+</link>
+<link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/ProductDetail" type="application/xml" title="ProductDetail" href="Products(0)/ProductDetail/$ref"/>
+<link rel="http://docs.oasis-open.org/odata/ns/related/ProductDetail" type="application/atom+xml;type=entry" title="ProductDetail" href="Products(0)/ProductDetail">
+<m:inline/>
+</link>
+<title/>
+<updated>2014-11-04T06:33:29Z</updated>
+<author>
+<name/>
+</author>
+<content type="application/xml">
+<m:properties>
+<d:ID m:type="Int32">0</d:ID>
+<d:Name>Bread</d:Name>
+<d:Description>Whole grain bread</d:Description>
+<d:ReleaseDate m:type="DateTimeOffset">1992-01-01T00:00:00Z</d:ReleaseDate>
+<d:DiscontinuedDate m:null="true"/>
+<d:Rating m:type="Int16">4</d:Rating>
+<d:Price m:type="Double">2.5</d:Price>
+</m:properties>
+</content>
+</entry>

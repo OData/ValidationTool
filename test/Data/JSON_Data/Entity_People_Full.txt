@@ -1,0 +1,65 @@
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 856
+Cache-Control: no-cache
+Content-Type: application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+Date: Wed, 28 May 2014 06:54:15 GMT
+Set-Cookie: ARRAffinity=d0e5419c92e823022a1378d3fb5680ef4e6597abaa7678086a75cbb41e28ff8e;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People/$entity",
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Person",
+"@odata.id": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+"@odata.etag": "W/\"08D17F4C1D5FC3BD\"",
+"@odata.editLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')",
+"UserName": "russellwhyte",
+"FirstName": "Russell",
+"LastName": "Whyte",
+"Emails@odata.type": "#Collection(String)",
+"Emails": [
+"Russell@example.com",
+"Russell@contoso.com"
+],
+"AddressInfo@odata.type": "#Collection(Microsoft.OData.SampleService.Models.TripPin.Location)",
+"AddressInfo": [
+{
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Location",
+"Address": "187 Suffolk Ln.",
+"City": {
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.City",
+"CountryRegion": "United States",
+"Name": "Boise",
+"Region": "ID"
+}
+}
+],
+"Gender@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.PersonGender",
+"Gender": "Male",
+"Concurrency@odata.type": "#Int64",
+"Concurrency": 635428987323007900,
+"Friends@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Friends/$ref",
+"Friends@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Friends",
+"Trips@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips/$ref",
+"Trips@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Trips",
+"Photo@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Photo/$ref",
+"Photo@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Photo",
+"#Microsoft.OData.SampleService.Models.TripPin.ShareTrip": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.ShareTrip",
+"target": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Microsoft.OData.SampleService.Models.TripPin.ShareTrip"
+},
+"#Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline",
+"target": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline"
+},
+"#Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips",
+"target": "http://services.odata.org/V4/TripPinService/People('russellwhyte')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips"
+}
+}

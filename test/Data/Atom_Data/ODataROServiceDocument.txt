@@ -1,0 +1,54 @@
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-Length: 1019
+Content-Type: application/atomsvc+xml;application/xml;charset=utf-8
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0;
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Set-Cookie: ARRAffinity=f52a868fbb9bda30202dea2c82bfa2f9350871e50836757efd92afab45cf9549;Path=/;Domain=services.odata.org
+Date: Mon, 13 Oct 2014 09:29:48 GMT
+
+<service xml:base="http://services.odata.org/V4/OData/OData.svc/" m:context="http://services.odata.org/V4/OData/OData.svc/$metadata" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+<workspace>
+<atom:title type="text">Default</atom:title>
+<collection href="Products" m:name="Products">
+<atom:title type="text">Products</atom:title>
+</collection>
+<collection href="ProductDetails">
+<atom:title type="text">ProductDetails</atom:title>
+</collection>
+<collection href="Categories">
+<atom:title type="text">Categories</atom:title>
+</collection>
+<collection href="Suppliers">
+<atom:title type="text">Suppliers</atom:title>
+</collection>
+<collection href="Persons">
+<atom:title type="text">Persons</atom:title>
+</collection>
+<collection href="PersonDetails">
+<atom:title type="text">PersonDetails</atom:title>
+</collection>
+<collection href="Advertisements">
+<atom:title type="text">Advertisements</atom:title>
+</collection>
+<m:function-import href="TopProducts" m:name="TopProducts">
+<atom:title>Best-Selling Products</atom:title>
+</m:function-import>
+<m:singleton href="http://ODatademo.me" m:name="Me">
+<atom:title>This is me.</atom:title>
+</m:singleton>
+<m:singleton href="AllAddresses" m:name="AllAddresses">
+<atom:title>These are all the addresses.</atom:title>
+</m:singleton>
+<m:service-document href="http://services.odata.org/V4/Northwind/Northwind.svc/">
+<atom:title>North Wind Company</atom:title>
+</m:service-document>
+</workspace>
+</service>

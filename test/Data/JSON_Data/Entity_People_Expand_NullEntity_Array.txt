@@ -1,0 +1,47 @@
+Cache-Control:no-cache
+Content-Length:0
+Content-Type:application/octet-stream
+Date:Fri, 08 Aug 2014 07:39:31 GMT
+OData-Version:4.0
+Server:Microsoft-IIS/8.0
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+
+{
+"@odata.context": "http://services.odata.org/V4/TripPinService/$metadata#People/$entity",
+"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Person",
+"@odata.id": "http://services.odata.org/V4/TripPinService/People('clydeguess')",
+"@odata.etag": "W/\"08D193D1C44A8D87\"",
+"@odata.editLink": "http://services.odata.org/V4/TripPinService/People('clydeguess')",
+"UserName": "clydeguess",
+"FirstName": "Clyde",
+"LastName": "Guess",
+"Emails@odata.type": "#Collection(String)",
+"Emails": [
+"Clyde@example.com"
+],
+"AddressInfo@odata.type": "#Collection(Microsoft.OData.SampleService.Models.TripPin.Location)",
+"AddressInfo": [],
+"Gender@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.PersonGender",
+"Gender": "Male",
+"Concurrency@odata.type": "#Int64",
+"Concurrency": 635433497962399600,
+"Friends@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Friends/$ref",
+"Friends": [],
+"Photo@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Photo/$ref",
+"Photo@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Photo",
+"Trips@odata.associationLink": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Trips/$ref",
+"Trips@odata.navigationLink": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Trips",
+"#Microsoft.OData.SampleService.Models.TripPin.ShareTrip": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.ShareTrip",
+"target": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Microsoft.OData.SampleService.Models.TripPin.ShareTrip"
+},
+"#Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline",
+"target": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline"
+},
+"#Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips": {
+"title": "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips",
+"target": "http://services.odata.org/V4/TripPinService/People('clydeguess')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips"
+}
+}

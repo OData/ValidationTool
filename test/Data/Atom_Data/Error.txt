@@ -1,0 +1,28 @@
+HTTP/1.1 415 Unsupported Media Type
+Cache-Control: private
+Content-Length: 2143
+Content-Type: application/xml;charset=utf-8;application/atom+xml
+Server: Microsoft-IIS/8.0
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Set-Cookie: ARRAffinity=ccdfe40577c03ff4a86c765d399d28be6dce3021fa5617b910069b46d68b322d;Path=/;Domain=services.odata.org
+Date: Tue, 11 Nov 2014 02:44:51 GMT
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+<m:code />
+<m:message>Unsupported media type requested.</m:message>
+<m:innererror><m:message>A supported MIME type could not be found that matches the acceptable MIME types for the request. The supported type(s) 'application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false, application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true, application/json;odata.metadata=minimal;odata.streaming=true, application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false, application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true, application/json;odata.metadata=minimal;odata.streaming=false, application/json;odata.metadata=minimal;IEEE754Compatible=false, application/json;odata.metadata=minimal;IEEE754Compatible=true, application/json;odata.metadata=minimal, application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false, application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true, application/json;odata.metadata=full;odata.streaming=true, application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false, application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatib...' do not match any of the acceptable MIME types 'application/atom'.</m:message>
+<m:type>Microsoft.OData.Core.ODataContentTypeException</m:type>
+<m:stacktrace>   at Microsoft.OData.Core.MediaTypeUtils.GetContentTypeFromSettings(ODataMessageWriterSettings settings, ODataPayloadKind payloadKind, MediaTypeResolver mediaTypeResolver, MediaType&amp; mediaType, Encoding&amp; encoding)&#xD;
+   at Microsoft.OData.Core.ODataMessageWriter.EnsureODataFormatAndContentType()&#xD;
+   at Microsoft.OData.Core.ODataUtils.SetHeadersForPayload(ODataMessageWriter messageWriter, ODataPayloadKind payloadKind)&#xD;
+   at Microsoft.OData.Service.ResponseContentTypeNegotiator.DetermineResponseFormat(ODataPayloadKind payloadKind, String acceptableMediaTypes, String acceptableCharSets)</m:stacktrace>
+   </m:innererror>
+   <m:annotation term="ODataDemo.Product.Display" target="Suppliers(0)/Telephones(0)" m:type="Boolean">true</m:annotation>
+   </m:error>

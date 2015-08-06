@@ -1,0 +1,29 @@
+HTTP/1.1 404 Not Found
+Cache-Control: no-cache
+Content-Length: 948
+Content-Type: application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true;charset=utf-8
+Server: Microsoft-IIS/8.0
+OData-Version: 4.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Wed, 02 Jul 2014 03:00:23 GMT
+
+{
+    "error": {
+        "code": "NotFound",
+        "message": "Resource not found for the segment 'testdfd'.",
+	"target": "query",
+    	"details": [
+      	{
+       		"code": "301",
+       		"target": "$search",
+       		"message": "$search query option not supported",
+      	}
+      ],
+        "innererror": {
+            "message": "Resource not found for the segment 'testdfd'.",
+            "type": "Microsoft.OData.Core.UriParser.ODataUnrecognizedPathException",
+            "stacktrace": "   at Microsoft.OData.Core.UriParser.Parsers.ODataPathParser.ParsePath(ICollection`1 segments)\r\n   at Microsoft.OData.Core.UriParser.Parsers.ODataPathFactory.BindPath(ICollection`1 segments, ODataUriParserConfiguration configuration)\r\n   at Microsoft.OData.Core.UriParser.ODataUriParser.ParsePathImplementation()\r\n   at Microsoft.OData.Core.UriParser.ODataUriParser.Initialize()\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.QueryHandler.DispatchHandler()\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.RequestHandler.Process(Stream requestStream)\r\n   at Microsoft.Test.OData.Services.ODataWCFService.Handlers.RootRequestHandler.Process(Stream requestStream)"
+        }
+    }
+}

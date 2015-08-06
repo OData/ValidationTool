@@ -1,0 +1,36 @@
+// comments 
+Accepted
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
+Access-Control-Allow-Headers: Accept, Origin, Content-Type, MaxDataServiceVersion
+Access-Control-Expose-Headers: DataServiceVersion
+Content-Length: 717
+Cache-Control: no-cache
+Content-Type: multipart/mixed; boundary=batchresponse_0fd288a7-4fad-4a4e-bf02-29f3246a4eec
+Date: Tue, 12 Aug 2014 10:05:57 GMT
+Set-Cookie: ARRAffinity=1a7463e15cf2404668f4722ba1c1f5fb39dabb9f50a34a5cb1361ae0369633bb;Path=/;Domain=odatasampleservices.azurewebsites.net
+Server: Microsoft-IIS/8.0
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+
+
+
+--batchresponse_0fd288a7-4fad-4a4e-bf02-29f3246a4eec
+Content-Type: multipart/mixed; boundary=changesetresponse_5c00b51d-33c6-44a4-994f-312cb9015748
+
+--changesetresponse_5c00b51d-33c6-44a4-994f-312cb9015748
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 400 Bad Request
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>Content-Type header value missing.</m:message></m:error>
+--changesetresponse_5c00b51d-33c6-44a4-994f-312cb9015748--
+--batchresponse_0fd288a7-4fad-4a4e-bf02-29f3246a4eec--
+
