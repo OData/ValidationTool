@@ -16,7 +16,7 @@
     <script type="text/javascript" src="Scripts/validation-helper.js"></script>
     
 </head>
-<body onkeydown="pressEnterKey()">
+<body onkeydown="pressEnterKey()" onload="    (function () { $('#requiredCredential')[0].checked = false})()">
     <script id="jobStatusInfoTmpl" type="text/x-jQuery-tmpl">
         <div>
             <p id='jobType' class='cont'>{{html resourceType}}</p>
@@ -30,42 +30,40 @@
         </div>
     </script>
     <script id="resultTemplate" type="text/x-jQuery-tmpl">
-    <div>
-        <a name="${anchor}" />
-        <div class="resultbody">
-            <div id='summary' class='summary'>
-                <h2 id='type' class="subtitle">${toTypeDesc(ResourceType)}: </h2>
-                <h3 id='uri' class="subtitle">${Uri}</h3>
-                <div id='id' style="display: none">${Id}</div>
-            </div>
-            <div id='informational'></div>
-            <div id="completionMessage" />
-            <div class="results">
-                <img class="resultsIcon" src="Images/arrow_down.gif" alt="Result arrow"/>
-                <h3 class="subtitle">Results</h3>
-                <h3 id="resultsCount" class="subtitle"></h3>
-                <select id="Select1" title="filter" onchange='filterResult(this);'>
-                    <option value="all">all</option>
-                    <option value="errorResult warningResult">error + warning</option>
-                    <option value="warningResult">warning</option>
-                </select>
+        <div>
+            <a name="${anchor}" />
+            <div class="resultbody">
+                <div id='summary' class='summary'>
+                    <h2 id='type' class="subtitle">${toTypeDesc(ResourceType)}: </h2>
+                    <h3 id='uri' class="subtitle">${Uri}</h3>
+                    <div id='id' style="display: none">${Id}</div>
+                </div>
+                <div id='informational'></div>
+                <div id="completionMessage" />
+                <div class="results">
+                    <img class="resultsIcon" src="Images/arrow_down.gif" alt="Result arrow" />
+                    <h3 class="subtitle">Results</h3>
+                    <h3 id="resultsCount" class="subtitle"></h3>
+                    <select id="Select1" title="filter" onchange='filterResult(this);'>
+                        <option value="all">all</option>
+                        <option value="errorResult warningResult">error + warning</option>
+                        <option value="warningResult">warning</option>
+                    </select>
 
-                <input id="RerunRule" title="(Un)Check All" type="checkbox" onclick='filterCheck(this)' value="rerunrule" style ="transform: scale(1.5); /* IE */ -webkit-transform: scale(1.5); vertical-align: middle;">
-                <button>Rerun</button>
+                    <input id="RerunRule" title="(Un)Check All" type="checkbox" onclick='filterCheck(this)' value="rerunrule" style="transform: scale(1.5); /* IE */ -webkit-transform: scale(1.5); vertical-align: middle;">
+                    <button>Rerun</button>
 
-                <div id="resultsView">
-                    <div>
-                        <ul id="display" class="resultsList">
-                        </ul>
+                    <div id="resultsView">
+                        <div>
+                            <ul id="display" class="resultsList"></ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class='sources'>
-                <img class="sourceIcon" src="Images/arrow_down.gif"/>
-                <h3 class="subtitle">Source</h3>
-                <div>
-                        <ul id='display'>
-                        </ul>
+                <div class='sources'>
+                    <img class="sourceIcon" src="Images/arrow_down.gif" />
+                    <h3 class="subtitle">Source</h3>
+                    <div>
+                        <ul id='display'></ul>
                     </div>
                 </div>
                 <div class='separator' />
@@ -81,19 +79,17 @@
                 <option value="warningResult">warning</option>
             </select>
 
-            <input id="RerunRule" title="(Un)Check All" type="checkbox" onclick='filterCheck(this)' value="rerunrule" style ="transform: scale(1.5); /* IE */ -webkit-transform: scale(1.5); vertical-align: middle;">
+            <input id="RerunRule" title="(Un)Check All" type="checkbox" onclick='filterCheck(this)' value="rerunrule" style="transform: scale(1.5); /* IE */ -webkit-transform: scale(1.5); vertical-align: middle;">
             <button>Rerun</button>
             <br />
             <div class="Minimal" style="display: inline">
                 <img class="sourceIcon" src="Images/arrow_down.gif" />
                 <h3 class="subtitle">OData Minimal Conformance Level</h3>
                 <h3 id="minimalRulesCount" class="subtitle"></h3>
-                <button>
-                </button>
+                <button></button>
                 <div id="resultsView1">
                     <div>
-                        <ul id="display" class="resultsList">
-                        </ul>
+                        <ul id="display" class="resultsList"></ul>
                     </div>
                 </div>
             </div>
@@ -103,8 +99,7 @@
                 <h3 id="interRulesCount" class="subtitle"></h3><button></button>
                 <div id="resultsView2">
                     <div>
-                        <ul id="display" class="resultsList">
-                        </ul>
+                        <ul id="display" class="resultsList"></ul>
                     </div>
                 </div>
             </div>
@@ -114,12 +109,37 @@
                 <h3 id="advancedRulesCount" class="subtitle"></h3><button></button>
                 <div id="resultsView3">
                     <div>
-                        <ul id="display" class="resultsList">
-                        </ul>
+                        <ul id="display" class="resultsList"></ul>
                     </div>
                 </div>
             </div>
         </div>
+    </script>
+
+    <script id="serviceImplementationBodyTmpl" type="text/x-jQuery-tmpl">
+        <center><div style="font-size:20px;max-width:800px;font-weight:bold">${implementedCount} service implementations have been implemented, but ${nonImplementedCount} service implementations have not been implemented yet.</div></center>
+        <table style="width:100%;max-width:800px;margin:20px auto"  >
+            <thead style="background-color: #f89c36; color: white; font-size: 20px; text-align: center; font-weight: 300; font-family: Arial, Helvetica, sans-serif">
+                <tr>
+                    <th style="padding:5px 0px;" width="50%">Service Implemented</th>
+                    <th style="padding:5px 0px;" width="50%">Service Non-Implemented</th>
+                </tr>
+            </thead>
+            <tbody style="vertical-align: top;">
+                <tr>
+                    <td  style="max-width: 500px; overflow: auto; border-left-color: white; border-bottom-color: white; border-top-color: #f89c36; border-right-color: #f89c36; border-style: solid; border-right-width: 2px; ">
+                        <div id="implementedTree">
+                            <ul></ul>
+                        </div>
+                    </td>
+                    <td style="color:red; max-width: 500px; overflow: auto; border-right-color: white; border-bottom-color: white; border-top-color: #f89c36; border-style: solid; border-left-width: 2px;" >
+                        <div id="non-implementedTree">
+                            <ul></ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </script>
     <div id="wrapper">
         <div id="topBar">
@@ -143,18 +163,20 @@
             </div>
             <div id="tabs_container">
                 <ul class="tabs">
-                    <li class="active"><a href="#" rel="#tab_1_contents" class="tab">By Uri</a> </li> 
+                    <li class="active"><a href="#" rel="#tab_1_contents" class="tab">By Uri</a> </li>
                     <li><a href="#" rel="#tab_2_contents" class="tab">By Direct Input</a></li>
                     <li><a href="#" rel="#tab_3_contents" class="tab">Conformance Level</a></li>
                     <li><a href="#" rel="#tab_4_contents" class="tab">Metadata Validation</a></li>
-                 </ul>
+                    <!--<li><a href="#" rel="#tab_5_contents" class="tab">Service Implementation</a></li>-->
+                </ul>
                 <div class="tab_contents_container">
                     <div id="tab_1_contents" class="tab_contents tab_contents_active">
                         <div id="live_input">
                             <input id="odataUri" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
-                                onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                                   onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
                             <button id="liveValidateButton">
-                                Validate</button>
+                                Validate
+                            </button>
                             <br />
                             <div id="format">
                                 <div id="div_atom" style="display:inline;">
@@ -164,39 +186,46 @@
                                 <div id="div_json" style="display: none">
                                     <input id="json" type="radio" name="formatGroup" value="json" />
                                     <label for="json">
-                                        JSON (Verbose)</label>
+                                        JSON (Verbose)
+                                    </label>
                                 </div>
                                 <div id="div_jsonmin">
                                     <input id="jsonmin" type="radio" checked="checked" name="formatGroup" value="json" />
                                     <label for="jsonmin">
-                                        JSON-Min</label>
+                                        JSON-Min
+                                    </label>
                                 </div>
                                 <div id="div_jsonfull">
                                     <input id="jsonfull" type="radio" name="formatGroup" value="json" />
                                     <label for="jsonfull">
-                                        JSON-Full</label>
+                                        JSON-Full
+                                    </label>
                                 </div>
                             </div>
                             <div id="scope" title="It validates by crawling from service document to metadata document, then the first feed, and then the first entry.">
                                 <input id="crawling" type="checkbox" value="tocrawl" />
                                 <label for="crawling">
-                                    Crawling</label>
+                                    Crawling
+                                </label>
                             </div>
                             <div id="live_versioning">
                                 <div id="v1_v2">
                                     <input id="v1_v2Compliance" type="radio" name="versionGroup" value="v1_v2Compliance" onclick="displayHide_control()" />
                                     <label for="v1_v2Compliance">
-                                        OData v1.0 and v2.0 service endpoint</label>
+                                        OData v1.0 and v2.0 service endpoint
+                                    </label>
                                 </div>
                                 <div id="v3">
                                     <input id="v3Compliance" type="radio" name="versionGroup" value="v3Compliance" onclick="displayHide_control()" />
                                     <label for="v3Compliance">
-                                        OData v3.0 service endpoint</label>
+                                        OData v3.0 service endpoint
+                                    </label>
                                 </div>
                                 <div id="v4">
                                     <input id="v4Compliance" type="radio" checked="checked" name="versionGroup" value="v4Compliance" onclick="displayHide_control()" />
                                     <label for="v4Compliance">
-                                        OData v4.0 service endpoint</label>
+                                        OData v4.0 service endpoint
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +233,7 @@
                     <div id="tab_2_contents" class="tab_contents">
                         <div id="offline_input">
                             <b>Payload input: </b>
-                            <input style="font-size:10px;  margin-left: 20px; margin-bottom:3px;" type="file" id="payload" name="files[]" onchange='selectLocalTxt(event)'/>
+                            <input style="font-size:10px;  margin-left: 20px; margin-bottom:3px;" type="file" id="payload" name="files[]" onchange='selectLocalTxt(event)' />
                             <br />
                             <script>
                                 function selectLocalTxt(evt) {
@@ -222,8 +251,8 @@
                                     var reader = new FileReader();
 
                                     // Closure to capture the file information.
-                                    reader.onload = (function(theFile) {
-                                        return function(e) {
+                                    reader.onload = (function (theFile) {
+                                        return function (e) {
                                             // Render thumbnail.
                                             var textarea = $(evt.srcElement).nextAll("textarea")[0];//nextElementSibling;
                                             if (!textarea) {
@@ -236,9 +265,11 @@
                                     // Read in the image file as a data URL.
                                     reader.readAsText(file);
                                 }
-                                </script>
+                            </script>
                             <textarea id="payload_text" rows="6" wrap="off" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.payload_text_help; }"
-                                onfocus="if (this.value == validatorConf.payload_text_help) { this.value =''; }">paste here the response payload in atompub/xml or json format in full</textarea>
+                                      onfocus="if (this.value == validatorConf.payload_text_help) { this.value =''; }">
+                                paste here the response payload in atompub/xml or json format in full
+                            </textarea>
                             <br />
                             <div class="separator">
                             </div>
@@ -255,38 +286,44 @@
                             <div id="offline_format">
                                 Metadata type(For JSON light only):
                                 <input id="offlineMin" type="radio" checked="checked" name="payloadFormat" value="offline_min" />Minimal
-                                <input id="offlineFull" type="radio" name="payloadFormat" value="offline_full" />Full                               
+                                <input id="offlineFull" type="radio" name="payloadFormat" value="offline_full" />Full
                             </div>
                             <br />
                             <div class="separator">
                             </div>
                             <div>
                                 <img id="meta_icon" src="Images/arrow_right.gif" alt="Meta arrow" />
-                                <a id="metadata_prompt"><b>Metadata document(optional)</b></a> 
-                                <input style="font-size:10px; margin-left: 20px;  margin-bottom:3px; display:none;" type="file" id="metadata" name="files[]" onchange='selectLocalTxt(event);'/>
+                                <a id="metadata_prompt"><b>Metadata document(optional)</b></a>
+                                <input style="font-size:10px; margin-left: 20px;  margin-bottom:3px; display:none;" type="file" id="metadata" name="files[]" onchange='selectLocalTxt(event);' />
                                 <br />
                                 <div id="display" style="display: none">
                                     <textarea id="meta_text" rows="6" wrap="off" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.meta_text_help; }"
-                                        onfocus="if (this.value == validatorConf.meta_text_help) { this.value =''; }">paste here the metadata document content in xml format in full if you have one</textarea>
+                                              onfocus="if (this.value == validatorConf.meta_text_help) { this.value =''; }">
+                                        paste here the metadata document content in xml format in full if you have one
+                                    </textarea>
                                 </div>
                             </div>
                         </div>
-                        <br/>
-                        <center><button id="offlineValidateButton">
-                            Validate</button></center>
+                        <br />
+                        <center>
+                            <button id="offlineValidateButton">
+                                Validate
+                            </button>
+                        </center>
                     </div>
                     <div id="tab_3_contents" class="tab_contents">
                         <div id="ConformanceLevel">
                             <!--   Support OData v4 service with JSON format only:
                             <br /> <br />-->
                             <input id="svcUrl" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
-                                onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                                   onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
                             <button id="ConformanceValidation">
-                                Validate</button>
+                                Validate
+                            </button>
                             <br />
                             <br />
                             <div id="levelType">
-                                 <label>Level: </label>
+                                <label>Level: </label>
                                 <div id="div_MinimalLevel">
                                     <input id="Radio_MinimalLevel" title="Only Validate Conformance Minimal Level Rules" type="radio" name="levelGroup" value="Minimal" checked="checked" />
                                     <label for="Radio_MinimalLevel">Minimal</label>
@@ -300,50 +337,96 @@
                                     <label for="Radio_AdvancedLevel">Advanced</label>
                                 </div>
                             </div>
-                             <br />      
+                            <br />
                             <div id="serviceType">
-                                 <label>OData Service: </label>
+                                <label>OData Service: </label>
                                 <div id="div_readWrite">
-                                    <input id="readWrite" type="radio" name="typeGroup" value="Read-Write"  checked="checked" />
+                                    <input id="readWrite" type="radio" name="typeGroup" value="Read-Write" checked="checked" />
                                     <label for="readwrite">Read-Write</label>
                                 </div>
                                 <div id="div_readOnly">
                                     <input id="readOnly" type="radio" name="typeGroup" value="Read-Only" />
                                     <label for="readonly">
-                                        Read-Only</label>
+                                        Read-Only
+                                    </label>
                                 </div>
-                            </div>                      
-                              <br />
+                            </div>
+                            <br />
                             <span style="padding-left: 0px;"><b>Note</b>: Support conformance level validation for OData version 4.0 service with JSON format only!</span>
                         </div>
                     </div>
                     <div id="tab_4_contents" class="tab_contents">
                         <div id="metadataValidation">
                             <input id="serviceUri" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
-                                onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                                   onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
                             <button id="metadataValidateButton">
-                                Validate</button>
+                                Validate
+                            </button>
                             <br />
                             <div id="metadata_versioning">
                                 <div id="m_v1_v2">
                                     <input id="v1_v2_Radio" type="radio" name="mVersionGroup" value="v1_v2Compliance" />
                                     <label for="v1_v2Compliance">
-                                        OData v1.0 and v2.0 service endpoint</label>
+                                        OData v1.0 and v2.0 service endpoint
+                                    </label>
                                 </div>
                                 <div id="m_v3">
                                     <input id="v3_Radio" type="radio" name="mVersionGroup" value="v3Compliance" />
                                     <label for="v3Compliance">
-                                        OData v3.0 service endpoint</label>
+                                        OData v3.0 service endpoint
+                                    </label>
                                 </div>
                                 <div id="m_v4">
                                     <input id="v4_Radio" type="radio" checked="checked" name="mVersionGroup" value="v4Compliance" />
                                     <label for="v4Compliance">
-                                        OData v4.0 service endpoint</label>
+                                        OData v4.0 service endpoint
+                                    </label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                 <!--   <div id="tab_5_contents" class="tab_contents">
+                        <div id="serviceImplementation">
+                            <input id="serviceImplementationUri" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
+                                   onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
+                            <button id="serviceImplementationButton">
+                                Validate
+                            </button>
+                            <br />
+                            <div id="service_versioning">
+                                <div id="s_v1_v2">
+                                    <input id="s_v1_v2_Radio" type="radio" name="sVersionGroup" value="v1_v2Compliance" />
+                                    <label for="v1_v2Compliance">
+                                        OData v1.0 and v2.0 service endpoint
+                                    </label>
+                                </div>
+                                <div id="s_v3">
+                                    <input id="s_v3_Radio" type="radio" name="sVersionGroup" value="v3Compliance" />
+                                    <label for="v3Compliance">
+                                        OData v3.0 service endpoint
+                                    </label>
+                                </div>
+                                <div id="s_v4">
+                                    <input id="s_v4_Radio" type="radio" checked="checked" name="sVersionGroup" value="v4Compliance" />
+                                    <label for="v4Compliance">
+                                        OData v4.0 service endpoint
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div id="credentialContainer" style="background-color: #F7F7F7; border-style: solid; border: solid #CECECE; border-top-width: 0px; border-bottom-width: 1px; border-left-width: 1px; border-right-width: 1px; padding: 0.5em 0.75em; ">
+                        <span style="font-family: 'Arial Rounded MT'; color: #F89C36; ">If your OData service needs authorization, please supply the user name and password after checking this checkbox.</span>
+                        <input id="requiredCredential" type="checkbox" onclick="checkboxEvent(this)" />
+                        <form id="credential" method="post" action="#" style="display:none" target="loginframe" autocomplete="on">
+                            User Name: <input style="width:168px" id="username" type="text" name="username" autocomplete="on" />
+                            Password: <input style="width:168px" id="password" type="password" name="password" autocomplete="on" />
+                        </form>
+                        <script>function checkboxEvent(e) { if (e.checked) { $("#credential")[0].style.display = "inline"; } else { $("#credential")[0].style.display = "none"; } }</script>
+
+                        <iframe id="loginframe" style="display:none" name="loginframe"></iframe>
+                    </div>
+                    </div>
             </div>
             <div id="statusInfo">
             </div>
@@ -351,6 +434,7 @@
             </div>
         </div>
         <div id="infobody">
+
         </div>
     </div>
     <!-- START OF SmartSource Data Collector TAG -->
@@ -472,8 +556,7 @@
             }
         }
 
-        function pressEnterKey()
-        {
+        function pressEnterKey() {
             if (event.keyCode == 13) {
                 //if another job is running now
                 if ($('#tabs_container').hasClass('busy')) {
@@ -575,7 +658,7 @@
                     startJob(!crawlingJob);
                 });
             });
-            
+
         }
 
         function reloadMetadataJob() {
@@ -586,7 +669,7 @@
             }
             disableTabSwitch();
             OData.request(request, function (data) {
-               
+
                 function setVersion(header) {
 
                     var versionRadios = $('input[name=mVersionGroup]');
@@ -662,9 +745,9 @@
                         var payloadFormatRadios = $('input[name=payloadFormat]');
                         var metadata = headers[2].split('=')[1];
 
-                        if (metadata.indexOf("minimal")>=0)
+                        if (metadata.indexOf("minimal") >= 0)
                             payloadFormatRadios.filter('[value=offline_min]').attr('checked', true);
-                        else if (metadata.indexOf("full") >=0)
+                        else if (metadata.indexOf("full") >= 0)
                             payloadFormatRadios.filter('[value=offline_full]').attr('checked', true);
                     }
                     controlOfflineFormat();
@@ -700,8 +783,7 @@
                     if (data.ServiceType == "ReadOnly") rwRadios.filter('[value=Read-Only]').attr('checked', true);
                     else if (data.ServiceType == "ReadWrite") rwRadios.filter('[value=Read-Write]').attr('checked', true);
                     var levelRadios = $('input[name=levelGroup]');
-                    for (var i = 0; i< levelRadios.length; i++)
-                    {
+                    for (var i = 0; i < levelRadios.length; i++) {
                         if (data.LevelTypes == levelRadios[i].value) {
                             levelRadios[i].setAttribute('checked', true);
                         }
@@ -738,13 +820,13 @@
                         var job = { 'Uri': this.Uri, 'ResourceType': this.ResourceType, 'Id': this.DerivativeJobId, 'RuleCount': this.RuleCount, 'Issues': this.Issues };
                         validatorApp.jobsInQ.push(job);
                         conformanceResults.conformanceJobIDs.push(job.Id);
-                        
+
                     });
 
                     $('#infotop #statusInfo').empty();
                     $('#infotop #statusInfo').show();
                     loadConformanceLevelRules();
-                    
+
                     var d = data.results[0];
                     validatorApp.currentJob = { 'Uri': d.Uri, 'ResourceType': d.ResourceType, 'Id': d.DerivativeJobId, 'RuleCount': d.RuleCount, 'Issues': d.Issues };
                 });
@@ -767,7 +849,7 @@
                 var li3a = li4a.parentNode.previousElementSibling.firstElementChild;
                 var li2a = li3a.parentNode.previousElementSibling.firstElementChild;
                 var li1a = li2a.parentNode.previousElementSibling.firstElementChild;
-                
+
                 li4a.MasterJobId = data.MasterJobId4;
                 li3a.MasterJobId = data.MasterJobId3;
                 li2a.MasterJobId = data.MasterJobId2;
@@ -783,6 +865,7 @@
         }
     </script>
 </body>
+
 <noscript>
     <div>
         <img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://m.webtrends.com/dcsc97avu10000kn75ujgpso2_7j5n/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=MS.3.0.0" /></div>

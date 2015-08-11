@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -105,6 +106,8 @@
     <Compile Include="Common\WebHelper.cs" />
     <Compile Include="Common\XmlHelper.cs" />
     <Compile Include="ServiceContextFactory.cs" />
+    <Compile Include="ServiceImpl\ServiceImplCategoryName.cs" />
+    <Compile Include="ServiceImpl\ServiceImplExtensionRule.cs" />
     <Compile Include="ServiceVerificationResult.cs" />
     <Compile Include="ServiceVerification.cs" />
     <Compile Include="SupportedScheme.cs" />

@@ -66,5 +66,148 @@ namespace ODataValidator.Rule.Helper
 
             return result;
         }
+
+        /// <summary>
+        /// Compare the property value.
+        /// </summary>
+        /// <param name="val1">The property value.</param>
+        /// <param name="val2">The property value.</param>
+        /// /// <param name="propType">The property type.</param>
+        /// <param name="compareType">The compare type.</param>
+        /// <returns>Return the result.</returns>
+        public static bool Compare(this JToken val1, JToken val2, string propType, ComparerType compareType)
+        {
+            if (0 != string.Compare("Edm.Int16", propType, true) &&
+                0 != string.Compare("Edm.Int32", propType, true) &&
+                0 != string.Compare("Edm.Int64", propType, true) &&
+                0 != string.Compare("Edm.String", propType, true))
+            {
+                throw new Exception("Invalid value of property type, please use the 'Edm.Int16', 'Edm.Int32', 'Edm.Int64' or 'Edm.String' as the value of the input parameter 'propType'.");
+            }
+
+            var result = false;
+            if (0 == string.Compare("Edm.Int16", propType, true) ||
+                0 == string.Compare("Edm.Int32", propType, true) ||
+                0 == string.Compare("Edm.Int64", propType, true))
+            {
+                result = CompareOperationHelper.Int64Compare(val1, val2, compareType);
+            }
+            else if (0 == string.Compare("Edm.String", propType, true))
+            {
+                result = CompareOperationHelper.StringCompare(val1, val2, compareType);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Compare the property value with int type.
+        /// </summary>
+        /// <param name="val1">The property value.</param>
+        /// <param name="val2">The property value.</param>
+        /// <param name="compareType">The compare type.</param>
+        /// <returns>Return the result.</returns>
+        private static bool Int64Compare(this JToken val1, JToken val2, ComparerType compareType)
+        {
+            var result = false;
+            var value1 = (Int64)val1;
+            var value2 = (Int64)val2;
+            switch ((byte)compareType)
+            {
+                // Equal.
+                case 0x01:
+                    result = value1 == value2;
+                    break;
+                // Less Than.
+                case 0x02:
+                    result = value1 < value2;
+                    break;
+                // Less Than or Equal.
+                case 0x03:
+                    result = value1 <= value2;
+                    break;
+                // Greater Than.
+                case 0x04:
+                    result = value1 > value2;
+                    break;
+                // Greater Than or Equal.
+                case 0x05:
+                    result = value1 >= value2;
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Compare the property value with string type.
+        /// </summary>
+        /// <param name="val1">The property value.</param>
+        /// <param name="val2">The property value.</param>
+        /// <param name="compareType">The compare type.</param>
+        /// <returns>Return the result.</returns>
+        private static bool StringCompare(this JToken val1, JToken val2, ComparerType compareType)
+        {
+            var result = false;
+            var value1 = val1.ToString();
+            var value2 = val2.ToString();
+            switch ((byte)compareType)
+            {
+                // Equal.
+                case 0x01:
+                    result = 0 == string.Compare(value1, value2);
+                    break;
+                // Less Than.
+                case 0x02:
+                    result = -1 == string.Compare(value1, value2);
+                    break;
+                // Less Than or Equal.
+                case 0x03:
+                    result = 0 == string.Compare(value1, value2) || -1 == string.Compare(value1, value2);
+                    break;
+                // Greater Than.
+                case 0x04:
+                    result = 1 == string.Compare(value1, value2);
+                    break;
+                // Greater Than or Equal.
+                case 0x05:
+                    result = 0 == string.Compare(value1, value2) || 1 == string.Compare(value1, value2);
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// The ComparerType enumeration.
+    /// Note: (LessThanOrEqual = 0x03, GreaterThanOrEqual = 0x05)
+    /// </summary>
+    [Flags]
+    public enum ComparerType : byte
+    {
+        /// <summary>
+        /// Undefine.
+        /// </summary>
+        None = 0x00,
+
+        /// <summary>
+        /// Equal.
+        /// </summary>
+        Equal = 0x01,
+
+        /// <summary>
+        /// Less Than.
+        /// </summary>
+        LessThan = 0x02,
+
+        /// <summary>
+        /// Greater Than.
+        /// </summary>
+        GreaterThan = 0x04
     }
 }

@@ -145,7 +145,7 @@ namespace ODataValidator.Rule
             var additionalInfos = new List<AdditionalInfo>();
             var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
             string reqDataStr = reqData.ToString();
-            var resp = WebHelper.CreateEntity(url, reqData, false, ref additionalInfos);
+            var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, false, ref additionalInfos);
             detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
 
             if (null != resp && HttpStatusCode.Created == resp.StatusCode)
@@ -232,7 +232,7 @@ HTTP/1.1 200 OK
                     }
 
                     // Restore the service.
-                    var resps = WebHelper.DeleteEntities(additionalInfos);
+                    var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
                 }
             }
             else

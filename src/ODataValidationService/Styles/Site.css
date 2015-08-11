@@ -230,7 +230,7 @@ div#logo
     width: auto;
 }
 
-div#live_input, div#ConformanceLevel, div#metadataValidation
+div#live_input, div#ConformanceLevel, div#metadataValidation, div#serviceImplementation
 {
     background-color: #F7F7F7;
     border-style: solid;
@@ -239,14 +239,14 @@ div#live_input, div#ConformanceLevel, div#metadataValidation
     padding: 1.5em 0.75em;
 }
 
-div#format, div#scope, div#live_versioning, div#amount, div#metadata_versioning
+div#format, div#scope, div#live_versioning, div#amount, div#metadata_versioning, div#service_versioning
 {
     /*margin-left: 15%;*/
     margin-right: 15%;
     padding-top: 6px;
 }
 
-div#v1_v2, div#v3, div#v4, div#m_v1_v2, div#m_v3, div#m_v4
+div#v1_v2, div#v3, div#v4, div#m_v1_v2, div#m_v3, div#m_v4, div#s_v1_v2, div#s_v3, div#s_v4
 {
     margin-left: 0px;
     margin-right: 15%;
@@ -258,7 +258,7 @@ div#div_jsonmin, div#div_jsonfull, div#div_readWrite, div#div_readOnly, div#div_
     display:inline;
 }
 
-input#odataUri, #svcUrl, #serviceUri
+input#odataUri, #svcUrl, #serviceUri, #serviceImplementationUri
 {
     padding: 8px;
     color: #000000;
@@ -268,7 +268,7 @@ input#odataUri, #svcUrl, #serviceUri
     width: 83%;
 }
 
-button#liveValidateButton, button#offlineValidateButton, button#ConformanceValidation, button#metadataValidateButton
+button#liveValidateButton, button#offlineValidateButton, button#ConformanceValidation, button#metadataValidateButton, button#serviceImplementationButton
 {
     border-width: 2px;
     border-style: solid;
@@ -469,4 +469,13 @@ button.subrule_rerun{
 	font-size:12px;
 	color: green;
 	text-decoration:none;
+}
+
+#implementedTree ul, #non-implementedTree ul {
+    list-style-type: none;
+}
+
+#implementedTree li, #non-implementedTree li {
+    padding-left: 5px;
+    margin-left: -28px;
 }

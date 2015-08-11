@@ -38,6 +38,19 @@ $(document).ready(function () {
         // Add the 'tab_contents_active' class to the associated tab contents.
         $(this.rel).addClass('tab_contents_active');
 
+        switch (this.rel) {
+            case "#tab_1_contents":
+            case "#tab_3_contents":
+            case "#tab_4_contents":
+            case "#tab_5_contents":
+                $('#credentialContainer')[0].style.display = "block";
+                break;
+            case "#tab_2_contents":
+                $('#credentialContainer')[0].style.display = "none";
+                break;
+            default: break;
+        }
+
         // clear the result and resource areas
         resetAll();
         if (this.dataPacket) {
@@ -62,6 +75,7 @@ function disableTabSwitch() {
     $('#tabs_container').addClass('busy');
     // disable all the input elements on active tab
     $("#tabs_container .tab_contents_active [id]").attr("disabled", true);
+    disableCredential();
 };
 
 function enableTabSwitch() {
@@ -70,7 +84,19 @@ function enableTabSwitch() {
     $("#tabs_container .tab_contents_active [id]").attr("disabled", false);
     // enable all rerun buttons on active tab
     displayHide_buttonsIninfobody(false);
+    enableCredential();
 };
 
+function disableCredential() {
+    $('#requiredCredential')[0].disabled = true;
+    $('#username')[0].disabled = true;
+    $('#password')[0].disabled = true;
+}
+
+function enableCredential() {
+    $('#requiredCredential')[0].disabled = false;
+    $('#username')[0].disabled = false;
+    $('#password')[0].disabled = false;
+}
 
 

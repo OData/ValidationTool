@@ -200,7 +200,7 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         /// <param name="metadata">The metadata document.</param>
         /// <param name="entityTypeShortName">The name of entity type.</param>
-        /// <returns> List of result </returns>
+        /// <returns>True, if the entity is media type; false, otherwise. </returns>
         public static bool IsMediaEntity(string metadata, string entityTypeShortName)
         {
             string xpath1 = string.Format(@"//*[local-name()='EntityType' and @Name='{0}']", entityTypeShortName);
@@ -211,9 +211,117 @@ namespace ODataValidator.Rule.Helper
             if (HasStream != null && HasStream.ToLower() == "true")
             {
                 return true;
+            }                
+            
+            return false;            
+        }
+
+        /// <summary>
+        /// Judge whether the entity is media type by thoroughly checking all its base ancestor entity types.
+        /// </summary>
+        /// <param name="metadata">The string of metadata document.</param>
+        /// <param name="entityTypeShortName">The name of entity type.</param>
+        /// <param name="context">The service context.</param>
+        /// <returns> True, if the entity is media type; false, otherwise. </returns>
+        public static bool IsMediaEntity(string metadata, string entityTypeShortName, ServiceContext context)
+        {
+            string xpath1 = string.Format(@"//*[local-name()='EntityType' and @Name='{0}']", entityTypeShortName);
+            XElement md = XElement.Parse(metadata);
+            XElement entity = md.XPathSelectElement(xpath1, ODataNamespaceManager.Instance);
+            string HasStream = entity.GetAttributeValue(@"HasStream");
+
+            if (HasStream != null)
+            {
+                if (HasStream.ToLower() == "true")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            while (null != entity.Attribute("BaseType") && null == entity.GetAttributeValue(@"HasStream"))
+            {
+                string baseEntityQualifiedName = entity.GetAttributeValue("BaseType");
+                entity = GetTypeDefinitionEleInScope("EntityType", baseEntityQualifiedName, context);
+                HasStream = entity.GetAttributeValue(@"HasStream");
+                if (HasStream != null)
+                {
+                    if (HasStream.ToLower() == "true")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
 
             return false;
+        }
+
+
+        /// <summary>
+        /// Find all the entity types that has a property which is of Edm.Stream. Note: Not condider base type, the scenairo that Entity's Edm.Stream property is in its base type.
+        /// </summary>
+        /// <param name="metadata">The string of metadata document.</param>
+        /// <returns>A dictionary that has enity type short name as key, and relative property path as value.</returns>
+        public static Dictionary<string, string> StreamPropertyEntities(string metadata)
+        {
+            Dictionary<string, string> entityAndpaths = new Dictionary<string, string>();
+            string relPath = string.Empty;
+            FindEntityTypeHavingStreamProp(metadata, "Edm.Stream", ref entityAndpaths, ref relPath);
+            return entityAndpaths;
+        }
+
+        /// <summary>
+        /// Find all the entity types that has a property which is of Edm.Stream. Recursively sorting the complex types.
+        /// Note: Not condider base type, the scenairo that Entity's Edm.Stream property is in its base type.
+        /// </summary>
+        /// <param name="metadata">The string of metadata document.</param>
+        /// <param name="type">The type value of Edm.Stream or the complex type short name begining with a dot.</param>
+        /// <param name="entityAndpaths">The dictionary of entity type short name and property relative path.</param>
+        /// <param name="relPath">The temporary relative path.</param>
+        private static void FindEntityTypeHavingStreamProp(string metadata, string type, ref Dictionary<string, string> entityAndpaths, ref string relPath)
+        {
+            Dictionary<string, string> entityPath = new Dictionary<string, string>();
+            string xpath = string.Format(@"//*[local-name()='Property' and contains(@Type,'{0}')]", type);
+            XElement md = XElement.Parse(metadata);
+            IEnumerable<XElement> propElems = md.XPathSelectElements(xpath, ODataNamespaceManager.Instance);
+            string complexTypeName = string.Empty;
+
+            foreach (XElement propEle in propElems)
+            {
+                relPath = propEle.Attribute("Name").Value + "/" + relPath;
+
+                if (propEle.Parent.Name.LocalName.Equals("EntityType"))
+                {
+                    if (!entityAndpaths.Keys.Contains(propEle.Parent.Attribute("Name").Value)) 
+                    {
+                        /// Ignore the Entity that has two or more Edm.Stream properties. 
+                        /// The test code here only pick the first stream property to sample test.
+                        entityAndpaths.Add(propEle.Parent.Attribute("Name").Value, relPath);
+                    }
+                }
+                else if (propEle.Parent.Name.LocalName.Equals("ComplexType"))
+                {
+                    complexTypeName = propEle.Parent.Attribute("Name").Value;
+
+                    FindEntityTypeHavingStreamProp(metadata, "." + complexTypeName, ref entityAndpaths, ref relPath);
+                }
+
+                int length = relPath.Length;
+                int propNameLenth = (propEle.Attribute("Name").Value + "/").Length;
+                if (length >= propNameLenth)
+                {
+                    relPath = relPath.Substring(propNameLenth);
+                }
+            }
+
+            return;
         }
 
         /// <summary>
@@ -1326,10 +1434,11 @@ namespace ODataValidator.Rule.Helper
         /// <summary>
         /// Get entity containing complex type with specified property type.
         /// </summary>
-        /// <param name="metadata">The metadata document.</param>
+        /// <param name="metadataDoc">The metadata document.</param>
         /// <param name="specifiedType">The specified type of property in complex type.</param>
-        /// <param name="entityType">The entity type which containing complex type.</param>
-        /// <param name="entityTypeInfo">The entity-type information.</param>
+        /// <param name="entityTypeInfo">Output: The information of the entity type that has the complex type property containing specified type property.
+        /// The dictionary structures are like follows
+        /// (entity type short name, ((complex type property name, complex type name), list of property names that are the specified type)</param>
         /// <returns>true: get the specified entity; false: otherwise.</returns>
         public static bool GetEntityTypesWithComplexProperty(
             string metadataDoc,
@@ -1351,13 +1460,26 @@ namespace ODataValidator.Rule.Helper
 
             foreach (var elem in complexTypeElem)
             {
-                var propNames = from prop in elem.Elements()
-                                where prop.Name.LocalName.Equals("Property") && prop.Attribute("Type").Value.Equals(specifiedType)
-                                select prop.GetAttributeValue("Name");
-
-                if (propNames.Any())
+                XElement complexElem = elem;
+                bool continueSearch = true;
+                while (continueSearch)
                 {
-                    complexTypeInfo.Add(elem.GetAttributeValue("Name"), propNames.ToList());
+                    var propNames = from prop in complexElem.Elements()
+                                    where prop.Name.LocalName.Equals("Property") && prop.Attribute("Type").Value.Equals(specifiedType)
+                                    select prop.GetAttributeValue("Name");
+
+                    if (propNames.Any())
+                    {
+                        complexTypeInfo.Add(elem.GetAttributeValue("Name"), propNames.ToList());
+                        continueSearch = false;
+                    }
+                    else
+                    {
+                        if(elem.Attribute("BaseType")!=null && ! string.IsNullOrEmpty(elem.Attribute("BaseType").Value))
+                        {
+                            complexElem = GetTypeDefinitionEleByDoc("ComplexType", elem.Attribute("BaseType").Value, metadataDoc);
+                        }
+                    }
                 }
             }
 
@@ -1408,6 +1530,51 @@ namespace ODataValidator.Rule.Helper
             }
 
             return null != entityTypeInfo && entityTypeInfo.Any();
+        }
+
+        /// <summary>
+        /// Judge whether the entity has Collection type properties by thoroughly checking all its base ancestor entity types.
+        /// </summary>
+        /// <param name="metadata">The string of metadata document.</param>
+        /// <param name="entityTypeShortName">The name of entity type.</param>
+        /// <param name="context">The service context.</param>
+        /// <param name="collectionPropNames">Output the list of collection properties' names.</param>
+        /// <returns> True, if the entity is media type; false, otherwise. </returns>
+        public static bool HasEntityCollectionProp(string metadata, string entityTypeShortName, ServiceContext context, out List<string> collectionPropNames)
+        {
+            bool hasBaseType = true;
+            collectionPropNames = new List<string>();
+
+            while (hasBaseType)
+            {
+                string xpath1 = string.Format(@"//*[local-name()='EntityType' and @Name='{0}']/*[local-name()='Property' and contains(@Type, 'Collection(')]", entityTypeShortName);
+                XElement md = XElement.Parse(metadata);
+                IEnumerable<XElement> collectionProps = md.XPathSelectElements(xpath1, ODataNamespaceManager.Instance);
+
+                if (collectionProps != null)
+                {
+                    foreach (XElement prop in collectionProps)
+                    {
+                        collectionPropNames.Add(prop.Attribute("Name").Value);
+                    }
+                }
+
+                xpath1 = string.Format(@"//*[local-name()='EntityType' and @Name='{0}']", entityTypeShortName);
+                XElement entity = md.XPathSelectElement(xpath1, ODataNamespaceManager.Instance);
+
+                if (null != entity.Attribute("BaseType") && !string.IsNullOrEmpty(entity.Attribute("BaseType").Value))
+                {
+                    string baseEntityQualifiedName = entity.GetAttributeValue("BaseType");
+                    entity = GetTypeDefinitionEleInScope("EntityType", baseEntityQualifiedName, context);
+                    entityTypeShortName = entity.Attribute("Name").Value;
+                }
+                else
+                {
+                    hasBaseType = false;
+                }
+            }
+
+            return collectionPropNames != null && collectionPropNames.Any();
         }
 
         /// <summary>
@@ -2742,5 +2909,356 @@ namespace ODataValidator.Rule.Helper
             return true;
         }
 
+        /// <summary>
+        /// Get the key property name from a specified service.
+        /// </summary>
+        /// <param name="entityTypeShortName">Output the entity-type short name.</param>
+        /// <returns>Returns the key property name and type.</returns>
+        public static Tuple<string, string> GetKeyProperty(out string entityTypeShortName)
+        {
+            entityTypeShortName = string.Empty;
+            var metadata = XElement.Parse(ServiceStatus.GetInstance().MetadataDocument);
+            string xPath = "//*[local-name()='EntityType']";
+            var etElems = metadata.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+            foreach (var etElem in etElems)
+            {
+                if (null == etElem.Attribute("Name"))
+                {
+                    continue;
+                }
+
+                entityTypeShortName = etElem.GetAttributeValue("Name");
+                xPath = "./*[local-name()='Key']/*[local-name()='PropertyRef']";
+                var propRefElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null == propRefElems || propRefElems.Count() > 1 || null == propRefElems.First().Attribute("Name"))
+                {
+                    continue;
+                }
+
+                string keyPropName = propRefElems.First().GetAttributeValue("Name");
+                xPath = "./*[local-name()='Property']";
+                var propElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                foreach (var propElem in propElems)
+                {
+                    if (null == propElem.Attribute("Name") || null == propElem.Attribute("Type"))
+                    {
+                        continue;
+                    }
+
+                    if (MetadataHelper.IsKeyPropertyType(propElem.GetAttributeValue("Type")) &&
+                        keyPropName == propElem.GetAttributeValue("Name"))
+                    {
+                        return new Tuple<string, string>(propElem.GetAttributeValue("Name"), propElem.GetAttributeValue("Type"));
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the key property name from a specified service.
+        /// </summary>
+        /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <returns>Returns the key property name and type.</returns>
+        public static Tuple<string, string> GetKeyProperty(string entityTypeShortName)
+        {
+            var metadata = XElement.Parse(ServiceStatus.GetInstance().MetadataDocument);
+            string xPath = string.Format("//*[local-name()='EntityType' and @Name='{0}']", entityTypeShortName);
+            var etElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+            xPath = "./*[local-name()='Key']/*[local-name()='PropertyRef']";
+            var propRefElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+            if (propRefElems.Count() > 1)
+            {
+                return null;
+            }
+
+            string keyPropName = propRefElems.First().GetAttributeValue("Name");
+            xPath = string.Format("./*[local-name()='Property' and @Name='{0}']", keyPropName);
+            var propElem = etElem.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+            if (null != propElem.Attribute("Name") &&
+                null != propElem.Attribute("Type") &&
+                MetadataHelper.IsKeyPropertyType(propElem.GetAttributeValue("Type")))
+            {
+                return new Tuple<string, string>(propElem.GetAttributeValue("Name"), propElem.GetAttributeValue("Type"));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get all the entity-set URLs from the service.
+        /// </summary>
+        /// <returns>Returns the entity-set URLs' list.</returns>
+        public static List<string> GetEntitySetURLs()
+        {
+            var jObj = JObject.Parse(ServiceStatus.GetInstance().ServiceDocument);
+            var jArr = jObj.GetValue("value") as JArray;
+            var result = new List<string>();
+            foreach (JObject elem in jArr)
+            {
+                if (null != elem["url"])
+                {
+                    result.Add(elem["url"].ToString());
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get all the paging limit entity-set URLs from the service.
+        /// </summary>
+        /// <returns>Returns the entity-set URLs' list.</returns>
+        public static List<string> GetPagingLimitEntitySetURLs()
+        {
+            var result = new List<string>();
+            var entitySetUrls = MetadataHelper.GetEntitySetURLs();
+            foreach (var entitySetUrl in entitySetUrls)
+            {
+                string url = ServiceStatus.GetInstance().RootURL.TrimEnd('/') + "/" + entitySetUrl;
+                var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
+                if (null != resp && HttpStatusCode.OK == resp.StatusCode)
+                {
+                    var jObj = JObject.Parse(resp.ResponsePayload);
+                    if (null != jObj[Constants.V4OdataNextLink])
+                    {
+                        result.Add(entitySetUrl);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the property name with the specified type.
+        /// </summary>
+        /// <param name="propertyType">The specified type of a property.</param>
+        /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <returns>Returns all the eligible property names in an entity-type.</returns>
+        public static List<string> GetPropertyNames(string propertyType, out string entityTypeShortName)
+        {
+            var propertyTypes = new string[1] { propertyType };
+
+            return MetadataHelper.GetPropertyNames(propertyTypes, out entityTypeShortName);
+        }
+
+        /// <summary>
+        /// Get the property name with the specified types.
+        /// </summary>
+        /// <param name="propertyTypes">The specified types of properties.</param>
+        /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <returns>Returns all the eligible property names in an entity-type.</returns>
+        public static List<string> GetPropertyNames(IEnumerable<string> propertyTypes, out string entityTypeShortName)
+        {
+            var result = new List<string>();
+            entityTypeShortName = string.Empty;
+            var metadata = XElement.Parse(ServiceStatus.GetInstance().MetadataDocument);
+            string xPath = "//*[local-name()='EntityType']";
+            var etElems = metadata.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+            foreach (var etElem in etElems)
+            {
+                if (null == etElem.Attribute("Name"))
+                {
+                    continue;
+                }
+
+                if (null != etElem.Attribute("HasStream"))
+                {
+                    continue;
+                }
+
+                entityTypeShortName = etElem.GetAttributeValue("Name");
+                xPath = "./*[local-name()='Property']";
+                var propElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null != propElems && propElems.Any())
+                {
+                    foreach (var propElem in propElems)
+                    {
+                        if (null != propElem.Attribute("Type"))
+                        {
+                            string type = propElem.GetAttributeValue("Type");
+                            if (propertyTypes.Contains(type))
+                            {
+                                result.Add(propElem.GetAttributeValue("Name"));
+                            }
+                        }
+                    }
+
+                    if (result.Any())
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get property names from an entity-type.
+        /// </summary>
+        /// <param name="entityTypeShortName">Output the entity-type short name.</param>
+        /// <returns>Returns all the property names in the entity-type.</returns>
+        public static List<string> GetPropertyNames(out string entityTypeShortName)
+        {
+            var result = new List<string>();
+            entityTypeShortName = string.Empty;
+            var metadata = XElement.Parse(ServiceStatus.GetInstance().MetadataDocument);
+            string xPath = "//*[local-name()='EntityType']";
+            var etElems = metadata.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+            foreach (var etElem in etElems)
+            {
+                if (null == etElem.Attribute("Name"))
+                {
+                    continue;
+                }
+
+                entityTypeShortName = etElem.GetAttributeValue("Name");
+                xPath = "./*[local-name()='Property']";
+                var propElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null != propElems && propElems.Any())
+                {
+                    foreach (var propElem in propElems)
+                    {
+                        if (null != propElem.Attribute("Name"))
+                        {
+                            result.Add(propElem.GetAttributeValue("Name"));
+                        }
+                    }
+
+                    if (result.Any())
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get numeric property name from an entity-type.
+        /// </summary>
+        /// <param name="entityTypeShortName">Output the entity-type short name.</param>
+        /// <returns>Returns all the numeric property names in the entity-type.</returns>
+        public static List<string> GetNumericPropertyNames(out string entityTypeShortName)
+        {
+            var result = new List<string>();
+            entityTypeShortName = string.Empty;
+            var metadata = XElement.Parse(ServiceStatus.GetInstance().MetadataDocument);
+            string xPath = "//*[local-name()='EntityType']";
+            var etElems = metadata.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+            foreach (var etElem in etElems)
+            {
+                if (null == etElem.Attribute("Name"))
+                {
+                    continue;
+                }
+
+                entityTypeShortName = etElem.GetAttributeValue("Name");
+                xPath = "./*[local-name()='Property']";
+                var propElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null != propElems && propElems.Any())
+                {
+                    foreach (var propElem in propElems)
+                    {
+                        if (null != propElem.Attribute("Name") &&
+                            null != propElem.Attribute("Type") &&
+                            MetadataHelper.IsNumericPropertyType(propElem.GetAttributeValue("Type")))
+                        {
+                            result.Add(propElem.GetAttributeValue("Name"));
+                        }
+                    }
+
+                    if (result.Any())
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the navigation property names from an entity-type.
+        /// </summary>
+        /// <param name="entityTypeShortName">Output the entity-type short name.</param>
+        /// <returns>Returns all the navigation property name in the entity-type.</returns>
+        public static List<string> GetNavigationPropertyNames(out string entityTypeShortName, IEnumerable<string> entityTypeShortNames = null)
+        {
+            var result = new List<string>();
+            entityTypeShortName = string.Empty;
+            var metadata = XElement.Parse(ServiceStatus.GetInstance().MetadataDocument);
+            string xPath = "//*[local-name()='EntityType']";
+            var etElems = metadata.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+            foreach (var etElem in etElems)
+            {
+                if (null == etElem.Attribute("Name"))
+                {
+                    continue;
+                }
+
+                if (null != entityTypeShortNames &&
+                    entityTypeShortNames.Any() &&
+                    entityTypeShortNames.Contains(etElem.GetAttributeValue("Name")))
+                {
+                    continue;
+                }
+
+                entityTypeShortName = etElem.GetAttributeValue("Name");
+                xPath = "./*[local-name()='NavigationProperty']";
+                var propElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null != propElems && propElems.Any())
+                {
+                    foreach (var propElem in propElems)
+                    {
+                        result.Add(propElem.GetAttributeValue("Name"));
+                    }
+
+                    if (result.Any())
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Verify the specified key property type.
+        /// </summary>
+        /// <param name="propertyType">The property type.</param>
+        /// <returns>Returns the verification result.</returns>
+        private static bool IsKeyPropertyType(string propertyType)
+        {
+            if ("Edm.Int16" == propertyType || "Edm.Int32" == propertyType ||
+                "Edm.Int64" == propertyType || "Edm.String" == propertyType)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Verify the specified property is a numeric property.
+        /// </summary>
+        /// <param name="propertyType">The property type.</param>
+        /// <returns>Returns the verification result.</returns>
+        private static bool IsNumericPropertyType(string propertyType)
+        {
+            if ("Edm.Int16" == propertyType || "Edm.Int32" == propertyType ||
+                "Edm.Int64" == propertyType || "Edm.Decimal" == propertyType ||
+                "Edm.Double" == propertyType || "Edm.Single" == propertyType)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

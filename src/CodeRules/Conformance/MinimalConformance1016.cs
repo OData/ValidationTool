@@ -87,7 +87,7 @@ namespace ODataValidator.Rule
             ExtensionRuleResultDetail detail2 = new ExtensionRuleResultDetail(this.Name);
             List<string> keyPropertyTypes = new List<string>() { "Edm.Int32", "Edm.Int16", "Edm.Int64", "Edm.Guid", "Edm.String" };
             List<EntityTypeElement> entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.CollectionValued).ToList();
-            
+
             if (entityTypeElements == null || entityTypeElements.Count == 0)
             {
                 detail1.ErrorMessage = "To verify this rule it expects an entity type with Int32/Int64/Int16/Guid/String key property, but there is no this entity type in metadata so can not verify this rule.";
@@ -140,7 +140,7 @@ namespace ODataValidator.Rule
                     var reqData = dFactory.ConstructInsertedEntityData(et.EntitySetName, et.EntityTypeShortName, null, out additionalInfos1);
                     string reqDataStr = reqData.ToString();
                     bool isMediaType = !string.IsNullOrEmpty(additionalInfos1.Last().ODataMediaEtag);
-                    var resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos1);
+                    var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos1);
                     detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
 
                     if (resp.StatusCode.HasValue && HttpStatusCode.Created == resp.StatusCode)
@@ -163,7 +163,7 @@ namespace ODataValidator.Rule
                         reqData = dFactory.ConstructInsertedEntityData(navigPropRelatedEntitySetName, navigPropRelatedEntityTypeShortName, null, out additionalInfos2);
                         reqDataStr = reqData.ToString();
                         isMediaType = !string.IsNullOrEmpty(additionalInfos2.Last().ODataMediaEtag);
-                        resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos2);
+                        resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos2);
                         detail2 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
 
                         if (resp.StatusCode.HasValue && resp.StatusCode == HttpStatusCode.Created)
@@ -171,7 +171,7 @@ namespace ODataValidator.Rule
                             passed = true;
 
                             // Restore the service.
-                            var resps2 = WebHelper.DeleteEntities(additionalInfos2);
+                            var resps2 = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos2);
                         }
                         else
                         {
@@ -180,7 +180,7 @@ namespace ODataValidator.Rule
                         }
 
                         // Restore the service.
-                        var resps1 = WebHelper.DeleteEntities(additionalInfos1);
+                        var resps1 = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos1);
                     }
                     else
                     {

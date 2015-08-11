@@ -32,12 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RuleEngine\ODataValidator.RuleEngine.csproj">
-      <Project>{E6719D28-3A5A-4ACB-B8BE-A9A481496E07}</Project>
-      <Name>ODataValidator.RuleEngine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Rules.xsd" />
   </ItemGroup>
   <ItemGroup>

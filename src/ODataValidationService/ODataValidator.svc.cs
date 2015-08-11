@@ -137,7 +137,7 @@ namespace ODataValidator.ValidationService
         /// <param name="levelTypes">The validated conformance level types.</param>
         /// <returns>The collection of validation jobs</returns>
         [WebGet]
-        public IEnumerable<JobGroup> UriValidationJobs(string Uri, string Format, string toCrawl, string byMetadata, string Headers, string isConformance, string levelTypes = null)
+        public IEnumerable<JobGroup> UriValidationJobs(string Uri, string Format, string toCrawl, string byMetadata, string Headers, string isConformance, string levelTypes = null, string serviceImplementation = null)
         {
             Uri = HttpUtility.UrlDecode(Uri);
 
@@ -160,7 +160,9 @@ namespace ODataValidator.ValidationService
                 }
                 else
                 {
-                    return CreateSimpleValidationJobByUri(Uri, Format, reqHeaders, !string.IsNullOrEmpty(byMetadata) && byMetadata.Equals("yes", StringComparison.OrdinalIgnoreCase));
+                    return CreateSimpleValidationJobByUri(Uri, Format, reqHeaders, 
+                        !string.IsNullOrEmpty(byMetadata) && byMetadata.Equals("yes", StringComparison.OrdinalIgnoreCase),
+                        !string.IsNullOrEmpty(serviceImplementation) && serviceImplementation.Equals("yes", StringComparison.OrdinalIgnoreCase));
                 }
             }
         }
@@ -626,9 +628,17 @@ namespace ODataValidator.ValidationService
             return input.Trim(' ', '\t', '\r', '\n');
         }
 
-        private IEnumerable<JobGroup> CreateSimpleValidationJobByUri(string Uri, string Format, IEnumerable<KeyValuePair<string, string>> reqHeaders, bool isMetadataValidation = false)
+        private IEnumerable<JobGroup> CreateSimpleValidationJobByUri(string Uri, string Format, IEnumerable<KeyValuePair<string, string>> reqHeaders, bool isMetadataValidation = false, bool serviceImplementation = false)
         {
-            ServiceContext ctx = ServiceContextFactory.Create(Uri, Format, Guid.NewGuid(), MaxPayloadByteCount, reqHeaders);
+            ServiceContext ctx;
+            if (serviceImplementation)
+            {
+                ctx = ServiceContextFactory.Create(Uri, Format, Guid.NewGuid(), MaxPayloadByteCount, reqHeaders, "ServiceImpl");
+            }
+            else
+            {
+                ctx = ServiceContextFactory.Create(Uri, Format, Guid.NewGuid(), MaxPayloadByteCount, reqHeaders);
+            }
 
             bool isNotVerifyMetadata = isMetadataValidation ^ (ctx != null && ctx.PayloadType == PayloadType.Metadata);
             bool isVersionNotSupported = ctx != null && !ctx.IsRequestVersion() && (ctx.HttpStatusCode == System.Net.HttpStatusCode.UnsupportedMediaType || ctx.HttpStatusCode == System.Net.HttpStatusCode.BadRequest);

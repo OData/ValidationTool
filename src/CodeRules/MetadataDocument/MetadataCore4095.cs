@@ -195,7 +195,7 @@ namespace ODataValidator.Rule
                         passed = false; break;
                     }
                 }
-                catch(Exception e) { continue; }
+                catch(Exception) { continue; }
             }
 
             info = new ExtensionRuleViolationInfo(this.ErrorMessage, context.Destination, context.ResponsePayload);

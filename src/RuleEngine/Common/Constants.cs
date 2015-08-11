@@ -19,6 +19,11 @@ namespace ODataValidator.RuleEngine.Common
         public const string ContentTypeJson = @"application/json";
 
         /// <summary>
+        /// HTTP header Content-Type for text/plain payload
+        /// </summary>
+        public const string ContentTypeTextPlain = @"text/plain";
+
+        /// <summary>
         /// Regular expression for json content type
         /// </summary>
         public const string RegexContentTypeJson = @"application/json";

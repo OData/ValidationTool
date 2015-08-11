@@ -65,7 +65,164 @@ var conformanceResults = {
     "rerunloadover":-1
 };
 
+var ServiceImplementationResults = {
+    'ImplementTotal': { 'implementedCount': 0, 'nonImplementedCount': 0 },
+    'Rules': [],
+    'implementationJobIDs': [],
+    'checkJodIDCount': 0,
+    'ResultDetails': [],
+    "ResultDetailChecked": -1,
+    "rerunloadover": -1
+};
+
+var folderItem = "<li style=\"display: block; list-style-image: url(Images/leaf.png);\"><img src=\"Images/leaf.png\">{0}</li>"
+var folder = "<li name=\"{0}\"><img class=\"angle\" onclick=\"toggleFolder(this)\" src=\"Images/unfoldAngle.png\"><div style=\"display:inline\" ondblclick=\"toggleFolder(this)\"><img class=\"fold\" style=\"margin:0 3px\" src=\"images/unfold.png\" />{0}</div><ul style=\"display: block;\"></ul></li>";
+
 var currentDetail;
+
+String.prototype.format = String.prototype.f = function () {
+    var s = this,
+       i = arguments.length;
+
+    while (i--) {
+        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+    }
+    return s;
+};
+
+// Base64 encode and decode
+var Base64 = {
+    // private property
+    _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+    // public method for encoding
+    encode: function (input) {
+        var output = "";
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = Base64._utf8_encode(input);
+
+        while (i < input.length) {
+
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+
+            enc1 = chr1 >> 2;
+            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+            enc4 = chr3 & 63;
+
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+
+            output = output +
+            Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) +
+            Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
+
+        }
+
+        return output;
+    },
+
+    // public method for decoding
+    decode: function (input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+        while (i < input.length) {
+
+            enc1 = Base64._keyStr.indexOf(input.charAt(i++));
+            enc2 = Base64._keyStr.indexOf(input.charAt(i++));
+            enc3 = Base64._keyStr.indexOf(input.charAt(i++));
+            enc4 = Base64._keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+
+        }
+
+        output = Base64._utf8_decode(output);
+
+        return output;
+
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode: function (string) {
+        string = string.replace(/\r\n/g, "\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if ((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+
+        return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode: function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = 0, c1 = 0, c2 = 0;
+
+        while (i < utftext.length) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if ((c > 191) && (c < 224)) {
+                c1 = utftext.charCodeAt(i + 1);
+                string += String.fromCharCode(((c & 31) << 6) | (c1 & 63));
+                i += 2;
+            }
+            else {
+                c1 = utftext.charCodeAt(i + 1);
+                c2 = utftext.charCodeAt(i + 2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c1 & 63) << 6) | (c2 & 63));
+                i += 3;
+            }
+
+        }
+        return string;
+    }
+}
 
 $(function () {
     resetAll();
@@ -94,6 +251,11 @@ function initClickHandlers() {
     $("#metadataValidateButton").click(function () {
         emptyDataForRerun(3);
         submitMetadataValidationJobByUri();
+    });
+    
+    $("#serviceImplementationButton").click(function () {
+        emptyDataForRerun(4);
+        submitserviceImplementationJobByUri();
     });
 
     $("#meta_icon").click(function (ev) { evh_enableCollapse(ev); });
@@ -146,6 +308,19 @@ function resetJob() {
     validatorStat.totalRequestsSent = 0;
 }
 
+function resetServiceImplementationResults()
+{
+    ServiceImplementationResults = {
+        'ImplementTotal': { 'implementedCount': 0, 'nonImplementedCount': 0 },
+        'Rules': [],
+        'implementationJobIDs': [],
+        'checkJodIDCount': 0,
+        'ResultDetails': [],
+        "ResultDetailChecked": -1,
+        "rerunloadover": -1
+    };
+}
+
 function resetAll() {
     clearDisplay()
     resetApp();
@@ -182,6 +357,12 @@ function isNoInput() {
 
     if (index != -1 && input.indexOf(inputTable[index]) != -1) {
         $('#statusInfo').empty().show().append("<p class='errorMsg'>" + msgTable[index] + "</p>");
+        return true;
+    }
+    if ($('#requiredCredential')[0].checked == true
+        && ($('#username')[0].value == "" || $('#password')[0].value == ""))
+    {
+        $('#statusInfo').empty().show().append("<p class='errorMsg'>" + "User name and password should not be empty."  + "</p>");
         return true;
     }
 
@@ -247,6 +428,7 @@ function submitValidationJobByUri() {
     if (isNoInput()) {
         return;
     }
+    $("#credential").submit();
     onJobStart();
 
     if ($('#crawling').is(':checked')) {
@@ -261,6 +443,7 @@ function submitMetadataValidationJobByUri() {
     if (isNoInput()) {
         return;
     }
+    $("#credential").submit();
     onJobStart();
     submitMetadataValidationJob();
 }
@@ -287,6 +470,17 @@ function submitValidationJobByDirectText() {
         loadPayload(validatorApp.currentJob.Id);
     });
     alertSendoutRequest();
+}
+
+function submitserviceImplementationJobByUri()
+{
+    if (isNoInput()) {
+        return;
+    }
+    $("#credential").submit();
+    onJobStart();
+
+    submitserviceImplementationJob();
 }
 
 function newValidation(newJob, isSimpleJob) {
@@ -432,12 +626,13 @@ function submitConformanceValidationJob() {
     if (isNoInput()) {
         return;
     }
+    $("#credential").submit();
     onJobStart();
 
     var OriginalURI = "odatavalidator/UriValidationJobs"
             + "?Uri='" + encodeURIComponent($("#svcUrl").val())
             + "'&Format='json;odata.metadata=full'"
-            + "&Headers='OData-Version:4.0;'"
+            + "&Headers='OData-Version:4.0;" + getAuthorization() + "'"
             + "&isConformance='" + getSelectedResourceType() + "'"
             + "&levelTypes='" + getSelectedConformanceLevel() + "'";
     conformanceResults.OriginalURI = OriginalURI;
@@ -467,6 +662,149 @@ function submitConformanceValidationJob() {
         $('#infotop #statusInfo').empty();
         startJobForConformanceLevel();
     });
+}
+
+function submitserviceImplementationJob()
+{
+    var request = {
+        method: "GET",
+        requestUri: "odatavalidator/UriValidationJobs"
+            + "?Uri='" + encodeURIComponent(getServiceImplementationValidateUri()).replace(new RegExp("'", "g"), "%25%32%37") + "'"
+            + "&Format='atompub'"
+            + "&serviceImplementation='yes'"
+            + createServiceImplementationReqHeaders()
+    };
+    alertSendoutRequest();
+    OData.request(request, function (data) {
+        alertReceiveResponse();
+        $.each(data.results, function () {
+            var job = { 'Uri': this.Uri, 'ResourceType': this.ResourceType, 'Id': this.DerivativeJobId, 'RuleCount': this.RuleCount, 'Issues': this.Issues };
+            validatorApp.jobsInQ.push(job);
+        });
+        updateMasterJobId(data.results[0].MasterJobId);
+
+        $('#infotop #statusInfo').empty();
+        startJobForServiceImplementation(true);
+    });
+}
+
+function startJobForServiceImplementation()
+{
+    while (validatorApp.jobsInQ.length > 0) {
+        resetJob();
+        resetServiceImplementationResults();
+        validatorApp.currentJob = validatorApp.jobsInQ.shift();
+        if (validatorApp.currentJob.Issues) {
+            //display status message only, w/o anchor
+            var jobStatusInfo = { 'status': validatorApp.currentJob.Issues };
+            $('#jobStatusInfoTmpl').tmpl(jobStatusInfo).appendTo('#infotop #statusInfo');
+            continue;
+        }
+
+        //validatorApp.currJobDetail = (isSimpleJob) ? newRegularValidation(validatorApp.currentJob) : newCrawlingValidation(validatorApp.currentJob);
+        loadResultsForServiceImplementation(validatorApp.currentJob.Id, 0);
+        
+        return;
+    }
+
+    enableTabSwitch();
+}
+
+function loadResultsForServiceImplementation(jobID, totalResultsRetrieved)
+{
+    if (totalResultsRetrieved < validatorApp.currentJob.RuleCount)
+    { $('#infotop #statusInfo').empty(); alertResultsInProgress(); }
+    var query = "odatavalidator/ValidationJobs(guid'" + jobID + "')/TestResults?$orderby=ID";
+    if (totalResultsRetrieved > 0) { query += "&$skip=" + totalResultsRetrieved };
+
+    var ruleCount = validatorApp.currentJob.RuleCount;
+    OData.read(query, function (data) {
+        $.each(data.results, function () {
+            catcheServiceImplementationResults(this, ruleCount);
+            totalResultsRetrieved++;
+        });
+        $('#infotop #statusInfo').empty();
+        updateLoadedResultCount(totalResultsRetrieved);
+        loadMoreResultsForServiceImplementation(jobID, totalResultsRetrieved);
+    });
+}
+
+function loadMoreResultsForServiceImplementation(jobID, totalResultsRetrieved)
+{
+    if (totalResultsRetrieved < validatorApp.currentJob.RuleCount) {
+        validatorStat.totalRequestsSent++;
+        if (validatorStat.totalRequestsSent < validatorConf.maxRequests) {
+            validatorApp.LoadResultsTimeoutObj = setTimeout(function () { loadResultsForServiceImplementation(jobID, totalResultsRetrieved) }, validatorConf.perRequestDelay);
+        } else {
+            alertTimeout();
+            enableTabSwitch();
+        }
+    } else {
+        startJobForServiceImplementation();
+    }
+}
+
+function onJobEndforServiceImplementation()
+{
+    ServiceImplementationResults.implementationJobIDs.push(validatorApp.currentJob.Id);
+
+    if (jobHasAnyIssue()) {
+        //color code to highlight
+        jQuery('#summary', validatorApp.currJobDetail).addClass("highlit");
+    }
+    validatorApp.currJobDetail = null;
+    validatorApp.currJobNote = null;
+    $('#infotop #statusInfo').empty();
+    alertJobComplete();
+    displayServiceImplementationResults();
+}
+
+function catcheServiceImplementationResults(testResult, ruleCount)
+{
+    if (testResult.Classification == "success")
+    { ServiceImplementationResults.ImplementTotal.implementedCount++; }
+    else
+    { ServiceImplementationResults.ImplementTotal.nonImplementedCount++; }
+
+    var query = "odatavalidator/TestResults(" + testResult.ID + ")/ResultDetails";
+    var rule = { FullName: null, classification: null, URI: [] };
+    rule.FullName = testResult.Description;
+    rule.classification = testResult.Classification;
+
+    OData.read(query, function (data) {
+        if (data.results.length == 0) {
+            OData.read(query, function (data) {
+                if (data.results.length == 0) {
+                    "Load Result details failed!".appendTo('#infotop #statusInfo');
+                }
+                $.each(data.results, function () {
+                    rule.URI.push(this.URI);
+                    ServiceImplementationResults.Rules.push(rule);
+                    if (ServiceImplementationResults.Rules.length >= ruleCount) {
+                        onJobEndforServiceImplementation();
+                    }
+                });
+            });
+        }
+        else {
+            $.each(data.results, function () {
+                rule.URI.push(this.URI);
+                ServiceImplementationResults.Rules.push(rule);
+                if (ServiceImplementationResults.Rules.length >= ruleCount) {
+                    onJobEndforServiceImplementation();
+                }
+            });
+        }
+    });
+
+    
+}
+
+function displayServiceImplementationResults()
+{
+    $('#infobody').empty();
+    $('#serviceImplementationBodyTmpl').tmpl(ServiceImplementationResults.ImplementTotal).appendTo('#infobody');
+    loadTree();
 }
 
 function startJob(isSimpleJob) {
@@ -1748,13 +2086,13 @@ function htmlEncode(value) {
 function createReqHeaders() {
     var str = "";
     if ($('#v1_v2Compliance').is(':checked')) {
-        str = "&Headers='" + 'DataServiceVersion:1.0;' + "'";
+        str = "&Headers='" + 'DataServiceVersion:1.0;' + getAuthorization() + "'";
     }
     if ($('#v3Compliance').is(':checked')) {
-        str = "&Headers='" + 'DataServiceVersion:3.0;' + "'";
+        str = "&Headers='" + 'DataServiceVersion:3.0;' + getAuthorization() + "'";
     }
     if ($('#v4Compliance').is(':checked')) {
-        str = "&Headers='" + 'OData-Version:4.0;' + "'";
+        str = "&Headers='" + 'OData-Version:4.0;' + getAuthorization() + "'";
     }
 
     return str;
@@ -1763,13 +2101,28 @@ function createReqHeaders() {
 function createMetadataReqHeaders() {
     var str = "";
     if ($('#v1_v2_Radio').is(':checked')) {
-        str = "&Headers='" + 'DataServiceVersion:1.0;' + "'";
+        str = "&Headers='" + 'DataServiceVersion:1.0;' + getAuthorization() + "'";
     }
     if ($('#v3_Radio').is(':checked')) {
-        str = "&Headers='" + 'DataServiceVersion:3.0;' + "'";
+        str = "&Headers='" + 'DataServiceVersion:3.0;' + getAuthorization() + "'";
     }
     if ($('#v4_Radio').is(':checked')) {
-        str = "&Headers='" + 'OData-Version:4.0;' + "'";
+        str = "&Headers='" + 'OData-Version:4.0;' + getAuthorization() + "'";
+    }
+
+    return str;
+}
+
+function createServiceImplementationReqHeaders() {
+    var str = "";
+    if ($('#s_v1_v2_Radio').is(':checked')) {
+        str = "&Headers='" + 'DataServiceVersion:1.0;' + getAuthorization() + "'";
+    }
+    if ($('#s_v3_Radio').is(':checked')) {
+        str = "&Headers='" + 'DataServiceVersion:3.0;' + getAuthorization() + "'";
+    }
+    if ($('#s_v4_Radio').is(':checked')) {
+        str = "&Headers='" + 'OData-Version:4.0;' + getAuthorization() + "'";
     }
 
     return str;
@@ -1977,6 +2330,18 @@ function getServiceToValidateUri() {
     return url;
 }
 
+function getServiceImplementationValidateUri() {
+    var url = $("#serviceImplementationUri").val();
+
+    if (url.indexOf("?$format=") > 0) {
+        url = url.slice(0, url.lastIndexOf("?$format="))
+    } else if (url.indexOf("&$format=") > 0) {
+        url = url.slice(0, url.lastIndexOf("&$format="))
+    }
+
+    return url;
+}
+
 function getPayloadText() {
     if ($("#payload_text").val() == validatorConf.payload_text_help) { return ''; }
     return $("#payload_text").val();
@@ -2032,4 +2397,72 @@ function toTypeDesc(type) {
     if (type == "Entry") return "OData Entry";
     if (type == "Error") return "Error Payload";
     return "other";
+}
+
+function getAuthorization() {
+    var str = '';
+    if ($('#credentialContainer')[0].style.display != "none" && $('#requiredCredential')[0].checked) {
+        str = 'Authorization: Basic ' + Base64.encode($('#username')[0].value + ':' + $('#password')[0].value);
+    }
+    return str;
+}
+
+function loadTree() {
+    if (ServiceImplementationResults.Rules == undefined || ServiceImplementationResults.Rules.length == 0) {
+        return;
+    }
+
+    $.each(ServiceImplementationResults.Rules, function () {
+        var temp = this;
+        $.each(this.URI, function () {
+            if (temp.classification == "success") {
+                insertTo($($('#implementedTree ul')[0]), temp.FullName.split(',').concat(this));
+            }
+            else { insertTo($($('#non-implementedTree ul')[0]), temp.FullName.split(',').concat(this)); }
+        });
+    });
+}
+
+// Insert leaf to the node.
+function insertTo(node, paths) {
+    if (paths.length == 1) {
+        node.append(folderItem.format(paths[0])); return;
+    }
+
+    //node.children("li").each(function () {
+    //    if (this.attributes['name'].value == paths[0]) {
+
+    //    }
+    //});
+
+    var selector = "li[name=" + paths[0] + "]";
+    var existedFolder = node.children(selector);
+    if (existedFolder != undefined && existedFolder.length != 0) {
+        insertTo($(existedFolder.children("ul")[0]), paths.slice(1)); return;
+    }
+    //for (var child in node.children())
+    //{
+    //    if (child.nodeValue == paths[0])
+    //    {
+    //        insertTo($(child.children("ul")[0]), paths.slice(1)); return;
+    //    }
+    //}
+
+    var newNode = node.append(folder.format(paths[0]));
+
+    insertTo(newNode.children("li[name=" + paths[0] + "]").children("ul"), paths.slice(1));
+}
+
+function toggleFolder(e) {
+    var temp = $('ul', e.parentNode)[0];
+    if (temp.style.display == "block") {
+        temp.style.display = "none";
+        $('.angle', e.parentNode)[0].src = "Images/foldAngle.png";
+        $('.fold', e.parentNode)[0].src = "Images/fold.png";
+    }
+    else {
+        temp.style.display = "block";
+        $('.angle', e.parentNode)[0].src = "Images/unfoldAngle.png";
+        $('.fold', e.parentNode)[0].src = "Images/unfold.png";
+    }
 }

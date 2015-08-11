@@ -142,7 +142,7 @@ namespace ODataValidator.Rule
             var additionalInfos = new List<AdditionalInfo>();
             var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
             string reqDataStr = reqData.ToString();
-            var resp = WebHelper.CreateEntity(feedUrl, reqData, false, ref additionalInfos);
+            var resp = WebHelper.CreateEntity(feedUrl, context.RequestHeaders, reqData, false, ref additionalInfos);
             detail1 = new ExtensionRuleResultDetail(this.Name, feedUrl, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (HttpStatusCode.Created == resp.StatusCode)
             {

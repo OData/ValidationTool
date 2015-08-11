@@ -5,7 +5,9 @@ namespace ODataValidator.Rule.Helper
 {
     #region Namespace.
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Xml.Linq;
     using System.Xml.XPath;
     using Newtonsoft.Json.Linq;
@@ -47,7 +49,7 @@ namespace ODataValidator.Rule.Helper
             string xPath = string.Format("//*[local-name()='EntitySet' and @EntityType='{0}']", entityTypeFullName);
             var entitySetElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
 
-            return null != entitySetElem && null != entitySetElem.Attribute("Name") ? 
+            return null != entitySetElem && null != entitySetElem.Attribute("Name") ?
                 entitySetElem.GetAttributeValue("Name") : string.Empty;
         }
 
@@ -72,7 +74,7 @@ namespace ODataValidator.Rule.Helper
             string xPath = string.Format("//*[local-name()='EntitySet' and @Name='{0}']", entitySetName);
             var entitySetElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
 
-            return null != entitySetElem && null != entitySetElem.Attribute("EntityType") ? 
+            return null != entitySetElem && null != entitySetElem.Attribute("EntityType") ?
                 entitySetElem.GetAttributeValue("EntityType") : string.Empty;
         }
 
@@ -142,7 +144,7 @@ namespace ODataValidator.Rule.Helper
             {
                 foreach (var entry in entries)
                 {
-                    if(null != entry["name"] && entitySetName == entry["name"].Value<string>() &&
+                    if (null != entry["name"] && entitySetName == entry["name"].Value<string>() &&
                        null != entry["kind"] && "EntitySet" == entry["kind"].Value<string>())
                     {
                         return null != entry["url"] ? entry["url"].Value<string>() : string.Empty;
@@ -165,7 +167,7 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entitySetURL"));
             }
 
-            if (!IsSpecifiedEntitySetNameExist(entitySetURL))
+            if (!IsSpecifiedEntitySetURLExist(entitySetURL))
             {
                 throw new ArgumentException(string.Format(ParamNotFoundErrorMsgPattern, "entity-set", "URL", "entitySetURL"));
             }
@@ -200,7 +202,7 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entityTypeFullName"));
             }
 
-            if (!IsSpecifiedEntitySetNameExist(entityTypeFullName))
+            if (!IsSpecifiedEntityTypeFullNameExist(entityTypeFullName))
             {
                 throw new ArgumentException(string.Format(ParamNotFoundErrorMsgPattern, "entity-type", "full name", "entityTypeFullName"));
             }
@@ -228,7 +230,7 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entitySetURL"));
             }
 
-            if (!IsSpecifiedEntitySetNameExist(entitySetURL))
+            if (!IsSpecifiedEntitySetURLExist(entitySetURL))
             {
                 throw new ArgumentException(string.Format(ParamNotFoundErrorMsgPattern, "entity-set", "URL", "entitySetURL"));
             }
@@ -255,7 +257,7 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entityTypeShortName"));
             }
 
-            if (!IsSpecifiedEntitySetNameExist(entityTypeShortName))
+            if (!IsSpecifiedEntityTypeShortNameExist(entityTypeShortName))
             {
                 throw new ArgumentException(string.Format(ParamNotFoundErrorMsgPattern, "entity-type", "short name", "entityTypeShortName"));
             }
@@ -287,7 +289,7 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entitySetURL"));
             }
 
-            if (!IsSpecifiedEntitySetNameExist(entitySetURL))
+            if (!IsSpecifiedEntitySetURLExist(entitySetURL))
             {
                 throw new ArgumentException(string.Format(ParamNotFoundErrorMsgPattern, "entity-set", "URL", "entitySetURL"));
             }
@@ -657,10 +659,239 @@ namespace ODataValidator.Rule.Helper
                 .Where(e => "EntitySet" == e["kind"].Value<string>() && entitySetURL == e["url"].Value<string>())
                 .Select(e => e);
 
-            return null != entry;
+            return null != entry && entry.Any();
         }
 
+        /// <summary>
+        /// Get the accessable entity-set URL.
+        /// </summary>
+        /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <returns>Returns the accessable entity-set URL.</returns>
+        public static string GetAccessEntitySetURL(this string entityTypeShortName)
+        {
+            var svcStatus = ServiceStatus.GetInstance();
+            var queue = MappingHelper.GetAccessEntitySetPathNodes(entityTypeShortName);
+            var stack = new Stack<string>();
+            while (queue.Any())
+            {
+                stack.Push(queue.Dequeue());
+            }
+
+            string url = svcStatus.RootURL.TrimEnd('/') + "/";
+            while (stack.Any())
+            {
+                string entitySetUrl = stack.Pop();
+                var keyProps = entitySetUrl.GetAccessKeyProperties();
+                url += entitySetUrl;
+                var keyPropVals = new List<string>();
+                var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
+                if (null != resp && HttpStatusCode.OK == resp.StatusCode)
+                {
+                    var jObj = JObject.Parse(resp.ResponsePayload);
+                    JArray jArr = jObj.GetValue(Constants.Value) as JArray;
+                    var entity = jArr.First as JObject;
+                    foreach (var keyProp in keyProps)
+                    {
+                        keyPropVals.Add(entity[keyProp.Item1].ToString());
+                    }
+                }
+
+                if (stack.Count != 0)
+                {
+                    url = url.RemoveEnd(entitySetUrl) + MappingHelper.GetNodePath(entitySetUrl, keyProps, keyPropVals) + "/";
+                }
+            }
+
+            return url.Remove(0, (svcStatus.RootURL.TrimEnd('/') + "/").Count());
+        }
+
+        #region Private members.
         private static readonly string ParamNullErrorMsgPattern;
         private static readonly string ParamNotFoundErrorMsgPattern;
+        #endregion
+
+        #region Private methods.
+        /// <summary>
+        /// Get the accessable entity-set URL.
+        /// </summary>
+        /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <returns>Returns the path nodes as a queue.</returns>
+        private static Queue<string> GetAccessEntitySetPathNodes(this string entityTypeShortName)
+        {
+            if (string.IsNullOrEmpty(entityTypeShortName))
+            {
+                throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entityTypeShortName"));
+            }
+
+            var queue = new Queue<string>();
+            string entitySetUrl = entityTypeShortName.MapEntityTypeShortNameToEntitySetURL();
+            if (!string.IsNullOrEmpty(entitySetUrl))
+            {
+                queue.Enqueue(entitySetUrl);
+
+                return queue;
+            }
+
+            var svcStatus = ServiceStatus.GetInstance();
+            XElement metadata = XElement.Parse(svcStatus.MetadataDocument);
+            string entityTypeFullName = entityTypeShortName.AddNamespace(AppliesToType.EntityType);
+            if (string.IsNullOrEmpty(entityTypeFullName))
+            {
+                return queue;
+            }
+
+            string etShortName = string.Empty;
+            string xPath = string.Format("//*[local-name()='NavigationProperty' and contains(@Type, '{0}')]", entityTypeFullName);
+            var navigElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+            if (null != navigElem || null != navigElem.Attribute("Name"))
+            {
+                queue.Enqueue(navigElem.GetAttributeValue("Name"));
+                var parentElem = navigElem.Parent;
+                if (null == parentElem || null == parentElem.Attribute("Name"))
+                {
+                    return queue;
+                }
+
+                etShortName = parentElem.GetAttributeValue("Name");
+            }
+            else
+            {
+                xPath = string.Format("//*[local-name()='EntityType' and @BaseType='{0}']", entityTypeFullName);
+                var baseTypeElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+                if (null == baseTypeElem || null == baseTypeElem.Attribute("Name"))
+                {
+                    return queue;
+                }
+
+                etShortName = baseTypeElem.GetAttributeValue("Name");
+            }
+
+            if (!string.IsNullOrEmpty(etShortName))
+            {
+                var temp = MappingHelper.GetAccessEntitySetPathNodes(etShortName);
+                while (temp.Any())
+                {
+                    queue.Enqueue(temp.Dequeue());
+                }
+            }
+
+            return queue;
+        }
+
+        /// <summary>
+        /// Get accessable key properties from entity-type.
+        /// </summary>
+        /// <param name="entitySetUrl">The entity-set URL.</param>
+        /// <returns>Returns the accessable key properties.</returns>
+        private static List<Tuple<string, string>> GetAccessKeyProperties(this string entitySetUrl)
+        {
+            if (string.IsNullOrEmpty(entitySetUrl))
+            {
+                throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entitySetUrl"));
+            }
+
+            var result = new List<Tuple<string, string>>();
+            var svcStatus = ServiceStatus.GetInstance();
+            var metadata = XElement.Parse(svcStatus.MetadataDocument);
+            if (entitySetUrl.IsSpecifiedEntitySetURLExist())
+            {
+                var entityTypeShortName = entitySetUrl.MapEntitySetURLToEntityTypeShortName();
+                if (!string.IsNullOrEmpty(entityTypeShortName))
+                {
+                    return entityTypeShortName.GetAccessKeyPropertiesET();
+                }
+            }
+
+            string xPath = string.Format("//*[local-name()='NavigationProperty' and @Name='{0}' and @ContainsTarget='true']", entitySetUrl);
+            var navigPropElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+            if (null != navigPropElem && null != navigPropElem.Attribute("Type"))
+            {
+                string navigPropType = navigPropElem.GetAttributeValue("Type");
+                var etShortName = navigPropType.RemoveCollectionFlag().GetLastSegment();
+
+                return etShortName.GetAccessKeyPropertiesET();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get accessable key properties from entity-type.
+        /// </summary>
+        /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <returns>Returns the accessable key properties.</returns>
+        private static List<Tuple<string, string>> GetAccessKeyPropertiesET(this string entityTypeShortName)
+        {
+            if (string.IsNullOrEmpty(entityTypeShortName))
+            {
+                throw new ArgumentNullException(string.Format(ParamNullErrorMsgPattern, "entityTypeShortName"));
+            }
+
+            var result = new List<Tuple<string, string>>();
+            var svcStatus = ServiceStatus.GetInstance();
+            var metadata = XElement.Parse(svcStatus.MetadataDocument);
+            string xPath = string.Format("//*[local-name()='EntityType' and @Name='{0}']", entityTypeShortName);
+            var entityTypeElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+            if (null != entityTypeElem)
+            {
+                xPath = "./*[local-name()='Key']/*[local-name()='PropertyRef']";
+                var propRefElems = entityTypeElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null != propRefElems && propRefElems.Any())
+                {
+                    foreach (var elem in propRefElems)
+                    {
+                        if (null == elem.Attribute("Name"))
+                        {
+                            continue;
+                        }
+
+                        string propName = elem.GetAttributeValue("Name");
+                        xPath = string.Format("./*[local-name()='Property' and @Name='{0}']", propName);
+                        var propElem = entityTypeElem.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+                        if (null == propElem || null == propElem.Attribute("Type"))
+                        {
+                            continue;
+                        }
+
+                        string propType = propElem.GetAttributeValue("Type");
+                        result.Add(new Tuple<string, string>(propName, propType));
+                    }
+
+                    return result;
+                }
+                else if (null != entityTypeElem.Attribute("BaseType"))
+                {
+                    string baseTypeShortName = entityTypeElem.GetAttributeValue("BaseType").GetLastSegment();
+
+                    return MappingHelper.GetAccessKeyPropertiesET(baseTypeShortName);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the node path.
+        /// </summary>
+        /// <param name="entitySetUrl">The entity-set URL.</param>
+        /// <param name="keyProps">The key properties which contain the key property names and types.</param>
+        /// <param name="keyPropVals">The key properties' value.</param>
+        /// <returns>Returns the node path.</returns>
+        private static string GetNodePath(string entitySetUrl, IEnumerable<Tuple<string, string>> keyProps, IEnumerable<string> keyPropVals)
+        {
+            var kps = keyProps.ToList();
+            var kpvs = keyPropVals.ToList();
+
+            string temp = string.Empty;
+            for (int i = 0; i < kps.Count; i++)
+            {
+                temp += kps[i].Item2 == "Edm.String" ?
+                    string.Format("{0}='{1}'", kps[i].Item1, kpvs[i]) :
+                    string.Format("{0}={1}", kps[i].Item1, kpvs[i]);
+            }
+
+            return entitySetUrl + "(" + temp.TrimEnd(',') + ")";
+        }
+        #endregion
     }
 }
