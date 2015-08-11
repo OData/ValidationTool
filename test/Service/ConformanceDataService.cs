@@ -13,7 +13,6 @@ namespace Microsoft.Protocols.TestSuites.Validator
     using System.IO;
     using System.Text;
     using System.Xml.Linq;
-    using Newtonsoft.Json.Linq;
     using System.Collections.Specialized;
     using System.Collections;
 

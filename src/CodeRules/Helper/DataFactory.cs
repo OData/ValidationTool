@@ -50,6 +50,47 @@ namespace ODataValidator.Rule.Helper
         }
 
         /// <summary>
+        /// Construct an entity property's data.
+        /// </summary>
+        /// <param name="entitySetName">The entity-set name.</param>
+        /// <param name="actualEntityTypeShortName">The actual entity-type short name.</param>
+        /// <param name="PropertyName">The property name.</param>
+        /// <returns>Returns the custom entity data.</returns>
+        public JProperty ConstructPropertyData(
+            string entitySetName,
+            string actualEntityTypeShortName,
+            string PropertyName)
+        {
+            JObject entity = new JObject();
+
+            if (!entitySetName.IsSpecifiedEntitySetNameExist())
+            {
+                return null;
+            }
+
+            // Map the entity-set name to entity-type short name.
+            string entityTypeShortName = entitySetName.MapEntitySetNameToEntityTypeShortName();
+            string targetShortName = string.IsNullOrEmpty(actualEntityTypeShortName) ? entityTypeShortName : actualEntityTypeShortName;
+            var normalPropNames = MetadataHelper.GetNormalPropertiesNames(this.metadataDoc, targetShortName);
+            var template = this.GetEntityDataTemplate(entitySetName, actualEntityTypeShortName);
+
+            if (null != template)
+            {
+                var properties = template.Children<JProperty>();
+
+                foreach (var prop in properties)
+                {
+                    if (PropertyName.Equals(prop.Name))
+                    {
+                        return prop;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Construct an inserted entity data.
         /// </summary>
         /// <param name="entitySetName">The entity-set name.</param>

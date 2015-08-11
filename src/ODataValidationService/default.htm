@@ -256,8 +256,8 @@
          transform: translateX(100%);
          /* Apply animation to this element */
          -moz-animation: scroll-left 30s linear infinite;
-         -webkit-animation: scroll-left 20s linear infinite;
-         animation: scroll-left 20s linear infinite;
+         -webkit-animation: scroll-left 30s linear infinite;
+         animation: scroll-left 30s linear infinite;
      }
      /* Move it (define the animation) */
      @-moz-keyframes scroll-left {
@@ -359,24 +359,30 @@
 
             </div>
         </div>
-        <div style="font-size: 30px;text-align:center; outline-offset:0;font-weight:bold;width:1200px;margin:auto">
+        <div style="font-size: 30px;text-align:center; outline-offset:0;font-weight:bold;width:1200px;margin:auto;">
             Run into the OData Validation Tool!<br />
         </div>
-        <div id="content" style="height:250px">
+        <div id="content" style="height:220px;width:1100px;margin-top:15px">
+            <div style="height:90px;font-size: 19px;">
+                OData Service Validation Tool is a member of the Data, Languages, and Systems Interoperability Gallery in the <a href="http://outercurve.org/">Outercurve Foundation</a> (see the <a href="http://www.outercurve.org/News/articleType/ArticleView/articleId/34/Outercurve-Foundation-Announces-Contribution-of-OData-Validation-Project">press release</a>).
+                <br />
+                The tool can currently validate the following types of OData endpoints:
+            </div> 
+            <div >
+                <ul style="font-size:medium;margin-top:5px">
+                    <li>&nbsp;&nbsp;&nbsp; Service document (e.g. <a href="http://services.odata.org/V4/TripPinServiceRW">http://services.odata.org/V4/TripPinServiceRW</a> )</li>
+                    <li>&nbsp;&nbsp;&nbsp; Metadata document (e.g. <a href="http://services.odata.org/V4/TripPinServiceRW/$metadata">http://services.odata.org/V4/TripPinServiceRW/$metadata</a> )</li>
+                    <li>&nbsp;&nbsp;&nbsp; A feed / collection (e.g. <a href="http://services.odata.org/V4/TripPinServiceRW/People">http://services.odata.org/V4/TripPinServiceRW/People)</a> </li>
+                    <li>&nbsp;&nbsp;&nbsp; An Entry (e.g. <a href="http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')">http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')</a>) </li>
 
-            <div class="col-1" style="height: 250px; width: 1100px; font-size: 19px; text-indent: 2em">
-                <div style="text-align:center;font-weight:bold">Download Source Code</div>
-                <p>Download the source code to a desired folder from CodePlex, e.g C:\ODataValidation.</p>
-
-                <div style="text-align: center; display: block; font-weight: bold">Build</div>
-                <p>Browse to C:\ODataValidation\src and open ODataValidationTool.sln. This should bring up the project as well as its<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependency projects.</p>
-                <p style="text-align: right; display: block; font-size: 15px">For more details please click <a href="help.htm">Help</a>.</p>
+                </ul>
             </div>
+            <span style="text-align: right; display: block; font-size: 15px;margin-top:30px;"> To know more about how to use OData Validation Tool,  please click <a href="help.htm">Help</a>.</span>
         </div>
-        <div style="padding-bottom:30px" />
-        <div id="footer" style="position: absolute; bottom: 0; left: 0; height: 50px; ">
+        <div style="height:50px"></div>
+        <div id="footer" style="position: absolute; bottom: 0; left: 0; height: 40px; ">
             <div id="externalLinks" style="width: 1100px; min-width: 800px; margin: 0 auto; text-align: center; padding-top: 5px; background-color: #F89C36">
-                <div style="display: inline-block; float:left"><a href="http://odatavalidator.codeplex.com/"><div id="codePlexLogo" style="font-size: 26px; line-height: 28px; vertical-align: central; ">Code<span class="semi">Plex</span></div></a></div>
+                <div style="display: inline-block; float:left"><a href="https://github.com/OData/ValidationTool/"><div id="codePlexLogo" style="font-size: 26px; line-height: 28px; vertical-align: central; ">Git<span class="semi">Hub</span></div></a></div>
                 <div style="display: inline-block;  "><a href="http://www.pragmatiqa.com/xodata"><img style="vertical-align:text-bottom;height:28px" src="images/XODataforfavico1-35.png"><font style="font-size: 26px; font-weight:bold; line-height: 28px; " color="6a747e">XOData&reg; </font></a></div>
                 <div style="display: inline-block;  float: right"><a href="https://github.com/OData/RESTier"><img style="vertical-align:bottom;" src="images/GitHub.png"><font style="box-sizing: border-box; white-space: nowrap; color: #6a747e; font-size: 26px; font-weight: normal; line-height: 28px; ">OData/<strong>RESTier</strong></font></a></div>
             </div>

@@ -143,7 +143,7 @@ namespace ODataValidator.Rule
             var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
             string reqDataStr = reqData.ToString();
             bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
-            var resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos);
+            var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
             detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (resp.StatusCode == HttpStatusCode.Created)
             {
@@ -169,12 +169,12 @@ namespace ODataValidator.Rule
                 if (resp.StatusCode == HttpStatusCode.OK)
                 {
                     // Delete the individual property
-                    resp = WebHelper.DeleteEntity(individualProUrl, hasEtag);
+                    resp = WebHelper.DeleteEntity(individualProUrl, context.RequestHeaders, hasEtag);
                     detail3 = new ExtensionRuleResultDetail(this.Name, individualProUrl, HttpMethod.Delete, string.Empty, resp);
                     if (resp.StatusCode == HttpStatusCode.NoContent)
                     {
                         // Check whether the deleted property is set to null
-                        if (WebHelper.GetMoreEntity(individualProUrl, out resp))
+                        if (WebHelper.GetContent(individualProUrl, context.RequestHeaders, out resp))
                         {
                             detail4 = new ExtensionRuleResultDetail(this.Name, individualProUrl, HttpMethod.Get, string.Empty, resp);
                             JObject jo;
@@ -208,7 +208,7 @@ namespace ODataValidator.Rule
                 }
 
                 // Delete the entity
-                var resps = WebHelper.DeleteEntities(additionalInfos);
+                var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
             }
             else
             {

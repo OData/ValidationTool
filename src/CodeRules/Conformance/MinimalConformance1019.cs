@@ -130,7 +130,7 @@ namespace ODataValidator.Rule
             var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
             string reqDataStr = reqData.ToString();
             bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
-            var resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos);
+            var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
             detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (HttpStatusCode.Created == resp.StatusCode)
             {
@@ -146,7 +146,7 @@ namespace ODataValidator.Rule
                         .Select(norProp => norProp.PropertyName)
                         .ToList();
                     reqDataStr = dFactory.ConstructUpdatedEntityData(entity, norPropertyNames).ToString();
-                    resp = WebHelper.UpdateEntity(entityId, reqDataStr, HttpMethod.Patch, hasEtag);
+                    resp = WebHelper.UpdateEntity(entityId, context.RequestHeaders, reqDataStr, HttpMethod.Patch, hasEtag);
                     detail3 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Patch, string.Empty, resp, string.Empty, reqDataStr);
                     if (HttpStatusCode.NoContent == resp.StatusCode)
                     {
@@ -196,7 +196,7 @@ namespace ODataValidator.Rule
                 }
 
                 // Restore the service.
-                var resps = WebHelper.DeleteEntities(additionalInfos);
+                var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
             }
             else
             {

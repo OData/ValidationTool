@@ -837,54 +837,35 @@ namespace ODataValidator.Rule.Helper
         /// <summary>
         /// Gets the amount of entities from a feed.
         /// </summary>
-        /// <param name="feedURL">A feed URL.</param>
+        /// <param name="entitySetUrl">A feed URL.</param>
         /// <returns>Return the amount of entities in current feed.</returns>
-        public static int GetEntitiesCountFromFeed(string feedURL)
+        public static int GetEntitiesCountFromFeed(string entitySetUrl)
         {
-            if (!Uri.IsWellFormedUriString(feedURL, UriKind.Absolute))
+            int amount = 0;
+            if (!Uri.IsWellFormedUriString(entitySetUrl, UriKind.Absolute))
             {
-                throw new UriFormatException("The parameter 'feedURL' is not an URL string.");
+                throw new UriFormatException("The input parameter 'entitySetUrl' is not a URL string.");
             }
 
-            int count = 0;
-            WebRequest req = WebRequest.Create(feedURL + "/$count");
-            Response resp = WebHelper.Get(req, RuleEngineSetting.Instance().DefaultMaximumPayloadSize);
-
-            if (HttpStatusCode.OK == resp.StatusCode)
+            var resp = WebHelper.Get(new Uri(entitySetUrl), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
+            if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
-                try
+                var jObj = JObject.Parse(resp.ResponsePayload);
+                var jArr = jObj.GetValue(Constants.Value) as JArray;
+                amount += jArr.Count;
+                while (null != jObj[Constants.V4OdataNextLink])
                 {
-                    count = Convert.ToInt32(resp.ResponsePayload);
-
-                    return count;
-                }
-                catch (FormatException)
-                {
-                    // Do nothing and let the program continue to run.
-                }
-            }
-
-            resp = WebHelper.Get(new Uri(feedURL + "?$count=true"), Constants.V4AcceptHeaderJsonMinimalMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
-
-            if (HttpStatusCode.OK == resp.StatusCode)
-            {
-                JObject feedPayload = JObject.Parse(resp.ResponsePayload);
-
-                try
-                {
-                    count = Convert.ToInt32(feedPayload["@odata.count"]);
-
-                    return count;
-                }
-                catch (FormatException)
-                {
-                    // If the response payload cannot convert to an integer, the program will return -1.
-                    return -1;
+                    string url = Uri.IsWellFormedUriString(jObj[Constants.V4OdataNextLink].ToString(), UriKind.Absolute) ?
+                        jObj[Constants.V4OdataNextLink].ToString() :
+                        ServiceStatus.GetInstance().RootURL.TrimEnd('/') + "/" + jObj[Constants.V4OdataNextLink].ToString();
+                    resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
+                    jObj = JObject.Parse(resp.ResponsePayload);
+                    jArr = jObj.GetValue(Constants.Value) as JArray;
+                    amount += jArr.Count;
                 }
             }
 
-            // If the above 2 methods all fail to get the amount of members in an entity-set, the program will return -1;
-            return -1;
+            return amount;
         }
 
         /// <summary>

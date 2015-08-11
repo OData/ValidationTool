@@ -138,7 +138,7 @@ namespace ODataValidator.Rule
                     var reqData = dFactory.ConstructInsertedEntityData(et.EntitySetName, et.EntityTypeShortName, null, out additionalInfos);
                     string reqDataStr = reqData.ToString();
                     bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
-                    var resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos);
+                    var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
                     detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
 
                     if (resp.StatusCode.HasValue && HttpStatusCode.Created == resp.StatusCode)
@@ -177,7 +177,7 @@ namespace ODataValidator.Rule
                         }
 
                         // Restore the service.
-                        var resps = WebHelper.DeleteEntities(additionalInfos);
+                        var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
                     }
                     else
                     {

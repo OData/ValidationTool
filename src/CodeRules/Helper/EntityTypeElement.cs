@@ -32,6 +32,7 @@ namespace ODataValidator.Rule.Helper
             string entityTypeNamespace = null,
             string entityTypeAlias = null,
             string baseTypeFullName = null,
+            bool hasStream = false,
             bool isOpenType = false,
             IEnumerable<NavigProperty> navigationProperties = null,
             string entitySetName = null)
@@ -54,6 +55,7 @@ namespace ODataValidator.Rule.Helper
                 string.Format("{0}.{1}", entityTypeNamespace, entityTypeShortName) :
                 entityTypeShortName;
             this.baseTypeFullName = baseTypeFullName;
+            this.hasStream = hasStream;
             this.isOpenType = isOpenType;
             this.normalProperties = normalProperties;
             this.keyProperties = normalProperties.Where(np => np.IsKey).Select(np => np);
@@ -139,6 +141,21 @@ namespace ODataValidator.Rule.Helper
             set
             {
                 baseTypeFullName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the HasStream attribute of an entity type.
+        /// </summary>
+        public bool HasStream
+        {
+            get
+            {
+                return hasStream;
+            }
+            set
+            {
+                hasStream = value;
             }
         }
 
@@ -258,6 +275,12 @@ namespace ODataValidator.Rule.Helper
                 entityTypeElement.GetAttributeValue("BaseType") :
                 null;
 
+            // Set the HasStream attribute of the entity-type element.
+            bool hasStream =
+                entityTypeElement.Attribute("HasStream") != null ?
+                Convert.ToBoolean(entityTypeElement.GetAttributeValue("HasStream")) :
+                false;
+
             // Set the OpenType attribute of the entity-type element.
             bool isOpenType =
                 entityTypeElement.Attribute("OpenType") != null ?
@@ -316,7 +339,8 @@ namespace ODataValidator.Rule.Helper
                     string propType = prop.Attribute("Type") != null ? prop.GetAttributeValue("Type") : null;
                     bool isKey = keyPropNames.Contains(propName) ? true : false;
                     bool isNullable = prop.Attribute("Nullable") != null ? Convert.ToBoolean(prop.GetAttributeValue("Nullable")) : true;
-                    normalProperties.Add(new NormalProperty(propName, propType, isKey, isNullable));
+                    bool isValueNull = prop.Value == null;
+                    normalProperties.Add(new NormalProperty(propName, propType, isKey, isNullable, isValueNull));
                 }
                 else if (prop.Name.LocalName.Equals("NavigationProperty"))
                 {
@@ -330,7 +354,7 @@ namespace ODataValidator.Rule.Helper
             // Map entity-type short name to entity-set name.
             string entitySetName = GetEntitySetName(entityTypeElement);
 
-            return new EntityTypeElement(entityTypeShortName, normalProperties, entityTypeNamespace, entityTypeAlias, baseTypeFullName, isOpenType, navigProperties, entitySetName);
+            return new EntityTypeElement(entityTypeShortName, normalProperties, entityTypeNamespace, entityTypeAlias, baseTypeFullName, hasStream, isOpenType, navigProperties, entitySetName);
         }
 
         /// <summary>
@@ -377,6 +401,11 @@ namespace ODataValidator.Rule.Helper
 
             return entitySetName;
         }
+
+        /// <summary>
+        /// Whether this is an stream entity.
+        /// </summary>
+        private bool hasStream;
 
         /// <summary>
         /// The entity type's namespace.

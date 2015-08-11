@@ -152,7 +152,7 @@ namespace ODataValidator.Rule
             reqData = dFactory.ReconstructNullableComplexData(reqData, new List<string>() { complexPropName });
             string reqDataStr = reqData.ToString();
             bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
-            var resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos);
+            var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
             detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (resp.StatusCode == HttpStatusCode.Created)
             {
@@ -172,12 +172,12 @@ namespace ODataValidator.Rule
                     string newComplexProperty = dFactory.ConstructUpdatedEntityData(jo, new List<string>() { propertyNameWithSpecifiedType }).ToString();
 
                     // Update the complex property
-                    resp = WebHelper.UpdateEntity(complexProUrl, newComplexProperty, HttpMethod.Patch, hasEtag);
+                    resp = WebHelper.UpdateEntity(complexProUrl, context.RequestHeaders, newComplexProperty, HttpMethod.Patch, hasEtag);
                     detail3 = new ExtensionRuleResultDetail(this.Name, complexProUrl, HttpMethod.Patch, string.Empty, resp, string.Empty, newComplexProperty);
                     if (resp.StatusCode == HttpStatusCode.NoContent)
                     {
                         // Check whether the complex property is updated to new value
-                        if (WebHelper.GetMoreEntity(complexProUrl, out resp))
+                        if (WebHelper.GetContent(complexProUrl, context.RequestHeaders, out resp))
                         {
                             detail4 = new ExtensionRuleResultDetail(this.Name, complexProUrl, HttpMethod.Get, string.Empty, resp);
                             resp.ResponsePayload.TryToJObject(out jo);
@@ -219,7 +219,7 @@ namespace ODataValidator.Rule
                     detail2.ErrorMessage = "Get complex property in the created entity failed. ";
                 }
                 // Delete the entity
-                var resps = WebHelper.DeleteEntities(additionalInfos);
+                var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
             }
             else
             {

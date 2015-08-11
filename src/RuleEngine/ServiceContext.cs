@@ -64,11 +64,6 @@ namespace ODataValidator.RuleEngine
         bool? containsExternalSchema;
 
         /// <summary>
-        /// Wehthet the service returns the ~/$metadata/$metadata
-        /// </summary>
-        bool hasMetadataServiceSchema = false;
-
-        /// <summary>
         /// Creates an instance of ServiceContext.
         /// </summary>
         /// <param name="destination">request Uri of the service context</param>

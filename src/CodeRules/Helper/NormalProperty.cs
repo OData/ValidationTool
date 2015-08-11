@@ -20,7 +20,9 @@ namespace ODataValidator.Rule.Helper
         /// <param name="isKey">The flag indicates whether a property is a key or not.</param>
         /// <param name="isNullable">The flag indicates whether a property value can be set to null or not. 
         /// The default value is true.</param>
-        public NormalProperty(string propertyName, string propertyType, bool isKey, bool isNullable = true)
+        /// <param name="isValueNull">The flag indicates whether a property value is null or not. 
+        /// The default value is true.</param>
+        public NormalProperty(string propertyName, string propertyType, bool isKey, bool isNullable = true, bool isValueNull = false)
         {
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -36,6 +38,7 @@ namespace ODataValidator.Rule.Helper
             this.propertyType = propertyType;
             this.isKey = isKey;
             this.isNullable = isNullable;
+            this.IsValueNull = isValueNull;
         }
 
         /// <summary>
@@ -84,6 +87,21 @@ namespace ODataValidator.Rule.Helper
         }
 
         /// <summary>
+        /// Gets or sets a flag which identifies a null property.
+        /// </summary>
+        public bool IsValueNull
+        {
+            get
+            {
+                return isValueNull;
+            }
+            set
+            {
+                isValueNull = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a flag which identifies a nullable property.
         /// </summary>
         public bool IsNullable
@@ -117,5 +135,10 @@ namespace ODataValidator.Rule.Helper
         /// The flag indicates whether a property value can be set to null or not.
         /// </summary>
         private bool isNullable;
+
+        /// <summary>
+        /// The flag indicates whether a property value is null or not.
+        /// </summary>
+        private bool isValueNull;
     }
 }

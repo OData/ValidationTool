@@ -107,7 +107,7 @@ namespace ODataValidator.Rule
                 var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
                 string reqDataStr = reqData.ToString();
                 bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
-                var resp = WebHelper.CreateEntity(url, reqData, isMediaType, ref additionalInfos);
+                var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
                 detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
 
                 if (HttpStatusCode.Created == resp.StatusCode)
@@ -137,7 +137,7 @@ namespace ODataValidator.Rule
                             detail4 = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, StringHelper.MergeHeaders(string.Empty, serviceStatus.DefaultHeaders), resp);
                             if (HttpStatusCode.OK == resp.StatusCode)
                             {
-                                resp = WebHelper.DeleteEntity(entityId, hasEtag);
+                                resp = WebHelper.DeleteEntity(entityId, context.RequestHeaders, hasEtag);
                                 detail5 = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Delete, StringHelper.MergeHeaders(string.Empty, new List<KeyValuePair<string, string>>() { header }), resp);
                                 if (HttpStatusCode.NoContent == resp.StatusCode)
                                 {

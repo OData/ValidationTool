@@ -203,9 +203,9 @@ namespace ODataValidator.Rule
                                 passed = false;
                                 detail3.ErrorMessage = "Can not get the created entity from above URI.";
                             }
-                            
+
                             // Restore the service.
-                            var resps = WebHelper.DeleteEntities(additionalInfos);
+                            var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
                         }
                         else
                         {
