@@ -1,4 +1,4 @@
-OData Validation Tool
+OData-Validation Tool
 
 Copyright (c) Microsoft Corporation
 
