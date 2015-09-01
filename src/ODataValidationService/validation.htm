@@ -407,10 +407,18 @@
                     </div>
                     <div id="credentialContainer" style="background-color: #F7F7F7; border-style: solid; border: solid #CECECE; border-top-width: 0px; border-bottom-width: 1px; border-left-width: 1px; border-right-width: 1px; padding: 0.5em 0.75em; ">
                         <span style="font-family: 'Arial Rounded MT'; color: #F89C36; ">If your OData service needs authorization, please supply the user name and password after checking this checkbox.</span>
-                        <input id="requiredCredential" type="checkbox" onclick="checkboxEvent(this)" />
+                        <input id="requiredCredential" type="checkbox" onclick="checkboxEvent(this)" /><br>
                         <form id="credential" method="post" action="#" style="display:none" target="loginframe" autocomplete="on">
-                            User Name: <input style="width:168px" id="username" type="text" name="username" autocomplete="on" />
-                            Password: <input style="width:168px" id="password" type="password" name="password" autocomplete="on" />
+						    <table width=100% style="margin-top:5px">
+						        <tr>
+						            <td width=50%>
+                                        User Name: <input style="width:200px" id="username" type="text" name="username" autocomplete="on" />
+							        </td>
+							        <td width=50% style="text-align: right">
+                                        Password: <input style="width:200px" id="password" type="password" name="password" autocomplete="on" />
+							        </td>
+							    </tr>
+						    </table>
                         </form>
                         <script>function checkboxEvent(e) { if (e.checked) { $("#credential")[0].style.display = "inline"; } else { $("#credential")[0].style.display = "none"; } }</script>
 
