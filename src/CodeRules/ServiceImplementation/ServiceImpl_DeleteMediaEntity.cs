@@ -94,16 +94,14 @@ namespace ODataValidator.Rule
             info = null;
             ServiceStatus serviceStatus = ServiceStatus.GetInstance();
             DataFactory dFactory = DataFactory.Instance();
-            var detail1 = new ExtensionRuleResultDetail(this.Name, serviceStatus.RootURL, HttpMethod.Post, string.Empty);
-            var detail2 = new ExtensionRuleResultDetail(this.Name);
-            var detail3 = new ExtensionRuleResultDetail(this.Name);
+            var detail = new ExtensionRuleResultDetail(this.Name, serviceStatus.RootURL, HttpMethod.Post, string.Empty);
             string deleteUrl = serviceStatus.RootURL;
             List<string> keyPropertyTypes = new List<string>() { "Edm.Int32", "Edm.Int16", "Edm.Int64", "Edm.Guid", "Edm.String" };
             List<EntityTypeElement> entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.None).ToList();
             if (null == entityTypeElements || 0 == entityTypeElements.Count())
             {
-                detail1.ErrorMessage = "To verify this rule it expects an entity type with Int32/Int64/Int16/Guid/String key property, but there is no this entity type in metadata so can not verify this rule.";
-                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail1);
+                detail.ErrorMessage = "To verify this rule it expects an entity type with Int32/Int64/Int16/Guid/String key property, but there is no this entity type in metadata so can not verify this rule.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
                 return passed;
             }
 
@@ -120,18 +118,18 @@ namespace ODataValidator.Rule
 
             if (null == eTypeElement)
             {
-                detail1.ErrorMessage = "To verify this rule it expects an entity type with deleteable and insertable restrictions, but there is no entity type in metadata which is insertable and deleteable.";
-                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail1);
+                detail.ErrorMessage = "To verify this rule it expects an entity type with deleteable and insertable restrictions, but there is no entity type in metadata which is insertable and deleteable.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
 
                 return passed;
             }
 
             string entitySetUrl = eTypeElement.EntitySetName.MapEntitySetNameToEntitySetURL();
-            deleteUrl = entitySetUrl;
+            deleteUrl = serviceStatus.RootURL.TrimEnd('/') + @"/" + entitySetUrl;
             if (string.IsNullOrEmpty(entitySetUrl))
             {
-                detail1.ErrorMessage = string.Format("Cannot find the entity-set URL which is matched with {0}", eTypeElement.EntityTypeShortName);
-                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail1);
+                detail.ErrorMessage = string.Format("Cannot find the entity-set URL which is matched with {0}", eTypeElement.EntityTypeShortName);
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
 
                 return passed;
             }
@@ -141,18 +139,18 @@ namespace ODataValidator.Rule
             var reqData = dFactory.ConstructInsertedEntityData(eTypeElement.EntitySetName, eTypeElement.EntityTypeShortName, null, out additionalInfos);
             string reqDataStr = reqData.ToString();
             var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, true, ref additionalInfos);
-            detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
+            detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (HttpStatusCode.Created == resp.StatusCode || HttpStatusCode.NoContent == resp.StatusCode)
             {
                 var entityId = additionalInfos.Last().EntityId;
                 deleteUrl = entityId;
                 var hasEtag = additionalInfos.Last().HasEtag;
                 resp = WebHelper.DeleteEntity(entityId, context.RequestHeaders, hasEtag);
-                detail2 = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Delete, string.Empty, resp);
+                detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Delete, string.Empty, resp);
                 if (HttpStatusCode.NoContent == resp.StatusCode)
                 {
                     resp = WebHelper.GetEntity(entityId);
-                    detail3 = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp);
+                    detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp);
                     if (HttpStatusCode.NotFound == resp.StatusCode)
                     {
                         additionalInfos.Remove(additionalInfos.Last());
@@ -161,13 +159,13 @@ namespace ODataValidator.Rule
                     else
                     {
                         passed = false;
-                        detail3.ErrorMessage = string.Format("Delete media entity failed because it still can get the entity {0}.", entityId);
+                        detail.ErrorMessage = string.Format("Delete media entity failed because it still can get the entity {0}.", entityId);
                     }
                 }
                 else
                 {
                     passed = false;
-                    detail2.ErrorMessage = string.Format("Delete the created media entity failed.");
+                    detail.ErrorMessage = string.Format("Delete the created media entity failed.");
                 }
 
                 // Restore the service.
@@ -175,11 +173,10 @@ namespace ODataValidator.Rule
             }
             else
             {
-                passed = false;
-                detail1.ErrorMessage = "Created the new entity failed for above URI.";
+                detail.ErrorMessage = "Created the new entity failed for above URI.";
             }
 
-            var details = new List<ExtensionRuleResultDetail>() { detail1, detail2, detail3 }.RemoveNullableDetails();
+            var details = new List<ExtensionRuleResultDetail>() { detail };
             info = new ExtensionRuleViolationInfo(new Uri(deleteUrl), serviceStatus.ServiceDocument, details);
 
             return passed;

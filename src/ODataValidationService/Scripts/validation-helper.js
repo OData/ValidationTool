@@ -37,8 +37,8 @@ var validatorConf = {
     'ODataV4SpecificationUriForProtocol': "http://docs.oasis-open.org/odata/odata/v4.0/cs01/part1-protocol/odata-v4.0-cs01-part1-protocol.html",
     'ODataV4SpecificationUriForURL': "http://docs.oasis-open.org/odata/odata/v4.0/cs01/part2-url-conventions/odata-v4.0-cs01-part2-url-conventions.html",
     'ODataV4SpecificationUriForCSDL': "http://docs.oasis-open.org/odata/odata/v4.0/cs01/part3-csdl/odata-v4.0-cs01-part3-csdl.html",
-    'payload_text_help': "paste here the response payload in atompub/xml or json format in full",
-    'meta_text_help': "paste here the metadata document content in xml format in full if you have one",
+    'payload_text_help': "Paste here or upload from file the response payload in atompub/xml or json format in full.",
+    'meta_text_help': "Paste here or upload from file the metadata document content in XML format in full, if you have one.",
     'info_error_resourse':
         "Attention: This is an OData error payload resource. If you meant to validate the error payload against OData spec, please see the validation results as reported below; otherwise, please correct the Uri input and try again.",
     'info_other_odata_resourse':
@@ -66,7 +66,7 @@ var conformanceResults = {
 };
 
 var ServiceImplementationResults = {
-    'ImplementTotal': { 'implementedCount': 0, 'nonImplementedCount': 0 },
+    'ImplementTotal': { 'implementedCount': 0, 'nonImplementedCount': 0, 'notTestedCount': 0},
     'Rules': [],
     'implementationJobIDs': [],
     'checkJodIDCount': 0,
@@ -75,8 +75,9 @@ var ServiceImplementationResults = {
     "rerunloadover": -1
 };
 
-var folderItem = "<li style=\"display: block; list-style-image: url(Images/leaf.png);\"><img src=\"Images/leaf.png\">{0}</li>"
-var folder = "<li name=\"{0}\"><img class=\"angle\" onclick=\"toggleFolder(this)\" src=\"Images/unfoldAngle.png\"><div style=\"display:inline\" ondblclick=\"toggleFolder(this)\"><img class=\"fold\" style=\"margin:0 3px\" src=\"images/unfold.png\" />{0}</div><ul style=\"display: block;\"></ul></li>";
+var folderItem = "<li style=\"display: block;margin-left:-15px;\"><table><tr><td><img src=\"Images/leaf.png\"></td><td title=\"{0}\" style=\"white-space:nowrap\">{0}</td></tr></table></li>";
+var folder = "<li name=\"{0}\"><img class=\"angle\" onclick=\"toggleFolder(this)\" src=\"Images/foldAngle.png\"><div style=\"display:inline\" ondblclick=\"toggleFolder(this)\"><img class=\"fold\" style=\"margin:0 3px\" src=\"images/fold.png\" />{0}</div><ul style=\"display: none;\"></ul></li>";
+var folderWithoutChild = "<li name=\"{0}\"><div style=\"display:inline\" ><img class=\"fold\" style=\"margin:0 3px 0 13px\" src=\"images/fold.png\" />{0}</div><ul style=\"display: none;\"></ul></li>";
 
 var currentDetail;
 
@@ -311,7 +312,7 @@ function resetJob() {
 function resetServiceImplementationResults()
 {
     ServiceImplementationResults = {
-        'ImplementTotal': { 'implementedCount': 0, 'nonImplementedCount': 0 },
+        'ImplementTotal': { 'implementedCount': 0, 'nonImplementedCount': 0, 'notTestedCount': 0 },
         'Rules': [],
         'implementationJobIDs': [],
         'checkJodIDCount': 0,
@@ -352,8 +353,9 @@ function isNoInput() {
     if (index == 1) {
         input = $('textarea', tabs[index]).val();
     }
-    var inputTable = ["enter a url", "paste here the response payload", "enter a url", "enter a url"];
-    var msgTable = ['Url should not be empty.', 'Payload input should not be empty.', 'Url should not be empty.', 'Url should not be empty.'];
+
+    var inputTable = ["Enter a url", "Paste here the response payload", "Enter a url", "Enter a url", "Enter a url"];
+    var msgTable = ['Url should not be empty.', 'Payload input should not be empty.', 'Url should not be empty.', 'Url should not be empty.', 'Url should not be empty.'];
 
     if (index != -1 && input.indexOf(inputTable[index]) != -1) {
         $('#statusInfo').empty().show().append("<p class='errorMsg'>" + msgTable[index] + "</p>");
@@ -680,7 +682,9 @@ function submitserviceImplementationJob()
         $.each(data.results, function () {
             var job = { 'Uri': this.Uri, 'ResourceType': this.ResourceType, 'Id': this.DerivativeJobId, 'RuleCount': this.RuleCount, 'Issues': this.Issues };
             validatorApp.jobsInQ.push(job);
+            
         });
+       
         updateMasterJobId(data.results[0].MasterJobId);
 
         $('#infotop #statusInfo').empty();
@@ -700,7 +704,8 @@ function startJobForServiceImplementation()
             $('#jobStatusInfoTmpl').tmpl(jobStatusInfo).appendTo('#infotop #statusInfo');
             continue;
         }
-
+        $('#infobody').empty();
+        $('#serviceImplementationBodyTmpl').tmpl(ServiceImplementationResults.ImplementTotal).appendTo('#infobody');
         //validatorApp.currJobDetail = (isSimpleJob) ? newRegularValidation(validatorApp.currentJob) : newCrawlingValidation(validatorApp.currentJob);
         loadResultsForServiceImplementation(validatorApp.currentJob.Id, 0);
         
@@ -717,10 +722,10 @@ function loadResultsForServiceImplementation(jobID, totalResultsRetrieved)
     var query = "odatavalidator/ValidationJobs(guid'" + jobID + "')/TestResults?$orderby=ID";
     if (totalResultsRetrieved > 0) { query += "&$skip=" + totalResultsRetrieved };
 
-    var ruleCount = validatorApp.currentJob.RuleCount;
+    
     OData.read(query, function (data) {
         $.each(data.results, function () {
-            catcheServiceImplementationResults(this, ruleCount);
+            catcheServiceImplementationResults(this);
             totalResultsRetrieved++;
         });
         $('#infotop #statusInfo').empty();
@@ -756,55 +761,69 @@ function onJobEndforServiceImplementation()
     validatorApp.currJobNote = null;
     $('#infotop #statusInfo').empty();
     alertJobComplete();
-    displayServiceImplementationResults();
 }
 
-function catcheServiceImplementationResults(testResult, ruleCount)
+function catcheServiceImplementationResults(testResult)
 {
-    if (testResult.Classification == "success")
-    { ServiceImplementationResults.ImplementTotal.implementedCount++; }
-    else
-    { ServiceImplementationResults.ImplementTotal.nonImplementedCount++; }
-
-    var query = "odatavalidator/TestResults(" + testResult.ID + ")/ResultDetails";
     var rule = { FullName: null, classification: null, URI: [] };
     rule.FullName = testResult.Description;
     rule.classification = testResult.Classification;
+
+    if (testResult.Classification == "success")
+    { 
+        ServiceImplementationResults.ImplementTotal.implementedCount++; 
+    }
+    else if (testResult.Classification == "error")
+    { 
+        ServiceImplementationResults.ImplementTotal.nonImplementedCount++; 
+    }
+    else
+    {
+        rule.URI.push("PlaceHolder"); // No meanning, just a palce holder.
+        ServiceImplementationResults.Rules.push(rule);
+        ServiceImplementationResults.ImplementTotal.notTestedCount++;
+        display(rule);
+        
+        if (ServiceImplementationResults.Rules.length >= validatorApp.currentJob.RuleCount)
+        {
+            onJobEndforServiceImplementation();
+        }
+        return;
+    }
+
+    var query = "odatavalidator/TestResults(" + testResult.ID + ")/ResultDetails";
 
     OData.read(query, function (data) {
         if (data.results.length == 0) {
             OData.read(query, function (data) {
                 if (data.results.length == 0) {
                     "Load Result details failed!".appendTo('#infotop #statusInfo');
+                    rule.URI.push("Can't get the Url.");
                 }
-                $.each(data.results, function () {
-                    rule.URI.push(this.URI);
-                    ServiceImplementationResults.Rules.push(rule);
-                    if (ServiceImplementationResults.Rules.length >= ruleCount) {
-                        onJobEndforServiceImplementation();
-                    }
-                });
+                else {
+                    $.each(data.results, function () {
+                        rule.URI.push(this.URI);
+
+                    });
+                }
+                ServiceImplementationResults.Rules.push(rule);
+                display(rule);
+                if (ServiceImplementationResults.Rules.length >= validatorApp.currentJob.RuleCount) {
+                    onJobEndforServiceImplementation();
+                }
             });
         }
         else {
             $.each(data.results, function () {
                 rule.URI.push(this.URI);
-                ServiceImplementationResults.Rules.push(rule);
-                if (ServiceImplementationResults.Rules.length >= ruleCount) {
-                    onJobEndforServiceImplementation();
-                }
             });
+            ServiceImplementationResults.Rules.push(rule);
+            display(rule);
+            if (ServiceImplementationResults.Rules.length >= validatorApp.currentJob.RuleCount) {
+                onJobEndforServiceImplementation();
+            }
         }
     });
-
-    
-}
-
-function displayServiceImplementationResults()
-{
-    $('#infobody').empty();
-    $('#serviceImplementationBodyTmpl').tmpl(ServiceImplementationResults.ImplementTotal).appendTo('#infobody');
-    loadTree();
 }
 
 function startJob(isSimpleJob) {
@@ -1993,17 +2012,17 @@ function summarize() {
         // do nothing;
     }
     else {
-        if (validatorApp.results.aborteds > 0) return "Some rules were not executed. Issue has been logged and will be investigated. You can see a list of all rules " + createLink("here", "roadmap.htm") + ".";
+        if (validatorApp.results.aborteds > 0) return "Some rules were not executed. Issue has been logged and will be investigated. You can see a list of all rules " + createLinkOfNewWindow("here", "roadmap.htm#rules") + ".";
         if (validatorApp.results.errors == 0 && validatorApp.results.warnings == 0) {
             if (validatorApp.results.recommendations <= 0) {
-                return "Congratulations! This is a valid OData endpoint. You can see a list of all rules " + createLink("here", "roadmap.htm#rules") + ".";
+                return "Congratulations! This is a valid OData endpoint. You can see a list of all rules " + createLinkOfNewWindow("here", "roadmap.htm#rules") + ".";
             } else {
                 return "Congratulations! This is a valid OData endpoint, but interoperability with the largest number of OData clients may be improved by implementing the following recommendations."
-                        + "You can see a list of all rules " + createLink("here", "roadmap.htm#rules") + ".";
+                        + "You can see a list of all rules " + createLinkOfNewWindow("here", "roadmap.htm#rules") + ".";
             }
         }
     }
-    return "You can see a list of all rules " + createLink("here", "roadmap.htm#rules") + ".";
+    return "You can see a list of all rules " + createLinkOfNewWindow("here", "roadmap.htm#rules") + ".";
 }
 
 function displayJobSummary() {
@@ -2114,16 +2133,7 @@ function createMetadataReqHeaders() {
 }
 
 function createServiceImplementationReqHeaders() {
-    var str = "";
-    if ($('#s_v1_v2_Radio').is(':checked')) {
-        str = "&Headers='" + 'DataServiceVersion:1.0;' + getAuthorization() + "'";
-    }
-    if ($('#s_v3_Radio').is(':checked')) {
-        str = "&Headers='" + 'DataServiceVersion:3.0;' + getAuthorization() + "'";
-    }
-    if ($('#s_v4_Radio').is(':checked')) {
-        str = "&Headers='" + 'OData-Version:4.0;' + getAuthorization() + "'";
-    }
+    var str = "&Headers='" + 'OData-Version:4.0;' + getAuthorization() + "'";
 
     return str;
 }
@@ -2331,7 +2341,7 @@ function getServiceToValidateUri() {
 }
 
 function getServiceImplementationValidateUri() {
-    var url = $("#serviceImplementationUri").val();
+    var url =$("#serviceImplementationUri").val();
 
     if (url.indexOf("?$format=") > 0) {
         url = url.slice(0, url.lastIndexOf("?$format="))
@@ -2407,26 +2417,39 @@ function getAuthorization() {
     return str;
 }
 
-function loadTree() {
-    if (ServiceImplementationResults.Rules == undefined || ServiceImplementationResults.Rules.length == 0) {
+function display(rule) {
+    if (rule == undefined) {
         return;
     }
 
-    $.each(ServiceImplementationResults.Rules, function () {
-        var temp = this;
-        $.each(this.URI, function () {
-            if (temp.classification == "success") {
-                insertTo($($('#implementedTree ul')[0]), temp.FullName.split(',').concat(this));
-            }
-            else { insertTo($($('#non-implementedTree ul')[0]), temp.FullName.split(',').concat(this)); }
-        });
+    $.each(rule.URI, function () {
+        if (rule.classification == "success") {
+            insertTo($($('#implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
+            $('#implementedCount').empty().append("{0} service implementation(s) have been implemented".format(ServiceImplementationResults.ImplementTotal.implementedCount));
+
+        }
+        else if (rule.classification == "error") {
+            insertTo($($('#non-implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
+            $('#nonImplementedCount').empty().append("{0} service implementation(s) have not been implemented".format(ServiceImplementationResults.ImplementTotal.nonImplementedCount));
+        }
+        else {
+            insertTo($($('#unknown ul')[0]), rule.FullName.split(','), true)
+            $('#notTestedCount').empty().append("{0} service implementation(s) are unknown because of can't getting the required data".format(ServiceImplementationResults.ImplementTotal.notTestedCount));
+        }
     });
 }
 
 // Insert leaf to the node.
-function insertTo(node, paths) {
+function insertTo(node, paths, isFolder) {
     if (paths.length == 1) {
-        node.append(folderItem.format(paths[0])); return;
+        if(isFolder)
+        {
+            node.append(folderWithoutChild.format(paths[0])); return;
+        }
+        else
+        {
+            node.append(folderItem.format(paths[0])); return;
+        }
     }
 
     //node.children("li").each(function () {
@@ -2438,7 +2461,7 @@ function insertTo(node, paths) {
     var selector = "li[name=" + paths[0] + "]";
     var existedFolder = node.children(selector);
     if (existedFolder != undefined && existedFolder.length != 0) {
-        insertTo($(existedFolder.children("ul")[0]), paths.slice(1)); return;
+        insertTo($(existedFolder.children("ul")[0]), paths.slice(1), isFolder); return;
     }
     //for (var child in node.children())
     //{
@@ -2450,7 +2473,7 @@ function insertTo(node, paths) {
 
     var newNode = node.append(folder.format(paths[0]));
 
-    insertTo(newNode.children("li[name=" + paths[0] + "]").children("ul"), paths.slice(1));
+    insertTo(newNode.children("li[name=" + paths[0] + "]").children("ul"), paths.slice(1), isFolder);
 }
 
 function toggleFolder(e) {

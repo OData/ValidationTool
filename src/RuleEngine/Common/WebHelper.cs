@@ -335,6 +335,44 @@ namespace ODataValidator.RuleEngine.Common
         }
 
         /// <summary>
+        /// Send the delta get request with the odata.track-changes prefer header.
+        /// </summary>
+        /// <param name="url">The URL to the resources whose change is asked to track.</param>
+        /// <param name="requestHeaders">The request headers.</param>
+        /// <returns>Return the response of getting operation.</returns>
+        public static Response GetDeltaLink(string url, IEnumerable<KeyValuePair<string, string>> requestHeaders = null)
+        {
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                return null;
+            }
+
+            Uri uri = new Uri(url);
+
+            var headers = new WebHeaderCollection();
+            foreach (var header in requestHeaders)
+            {
+                headers.Add(header.Key, header.Value);
+            }
+
+            headers.Add("Prefer", "odata.track-changes");
+
+            var req = WebRequest.Create(uri);
+
+            if (!string.IsNullOrEmpty(uri.UserInfo))
+            {
+                req.Credentials = new NetworkCredential(Uri.UnescapeDataString(uri.UserInfo.Split(':')[0]), Uri.UnescapeDataString(uri.UserInfo.Split(':')[1]));
+            }
+
+            var reqHttp = req as HttpWebRequest;
+
+            reqHttp.Headers = headers;
+            reqHttp.Accept =  Constants.V4AcceptHeaderJsonFullMetadata;
+
+            return WebHelper.Get(reqHttp, RuleEngineSetting.Instance().DefaultMaximumPayloadSize);
+        }
+
+        /// <summary>
         /// Update an entity to an entity-set.
         /// </summary>
         /// <param name="url">The URL of an entity-set.</param>

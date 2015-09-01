@@ -139,10 +139,40 @@ namespace ODataValidator.ValidationService
         [WebGet]
         public IEnumerable<JobGroup> UriValidationJobs(string Uri, string Format, string toCrawl, string byMetadata, string Headers, string isConformance, string levelTypes = null, string serviceImplementation = null)
         {
-            Uri = HttpUtility.UrlDecode(Uri);
+            Uri = HttpUtility.UrlDecode(Uri).Trim();
 
-            // Try to get the necessary information for only one time.
-            RuleEngine.Common.ServiceStatus.GetInstance(Uri);
+            try
+            {
+                // Try to get the necessary information for only one time.
+                RuleEngine.Common.ServiceStatus.GetInstance(Uri, Headers);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return new JobGroup[] { new JobGroup()
+                    {
+                        Uri = Uri,
+                        MasterJobId = Guid.Empty,
+                        DerivativeJobId = Guid.Empty,
+                        ResourceType = string.Empty,
+                        RuleCount = 0,
+                        Issues = "Error: The current user is unauthorized to access the endpoint." 
+                    }};
+            }
+            catch (UriFormatException)
+            {
+                return new JobGroup[]
+                    {
+                        new JobGroup(){
+                            Uri = Uri==null? "":Uri,
+                            MasterJobId = Guid.Empty,
+                            DerivativeJobId = Guid.Empty,
+                            ResourceType = "",
+                            RuleCount = 0,
+                            Issues = "Error: The input is not a valid OData service endpoint.",
+                        }
+                    };
+            }
+
             Format = HttpUtility.UrlDecode(Format);
             toCrawl = HttpUtility.UrlDecode(toCrawl);
 
@@ -631,6 +661,7 @@ namespace ODataValidator.ValidationService
         private IEnumerable<JobGroup> CreateSimpleValidationJobByUri(string Uri, string Format, IEnumerable<KeyValuePair<string, string>> reqHeaders, bool isMetadataValidation = false, bool serviceImplementation = false)
         {
             ServiceContext ctx;
+
             if (serviceImplementation)
             {
                 ctx = ServiceContextFactory.Create(Uri, Format, Guid.NewGuid(), MaxPayloadByteCount, reqHeaders, "ServiceImpl");

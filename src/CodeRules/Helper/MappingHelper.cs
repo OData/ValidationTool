@@ -741,9 +741,9 @@ namespace ODataValidator.Rule.Helper
             }
 
             string etShortName = string.Empty;
-            string xPath = string.Format("//*[local-name()='NavigationProperty' and contains(@Type, '{0}')]", entityTypeFullName);
+            string xPath = string.Format("//*[local-name()='NavigationProperty' and contains(@Type, '{0}') and starts-with(@Type, 'Collection')]", entityTypeFullName);
             var navigElem = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
-            if (null != navigElem || null != navigElem.Attribute("Name"))
+            if (null != navigElem && null != navigElem.Attribute("Name"))
             {
                 queue.Enqueue(navigElem.GetAttributeValue("Name"));
                 var parentElem = navigElem.Parent;

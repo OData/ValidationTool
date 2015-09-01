@@ -94,7 +94,7 @@ namespace ODataValidator.Rule
             var entitySetUrls = MetadataHelper.GetEntitySetURLs();
             var entitySetUrl = entitySetUrls[0];
             string url = svcStatus.RootURL.TrimEnd('/') + "/" + entitySetUrl;
-            int actualNum = JsonParserHelper.GetEntitiesCountFromFeed(url);
+            int actualNum = JsonParserHelper.GetEntitiesCountFromFeed(url, svcStatus.DefaultHeaders);
             url = string.Format("{0}/$count", url);
             var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             var detail = new ExtensionRuleResultDetail("ServiceImpl_SystemQueryOptionCount", url, HttpMethod.Get, string.Empty);

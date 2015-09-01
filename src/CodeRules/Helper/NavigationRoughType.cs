@@ -3,15 +3,19 @@
 
 namespace ODataValidator.Rule.Helper
 {
+    #region Namespace.
+    using System;
+    #endregion
     /// <summary>
     /// The rough-type of a navigation property.
     /// </summary>
+    [Flags]
     public enum NavigationRoughType
     {
         /// <summary>
         /// Indicates the navigation property type is undefined.
         /// </summary>
-        None = 0x00,
+        None = 0x03,
 
         /// <summary>
         /// Indicates the navigation property binds to an single entity.

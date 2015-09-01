@@ -96,7 +96,7 @@ namespace ODataValidator.RuleEngine
         {
             get
             {
-                return ODataVersion.V4;
+                return ODataVersion.V_All;
             }
         }
 

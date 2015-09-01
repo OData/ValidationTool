@@ -16,7 +16,7 @@
     <script type="text/javascript" src="Scripts/validation-helper.js"></script>
     
 </head>
-<body onkeydown="pressEnterKey()" onload="    (function () { $('#requiredCredential')[0].checked = false})()">
+<body style="overflow-y:scroll" onkeydown="pressEnterKey()" onload="    (function () { $('#requiredCredential')[0].checked = false})()">
     <script id="jobStatusInfoTmpl" type="text/x-jQuery-tmpl">
         <div>
             <p id='jobType' class='cont'>{{html resourceType}}</p>
@@ -117,36 +117,48 @@
     </script>
 
     <script id="serviceImplementationBodyTmpl" type="text/x-jQuery-tmpl">
-        <center><div style="font-size:20px;max-width:800px;font-weight:bold">${implementedCount} service implementations have been implemented, but ${nonImplementedCount} service implementations have not been implemented yet.</div></center>
-        <table style="width:100%;max-width:800px;margin:20px auto"  >
-            <thead style="background-color: #f89c36; color: white; font-size: 20px; text-align: center; font-weight: 300; font-family: Arial, Helvetica, sans-serif">
-                <tr>
-                    <th style="padding:5px 0px;" width="50%">Service Implemented</th>
-                    <th style="padding:5px 0px;" width="50%">Service Non-Implemented</th>
-                </tr>
-            </thead>
-            <tbody style="vertical-align: top;">
-                <tr>
-                    <td  style="max-width: 500px; overflow: auto; border-left-color: white; border-bottom-color: white; border-top-color: #f89c36; border-right-color: #f89c36; border-style: solid; border-right-width: 2px; ">
-                        <div id="implementedTree">
-                            <ul></ul>
-                        </div>
-                    </td>
-                    <td style="color:red; max-width: 500px; overflow: auto; border-right-color: white; border-bottom-color: white; border-top-color: #f89c36; border-style: solid; border-left-width: 2px;" >
-                        <div id="non-implementedTree">
-                            <ul></ul>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
+
+        <table style="width: 100%; max-width: 800px; margin: 20px auto">
+            <tr style="background-color: #f89c36; color: white; font-size: 20px; text-align: left; font-weight: 300; font-family: Arial, Helvetica, sans-serif">
+                <td id="implementedCount" style="padding:5px 10px;">${implementedCount} service implementation(s) have been implemented</td>
+            </tr>
+            <tr>
+                <td style="border-style: hidden;">
+                    <div style="width:initial; max-width:800px; overflow-x: auto;" id="implementedTree">
+                        <ul></ul>
+                    </div>
+                </td>
+            </tr>
+
+            <tr style="background-color: #f89c36; color: white; font-size: 20px; text-align: left; font-weight: 300; font-family: Arial, Helvetica, sans-serif">
+                <td id="nonImplementedCount" style="padding:5px 10px;">${nonImplementedCount} service implementation(s) have not been implemented</td>
+            </tr>
+            <tr>
+                <td style="color: red; border-style: hidden;">
+                    <div style="width:initial; max-width:800px; overflow-x: auto;" id="non-implementedTree">
+                        <ul></ul>
+                    </div>
+                </td>
+            </tr>
+            <tr style="background-color: #f89c36; color: white; font-size: 20px; text-align: left; font-weight: 300; font-family: Arial, Helvetica, sans-serif">
+                <td id="notTestedCount" style="padding:5px 10px;">${notTestedCount} service implementation(s) are unknown because of can't getting the required data</td>
+            </tr>
+            <tr>
+                <td style="border-style: hidden;">
+                    <div style="width:initial; max-width:800px; overflow-x: auto;" id="unknown">
+                        <ul></ul>
+                    </div>
+                </td>
+            </tr>
         </table>
     </script>
+
     <div id="wrapper">
         <div id="topBar">
         </div>
         <div id="header">
             <div id="version">
-                Release - v1.06
+                Release - v1.07
             </div>
             <div id="navigation">
                 <ul class="menu">
@@ -167,7 +179,7 @@
                     <li><a href="#" rel="#tab_2_contents" class="tab">By Direct Input</a></li>
                     <li><a href="#" rel="#tab_3_contents" class="tab">Conformance Level</a></li>
                     <li><a href="#" rel="#tab_4_contents" class="tab">Metadata Validation</a></li>
-                    <!--<li><a href="#" rel="#tab_5_contents" class="tab">Service Implementation</a></li>-->
+                    <li><a href="#" rel="#tab_5_contents" class="tab">Service Implementation</a></li>
                 </ul>
                 <div class="tab_contents_container">
                     <div id="tab_1_contents" class="tab_contents tab_contents_active">
@@ -233,18 +245,20 @@
                     <div id="tab_2_contents" class="tab_contents">
                         <div id="offline_input">
                             <b>Payload input: </b>
-                            <input style="font-size:10px;  margin-left: 20px; margin-bottom:3px;" type="file" id="payload" name="files[]" onchange='selectLocalTxt(event)' />
+                            <input style="font-size:10px;  margin-left: 20px; margin-bottom:3px;" type="file" id="payload" name="files[]" onclick='this.value=null' 
+                                   onchange='selectLocalTxt(event)' />
                             <br />
                             <script>
                                 function selectLocalTxt(evt) {
                                     var file = evt.target.files[0]; // FileList object
-                                    if (file.size > 10000) {
-                                        alert("select file too large");
+                                    if (file == null) return;
+                                    if (file.size > 1048576) {
+                                        alert("The file selected MUST be less than 1M.");
                                         return;
                                     }
 
                                     if (!file.type.match('text.*')) {
-                                        alert("not text file");
+                                        alert("The file MUST be a text file.");
                                         return;
                                     }
 
@@ -266,10 +280,8 @@
                                     reader.readAsText(file);
                                 }
                             </script>
-                            <textarea id="payload_text" rows="6" wrap="off" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.payload_text_help; }"
-                                      onfocus="if (this.value == validatorConf.payload_text_help) { this.value =''; }">
-                                paste here the response payload in atompub/xml or json format in full
-                            </textarea>
+                            <textarea id="payload_text" rows="6" wrap="soft" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.payload_text_help; }"
+                                      onfocus="if (this.value == validatorConf.payload_text_help) { this.value =''; }">Paste here or upload from file the response payload in atompub/xml or json format in full.</textarea>
                             <br />
                             <div class="separator">
                             </div>
@@ -294,13 +306,11 @@
                             <div>
                                 <img id="meta_icon" src="Images/arrow_right.gif" alt="Meta arrow" />
                                 <a id="metadata_prompt"><b>Metadata document(optional)</b></a>
-                                <input style="font-size:10px; margin-left: 20px;  margin-bottom:3px; display:none;" type="file" id="metadata" name="files[]" onchange='selectLocalTxt(event);' />
+                                <input style="font-size:10px; margin-left: 20px;  margin-bottom:3px; display:none;" type="file" id="metadata" name="files[]" onclick='this.value=null' onchange='selectLocalTxt(event);' />
                                 <br />
                                 <div id="display" style="display: none">
-                                    <textarea id="meta_text" rows="6" wrap="off" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.meta_text_help; }"
-                                              onfocus="if (this.value == validatorConf.meta_text_help) { this.value =''; }">
-                                        paste here the metadata document content in xml format in full if you have one
-                                    </textarea>
+                                    <textarea id="meta_text" rows="6" wrap="soft" style="overflow: auto" onblur="if (this.value == '') { this.value = validatorConf.meta_text_help; }"
+                                              onfocus="if (this.value == validatorConf.meta_text_help) { this.value =''; }">Paste here or upload from file the metadata document content in XML format in full, if you have one.</textarea>
                                 </div>
                             </div>
                         </div>
@@ -385,7 +395,7 @@
                             </div>
                         </div>
                     </div>
-                 <!--   <div id="tab_5_contents" class="tab_contents">
+                    <div id="tab_5_contents" class="tab_contents">
                         <div id="serviceImplementation">
                             <input id="serviceImplementationUri" type="text" onblur="if (this.value == '') { this.value = this.defaultValue; }"
                                    onfocus="if (this.value == this.defaultValue) { this.value = ''; }" value="enter a url to an OData service endpoint" />
@@ -393,28 +403,8 @@
                                 Validate
                             </button>
                             <br />
-                            <div id="service_versioning">
-                                <div id="s_v1_v2">
-                                    <input id="s_v1_v2_Radio" type="radio" name="sVersionGroup" value="v1_v2Compliance" />
-                                    <label for="v1_v2Compliance">
-                                        OData v1.0 and v2.0 service endpoint
-                                    </label>
-                                </div>
-                                <div id="s_v3">
-                                    <input id="s_v3_Radio" type="radio" name="sVersionGroup" value="v3Compliance" />
-                                    <label for="v3Compliance">
-                                        OData v3.0 service endpoint
-                                    </label>
-                                </div>
-                                <div id="s_v4">
-                                    <input id="s_v4_Radio" type="radio" checked="checked" name="sVersionGroup" value="v4Compliance" />
-                                    <label for="v4Compliance">
-                                        OData v4.0 service endpoint
-                                    </label>
-                                </div>
-                            </div>
                         </div>
-                    </div>-->
+                    </div>
                     <div id="credentialContainer" style="background-color: #F7F7F7; border-style: solid; border: solid #CECECE; border-top-width: 0px; border-bottom-width: 1px; border-left-width: 1px; border-right-width: 1px; padding: 0.5em 0.75em; ">
                         <span style="font-family: 'Arial Rounded MT'; color: #F89C36; ">If your OData service needs authorization, please supply the user name and password after checking this checkbox.</span>
                         <input id="requiredCredential" type="checkbox" onclick="checkboxEvent(this)" />
@@ -426,7 +416,7 @@
 
                         <iframe id="loginframe" style="display:none" name="loginframe"></iframe>
                     </div>
-                    </div>
+                </div>
             </div>
             <div id="statusInfo">
             </div>

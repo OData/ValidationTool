@@ -5,6 +5,7 @@ namespace ODataValidator.Rule.Helper
 {
     #region Namespace.
     using System;
+    using System.Xml.Linq;
     #endregion
 
     /// <summary>
@@ -22,7 +23,8 @@ namespace ODataValidator.Rule.Helper
         /// The default value is true.</param>
         /// <param name="isValueNull">The flag indicates whether a property value is null or not. 
         /// The default value is true.</param>
-        public NormalProperty(string propertyName, string propertyType, bool isKey, bool isNullable = true, bool isValueNull = false)
+        /// <param name="srid">The SRID attribute.</param>
+        public NormalProperty(string propertyName, string propertyType, bool isKey, bool isNullable = true, bool isValueNull = false, string srid = null)
         {
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -34,26 +36,21 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException("propertyType", "The value of the input parameter 'propertyType' MUST NOT be null or empty.");
             }
 
-            this.propertyName = propertyName;
-            this.propertyType = propertyType;
-            this.isKey = isKey;
-            this.isNullable = isNullable;
+            this.PropertyName = propertyName;
+            this.PropertyType = propertyType;
+            this.IsKey = isKey;
+            this.IsNullable = isNullable;
             this.IsValueNull = isValueNull;
+            this.SRID = srid;
         }
 
         /// <summary>
-        /// Gets or sets a property name.
+        /// Gets or private sets a property name.
         /// </summary>
         public string PropertyName
         {
-            get
-            {
-                return propertyName;
-            }
-            set
-            {
-                propertyName = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -61,14 +58,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public string PropertyType
         {
-            get
-            {
-                return propertyType;
-            }
-            set
-            {
-                propertyType = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -76,14 +67,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public bool IsKey
         {
-            get
-            {
-                return isKey;
-            }
-            set
-            {
-                isKey = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -91,14 +76,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public bool IsValueNull
         {
-            get
-            {
-                return isValueNull;
-            }
-            set
-            {
-                isValueNull = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -106,39 +85,14 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public bool IsNullable
         {
-            get
-            {
-                return isNullable;
-            }
-            set
-            {
-                isNullable = value;
-            }
+            get;
+            private set;
         }
 
-        /// <summary>
-        /// The property name.
-        /// </summary>
-        private string propertyName;
-
-        /// <summary>
-        /// The property type.
-        /// </summary>
-        private string propertyType;
-
-        /// <summary>
-        /// The flag indicates whether a property is a key or not.
-        /// </summary>
-        private bool isKey;
-
-        /// <summary>
-        /// The flag indicates whether a property value can be set to null or not.
-        /// </summary>
-        private bool isNullable;
-
-        /// <summary>
-        /// The flag indicates whether a property value is null or not.
-        /// </summary>
-        private bool isValueNull;
+        public string SRID
+        {
+            get;
+            private set;
+        }
     }
 }

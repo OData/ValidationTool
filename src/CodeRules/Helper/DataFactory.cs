@@ -412,7 +412,7 @@ namespace ODataValidator.Rule.Helper
                     throw new Exception("Failed to convert to entity-set name to entity-set URL.");
                 }
 
-                string url = string.Format("{0}/{1}", this.rootURL, entitySetURL);
+                string url = string.Format("{0}/{1}", this.rootURL.TrimEnd('/'), entitySetURL);
                 var resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
 
                 if (null != resp && HttpStatusCode.OK == resp.StatusCode)

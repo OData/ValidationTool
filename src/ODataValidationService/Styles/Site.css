@@ -471,11 +471,11 @@ button.subrule_rerun{
 	text-decoration:none;
 }
 
-#implementedTree ul, #non-implementedTree ul {
+#implementedTree ul, #non-implementedTree ul, #unknown ul {
     list-style-type: none;
 }
 
-#implementedTree li, #non-implementedTree li {
+#implementedTree li, #non-implementedTree li, #unknown li {
     padding-left: 5px;
     margin-left: -28px;
 }

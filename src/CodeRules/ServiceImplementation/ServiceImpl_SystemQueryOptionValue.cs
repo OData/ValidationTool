@@ -101,37 +101,40 @@ namespace ODataValidator.Rule
 
             string keyPropName = keyProp.Item1;
             string keyPropType = keyProp.Item2;
-            if(string.IsNullOrEmpty(entityTypeShortName) || string.IsNullOrEmpty(keyPropName) || string.IsNullOrEmpty(keyPropType))
-            {
-                return passed;
-            }
-            
-            string entitySetUrl = entityTypeShortName.MapEntityTypeShortNameToEntitySetURL();
-            string url = svcStatus.RootURL.TrimEnd('/') + "/" + entitySetUrl;
-            var resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, context.RequestHeaders);
-            var jObj = JObject.Parse(resp.ResponsePayload);
-            var jArr = jObj.GetValue("value") as JArray;
-            var temp = ((JObject)(jArr.First))[keyPropName];
-            if (null == temp)
+            if (string.IsNullOrEmpty(entityTypeShortName) || string.IsNullOrEmpty(keyPropName) || string.IsNullOrEmpty(keyPropType))
             {
                 return passed;
             }
 
-            var keyPropVal = temp.ToString();
-            string pattern = "Edm.String" == keyPropType ? "{0}('{1}')/{2}/$value" : "{0}({1})/{2}/$value";
-            url = string.Format(pattern, url, keyPropVal, keyPropName);
-            resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, context.RequestHeaders);
-            var detail = new ExtensionRuleResultDetail("ServiceImpl_SystemQueryOptionValue", url, HttpMethod.Get, string.Empty);
-            info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
+            string entitySetUrl = entityTypeShortName.MapEntityTypeShortNameToEntitySetURL();
+            string url = svcStatus.RootURL.TrimEnd('/') + "/" + entitySetUrl;
+            var resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, context.RequestHeaders);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
-                passed = resp.ResponsePayload == keyPropVal;
+                var jObj = JObject.Parse(resp.ResponsePayload);
+                var jArr = jObj.GetValue("value") as JArray;
+                var temp = ((JObject)(jArr.First))[keyPropName];
+                if (null == temp)
+                {
+                    return passed;
+                }
+
+                var keyPropVal = temp.ToString();
+                string pattern = "Edm.String" == keyPropType ? "{0}('{1}')/{2}/$value" : "{0}({1})/{2}/$value";
+                url = string.Format(pattern, url, keyPropVal, keyPropName);
+                resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, context.RequestHeaders);
+                var detail = new ExtensionRuleResultDetail("ServiceImpl_SystemQueryOptionValue", url, HttpMethod.Get, string.Empty);
+                info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
+                if (null != resp && HttpStatusCode.OK == resp.StatusCode)
+                {
+                    passed = resp.ResponsePayload == keyPropVal;
+                }
+                else
+                {
+                    passed = false;
+                }
             }
-            else
-            {
-                passed = false;
-            }
-            
+
             return passed;
         }
     }

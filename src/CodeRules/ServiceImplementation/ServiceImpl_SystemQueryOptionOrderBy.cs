@@ -108,7 +108,7 @@ namespace ODataValidator.Rule
 
             string entitySetUrl = entityTypeShortName.MapEntityTypeShortNameToEntitySetURL();
             string url = string.Format("{0}/{1}?$orderby={2} desc", svcStatus.RootURL.TrimEnd('/'), entitySetUrl, keyPropName);
-            var resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, context.RequestHeaders);
+            var resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             var detail = new ExtensionRuleResultDetail("ServiceImpl_SystemQueryOptionOrderBy", url, HttpMethod.Get, string.Empty);
             info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)

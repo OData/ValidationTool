@@ -114,7 +114,12 @@ namespace ODataValidator.Rule
 
             string keyPropName = keyProp.Item1;
             string keyPropType = keyProp.Item2;
-            var entitySetUrl = entityTypeShortName.MapEntityTypeShortNameToEntitySetURL();
+            var entitySetUrl = entityTypeShortName.GetAccessEntitySetURL();
+            if (string.IsNullOrEmpty(entitySetUrl))
+            {
+                return passed;
+            }
+
             string url = svcStatus.RootURL.TrimEnd('/') + "/" + entitySetUrl;
             var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             if (null == resp || HttpStatusCode.OK != resp.StatusCode)
@@ -122,8 +127,13 @@ namespace ODataValidator.Rule
                 return passed;
             }
 
-            var jObj = JObject.Parse(resp.ResponsePayload);
-            var entity = jObj.GetValue(Constants.Value).First;
+            var entities = JsonParserHelper.GetEntities(resp.ResponsePayload);
+            if (!entities.Any())
+            {
+                return passed;
+            }
+
+            var entity = entities.First();
             string keyPropVal = entity[keyPropName].ToString();
             string pattern = "Edm.String" == keyPropType ? "{0}('{1}')/{2}/$ref" : "{0}({1})/{2}/$ref";
             url = string.Format(pattern, url, keyPropVal, navigPropName);
@@ -132,9 +142,14 @@ namespace ODataValidator.Rule
             info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
-                jObj = JObject.Parse(resp.ResponsePayload);
-                var jArr = jObj.GetValue(Constants.Value);
-                var odataId = jArr.First[Constants.V4OdataId].ToString();
+                entities = JsonParserHelper.GetEntities(resp.ResponsePayload);
+                if (!entities.Any())
+                {
+                    return false;
+                }
+
+                entity = entities.First();
+                var odataId = entity[Constants.V4OdataId].ToString();
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 passed = null != resp && HttpStatusCode.OK == resp.StatusCode;
             }
@@ -142,6 +157,7 @@ namespace ODataValidator.Rule
             {
                 passed = false;
             }
+
             return passed;
         }
     }
