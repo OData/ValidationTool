@@ -104,6 +104,11 @@ namespace ODataValidator.Rule
 
             string propName = propNames[0];
             var entitySetUrl = entityTypeShortName.GetAccessEntitySetURL();
+            if (string.IsNullOrEmpty(entitySetUrl))
+            {
+                return passed;
+            }
+
             string url = svcStatus.RootURL.TrimEnd('/') + "/" + entitySetUrl;
             var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)

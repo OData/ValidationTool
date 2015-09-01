@@ -94,18 +94,15 @@ namespace ODataValidator.Rule
             info = null;
             ServiceStatus serviceStatus = ServiceStatus.GetInstance();
             DataFactory dFactory = DataFactory.Instance();
-            var detail1 = new ExtensionRuleResultDetail(this.Name, serviceStatus.RootURL, HttpMethod.Post, string.Empty);
-            var detail2 = new ExtensionRuleResultDetail(this.Name);
-            var detail3 = new ExtensionRuleResultDetail(this.Name);
-            var detail4 = new ExtensionRuleResultDetail(this.Name);
+            var detail = new ExtensionRuleResultDetail(this.Name, serviceStatus.RootURL, HttpMethod.Post, string.Empty);
             string updateUrl = serviceStatus.RootURL;
             List<string> keyPropertyTypes = new List<string>() { "Edm.Int32", "Edm.Int16", "Edm.Int64", "Edm.Guid", "Edm.String" };
             List<string> norPropertyTypes = new List<string>() { "Edm.String" };
             List<EntityTypeElement> entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.None).ToList();
             if (null == entityTypeElements || 0 == entityTypeElements.Count)
             {
-                detail1.ErrorMessage = "To verify this rule it expects an entity type with Int32/Int64/Int16/Guid/String key property and a string type normal property, but there is no this entity type in metadata so can not verify this rule.";
-                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail1);
+                detail.ErrorMessage = "To verify this rule it expects an entity type with Int32/Int64/Int16/Guid/String key property and a string type normal property, but there is no this entity type in metadata so can not verify this rule.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
 
                 return passed;
             }
@@ -124,10 +121,10 @@ namespace ODataValidator.Rule
                 }
             }
 
-            if(!collectionPropNames.Any())
+            if(collectionPropNames != null && !collectionPropNames.Any())
             {
-                detail1.ErrorMessage = "To verify this rule it expects an entity type collection type normal property, but there is no this entity type in metadata so can not verify this rule.";
-                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail1);
+                detail.ErrorMessage = "To verify this rule it is expected that an entity type has collection type normal property, but there is no this entity type in metadata so can not verify this rule.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
 
                 return passed;
             }
@@ -135,11 +132,11 @@ namespace ODataValidator.Rule
             string collectionPropName = collectionPropNames.First();
 
             string entitySetUrl = entityType.EntitySetName.MapEntitySetNameToEntitySetURL();
-            updateUrl = entitySetUrl;
+            updateUrl = serviceStatus.RootURL.TrimEnd('/') + @"/" + entitySetUrl;
             if (string.IsNullOrEmpty(entitySetUrl))
             {
-                detail1.ErrorMessage = string.Format("Cannot find the entity-set URL which is matched with {0}", entityType.EntityTypeShortName);
-                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail1);
+                detail.ErrorMessage = string.Format("Cannot find the entity-set URL which is matched with {0}", entityType.EntityTypeShortName);
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
 
                 return passed;
             }
@@ -150,23 +147,23 @@ namespace ODataValidator.Rule
             string reqDataStr = reqData.ToString();
             bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
             var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
-            detail1 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
+            detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (HttpStatusCode.Created == resp.StatusCode)
             {
                 string entityId = additionalInfos.Last().EntityId;
                 updateUrl = entityId.TrimEnd('/') + "/" + collectionPropName;
                 bool hasEtag = additionalInfos.Last().HasEtag;
                 resp = WebHelper.GetPropertyValue(updateUrl);
-                detail2 = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp);
+                detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp);
                 if (HttpStatusCode.OK == resp.StatusCode)
                 {
                     JProperty complexPropContent = dFactory.ConstructPropertyData(entityType.EntitySetName, entityType.EntityTypeShortName, collectionPropName);
                     resp = WebHelper.UpdateCollectionProperty(updateUrl, context.RequestHeaders, complexPropContent, hasEtag);
-                    detail3 = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Put, string.Empty, resp, string.Empty, reqDataStr);
+                    detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Put, string.Empty, resp, string.Empty, reqDataStr);
                     if (HttpStatusCode.NoContent == resp.StatusCode)
                     {
                         resp = WebHelper.GetPropertyValue(updateUrl);
-                        detail4 = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
+                        detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
 
                         if (HttpStatusCode.OK == resp.StatusCode)
                         {
@@ -182,7 +179,7 @@ namespace ODataValidator.Rule
                                     if (!prop.Value.ToString().Equals(Constants.UpdateData))
                                     {
                                         passed = false;
-                                        detail4.ErrorMessage = string.Format("The collection property in request fails in HTTP put updating.");
+                                        detail.ErrorMessage = string.Format("The collection property in request fails in HTTP put updating.");
                                         break;
                                     }
                                 }
@@ -196,19 +193,18 @@ namespace ODataValidator.Rule
                         else
                         {
                             passed = false;
-                            detail4.ErrorMessage = "Can not get the updated entity.";
+                            detail.ErrorMessage = "Can not get the updated entity.";
                         }
                     }
                     else
                     {
                         passed = false;
-                        detail3.ErrorMessage = "HTTP put the collection property failed.";
+                        detail.ErrorMessage = "HTTP put the collection property failed.";
                     }
                 }
                 else
                 {
-                    passed = false;
-                    detail2.ErrorMessage = "Can not get the created entity from above URI.";
+                    detail.ErrorMessage = "Can not get the created entity from above URI.";
                 }
 
                 // Restore the service.
@@ -216,11 +212,10 @@ namespace ODataValidator.Rule
             }
             else
             {
-                passed = false;
-                detail1.ErrorMessage = "Created the new entity failed for above URI.";
+                detail.ErrorMessage = "Created the new entity failed for above URI.";
             }
 
-            var details = new List<ExtensionRuleResultDetail>() { detail1, detail2, detail3, detail4 }.RemoveNullableDetails();
+            var details = new List<ExtensionRuleResultDetail>() { detail };
             info = new ExtensionRuleViolationInfo(new Uri(updateUrl), serviceStatus.ServiceDocument, details);
 
             return passed;

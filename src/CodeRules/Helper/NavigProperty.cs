@@ -30,12 +30,11 @@ namespace ODataValidator.Rule.Helper
                 throw new ArgumentNullException("navigPropType", "The value of the input parameter 'navigPropType' MUST NOT be null or empty.");
             }
 
-            this.navigationPropertyName = navigPropName;
-            this.navigationPropertyType = navigPropType;
-            this.navigationPropertyPartner = navigPropPartner;
-            this.navigationRoughType =
-                this.navigationPropertyType.StartsWith(@"Collection(") && this.navigationPropertyType.EndsWith(@")") ?
-                Helper.NavigationRoughType.CollectionValued : Helper.NavigationRoughType.SingleValued;
+            this.NavigationPropertyName = navigPropName;
+            this.NavigationPropertyType = navigPropType;
+            this.NavigationPropertyPartner = navigPropPartner;
+            this.NavigationRoughType = this.NavigationPropertyType.RemoveCollectionFlag() == this.NavigationPropertyType ?
+                NavigationRoughType.SingleValued : NavigationRoughType.CollectionValued;
         }
 
         /// <summary>
@@ -43,14 +42,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public string NavigationPropertyName
         {
-            get
-            {
-                return navigationPropertyName;
-            }
-            set
-            {
-                navigationPropertyName = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -58,14 +51,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public string NavigationPropertyType
         {
-            get
-            {
-                return navigationPropertyType;
-            }
-            set
-            {
-                navigationPropertyType = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -73,14 +60,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public string NavigationPropertyPartner
         {
-            get
-            {
-                return navigationPropertyPartner;
-            }
-            set
-            {
-                navigationPropertyPartner = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -88,53 +69,8 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         public NavigationRoughType NavigationRoughType
         {
-            get
-            {
-                return navigationRoughType;
-            }
-            set
-            {
-                navigationRoughType = value;
-            }
+            get;
+            private set;
         }
-
-        /// <summary>
-        /// Remove the key word "Collection" and paretheses sign from collection-valued navigation property.
-        /// </summary>
-        /// <param name="navigationPropertyType">A navigation property type.</param>
-        /// <returns>Returns a navigation type without key word "Collection" and paretheses sign.</returns>
-        public static string RemoveCollectionParentheses(string navigationPropertyType)
-        {
-            const string StartMarker = @"Collection(";
-            const string EndMarker = @")";
-
-            if (navigationPropertyType.StartsWith(StartMarker) &&
-                navigationPropertyType.EndsWith(EndMarker))
-            {
-                return navigationPropertyType.Remove(0, StartMarker.Length).RemoveEnd(EndMarker);
-            }
-
-            return navigationPropertyType;
-        }
-
-        /// <summary>
-        /// The navigation property name.
-        /// </summary>
-        private string navigationPropertyName;
-
-        /// <summary>
-        /// The navigation property type.
-        /// </summary>
-        private string navigationPropertyType;
-
-        /// <summary>
-        /// The navigation property partner.
-        /// </summary>
-        private string navigationPropertyPartner;
-
-        /// <summary>
-        /// The rought-type of a navigation property.
-        /// </summary>
-        private NavigationRoughType navigationRoughType;
     }
 }

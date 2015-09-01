@@ -110,6 +110,43 @@ namespace ODataValidator.Rule.Helper
         }
 
         /// <summary>
+        /// Gets all entities from the service's response payload.
+        /// </summary>
+        /// <param name="responsePayload">The specified response payload.</param>
+        /// <returns>Returns the entities' list.</returns>
+        public static List<JObject> GetEntities(string responsePayload)
+        {
+            var entities = new List<JObject>();
+            if (string.IsNullOrEmpty(responsePayload))
+            {
+                return entities;
+            }
+
+            JObject jObj = JObject.Parse(responsePayload);
+            JArray jArr = jObj.GetValue("value") as JArray;
+            if (null != jArr)
+            {
+                if (jArr.Any())
+                {
+                    foreach (JObject entity in jArr)
+                    {
+                        entities.Add(entity);
+                    }
+                }
+                else
+                {
+                    return entities;
+                }
+            }
+            else
+            {
+                entities.Add(jObj);
+            }
+
+            return entities;
+        }
+
+        /// <summary>
         /// Gets the last entry from the collection of entries.
         /// </summary>
         /// <param name="entries">The collection of entries</param>
@@ -839,7 +876,7 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         /// <param name="entitySetUrl">A feed URL.</param>
         /// <returns>Return the amount of entities in current feed.</returns>
-        public static int GetEntitiesCountFromFeed(string entitySetUrl)
+        public static int GetEntitiesCountFromFeed(string entitySetUrl, IEnumerable<KeyValuePair<string, string>> headers = null)
         {
             int amount = 0;
             if (!Uri.IsWellFormedUriString(entitySetUrl, UriKind.Absolute))
@@ -847,7 +884,7 @@ namespace ODataValidator.Rule.Helper
                 throw new UriFormatException("The input parameter 'entitySetUrl' is not a URL string.");
             }
 
-            var resp = WebHelper.Get(new Uri(entitySetUrl), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
+            var resp = WebHelper.Get(new Uri(entitySetUrl), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, headers);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
                 var jObj = JObject.Parse(resp.ResponsePayload);
@@ -858,7 +895,7 @@ namespace ODataValidator.Rule.Helper
                     string url = Uri.IsWellFormedUriString(jObj[Constants.V4OdataNextLink].ToString(), UriKind.Absolute) ?
                         jObj[Constants.V4OdataNextLink].ToString() :
                         ServiceStatus.GetInstance().RootURL.TrimEnd('/') + "/" + jObj[Constants.V4OdataNextLink].ToString();
-                    resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, null);
+                    resp = WebHelper.Get(new Uri(url), Constants.V4AcceptHeaderJsonFullMetadata, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, headers);
                     jObj = JObject.Parse(resp.ResponsePayload);
                     jArr = jObj.GetValue(Constants.Value) as JArray;
                     amount += jArr.Count;

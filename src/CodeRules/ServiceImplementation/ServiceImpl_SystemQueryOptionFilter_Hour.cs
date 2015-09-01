@@ -104,6 +104,11 @@ namespace ODataValidator.Rule
 
             string propName = propNames[0];
             var entitySetUrl = entityTypeShortName.GetAccessEntitySetURL();
+            if (string.IsNullOrEmpty(entitySetUrl))
+            {
+                return passed;
+            }
+
             string url = svcStatus.RootURL.TrimEnd('/') + "/" + entitySetUrl;
             var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
@@ -120,6 +125,11 @@ namespace ODataValidator.Rule
                 {
                     jObj = JObject.Parse(resp.ResponsePayload);
                     jArr = jObj.GetValue(Constants.Value) as JArray;
+                    if (null == jArr || !jArr.Any())
+                    {
+                        return false;
+                    }
+
                     foreach (JObject et in jArr)
                     {
                         passed = Convert.ToDateTime(et[propName]).Hour == propVal;

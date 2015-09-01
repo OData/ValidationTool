@@ -116,7 +116,7 @@ namespace ODataValidator.RuleEngine
                   || (r.Version == ODataVersion.V3_V4 && (version == ODataVersion.V3 || version == ODataVersion.V4))
                   || (version == ODataVersion.V4 && (r.Version == ODataVersion.V4 || r.Version == ODataVersion.V3_V4))
                   || (r.Version == ODataVersion.V1_V2_V3 && (version == ODataVersion.V1 || version == ODataVersion.V2 || version == ODataVersion.V3 || version == ODataVersion.V1_V2))
-                  || (version == ODataVersion.V_All && r.Version != ODataVersion.UNKNOWN)
+                  || (r.Version == ODataVersion.V_All && r.Version != ODataVersion.UNKNOWN)
                   select r;
         }
 

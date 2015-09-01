@@ -131,6 +131,10 @@ namespace ODataValidator.Rule
                     }
                 }
             }
+            else
+            {
+                passed = false;
+            }
             
             return passed;
         }

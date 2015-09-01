@@ -302,8 +302,8 @@ namespace ODataValidator.Rule.Helper
         static string patternDouble;
         static string patternDoubleInJson;
 
-        private string xmlValueTemplate = "6465468461.6748468";
-        private string jsonValueTemplate = "\"6465468461.6748468\"";
+        private string xmlValueTemplate = "75.67";
+        private string jsonValueTemplate = "\"75.67\"";
 
         static EdmDouble()
         {

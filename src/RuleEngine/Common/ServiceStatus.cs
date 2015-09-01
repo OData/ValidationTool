@@ -9,6 +9,8 @@ namespace ODataValidator.RuleEngine.Common
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Net.Security;
+    using System.Security.Cryptography.X509Certificates;
     using System.Runtime.CompilerServices;
     #endregion
 
@@ -22,7 +24,7 @@ namespace ODataValidator.RuleEngine.Common
         /// </summary>
         /// <returns>The instance of class type TermDocument.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static ServiceStatus GetInstance(string url = null)
+        public static ServiceStatus GetInstance(string url = null, string headers=null)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -31,7 +33,7 @@ namespace ODataValidator.RuleEngine.Common
                     string.IsNullOrEmpty(serviceStatus.serviceDoc) || 
                     string.IsNullOrEmpty(serviceStatus.metadataDoc))
                 {
-                    serviceStatus = new ServiceStatus(url);
+                    serviceStatus = new ServiceStatus(url, headers);
                 }
             }
 
@@ -132,15 +134,29 @@ namespace ODataValidator.RuleEngine.Common
         /// <summary>
         /// The default request headers.
         /// </summary>
-        private IEnumerable<KeyValuePair<string, string>> defaultHeaders;
+        private IEnumerable<KeyValuePair<string, string>> defaultHeaders = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string> ("ODataVersion", "4.0" ) };
 
         /// <summary>
         /// The constructor of class type ServiceStatus.
         /// </summary>
-        private ServiceStatus(string url)
+        private ServiceStatus(string url, string headers)
         {
             var uri = this.ConvertToUri(url);
-            defaultHeaders = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("ODataVersion", "4.0") };
+
+            if (!string.IsNullOrWhiteSpace(headers))
+            {
+                string[] headersSplited = headers.Split(';');
+                List<KeyValuePair<string, string>> heaserCollection = new List<KeyValuePair<string, string>>();
+                foreach (string header in headersSplited)
+                {
+                    string[] headerKeyValue = header.Split(':');
+                    if (headerKeyValue.Length == 2)
+                    {
+                        heaserCollection.Add(new KeyValuePair<string, string>(headerKeyValue[0], headerKeyValue[1]));
+                    }
+                }
+                defaultHeaders = heaserCollection;
+            }
 
             // Get the service document.
             if (this.GetServiceDocument(uri, out this.rootURL, out this.serviceDoc))
@@ -170,8 +186,19 @@ namespace ODataValidator.RuleEngine.Common
             }
 
             var req = (HttpWebRequest)WebRequest.Create(uri.ToString());
+
+            foreach(var header in  defaultHeaders)
+            {
+                req.Headers.Add(header.Key, header.Value);
+            }
+
             var resp = ServiceStatus.Get(req);
-            if (null != resp && HttpStatusCode.OK == resp.StatusCode)
+            if(null == resp)
+            {
+                return false;
+            }
+
+            if (HttpStatusCode.OK == resp.StatusCode)
             {
                 if (resp.IsServiceDocument())
                 {
@@ -195,6 +222,10 @@ namespace ODataValidator.RuleEngine.Common
                         }
                     }
                 }
+            }
+            else if (HttpStatusCode.Unauthorized == resp.StatusCode)
+            {
+                throw new UnauthorizedAccessException();
             }
 
             return false;
@@ -237,7 +268,7 @@ namespace ODataValidator.RuleEngine.Common
 
             StreamReader streamReader = null;
             string responseHeaders, responsePayload;
-
+            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; });
             try
             {
                 using (HttpWebResponse resp = (HttpWebResponse)request.GetResponse())
