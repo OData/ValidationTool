@@ -15,6 +15,7 @@ namespace ODataValidator.ValidationService
     using System.Web;
     using Eucritta;
     using RuleEngine;
+    using System.Text.RegularExpressions;
 
     /// <summary>ODataValidator class hosting the OData service for job submission and rule processing</summary>
     [System.ServiceModel.ServiceBehavior(IncludeExceptionDetailInFaults = true)]
@@ -204,7 +205,7 @@ namespace ODataValidator.ValidationService
         /// <param name="testResultIdsStr">The string for the rerun test result IDs.</param>
         /// <returns>The collection of validation jobs.</returns>
         [WebGet]
-        public IEnumerable<JobGroup> SimpleRerunJob(string jobIdStr, string testResultIdsStr)
+        public IEnumerable<JobGroup> SimpleRerunJob(string jobIdStr, string testResultIdsStr, string authorizationHeader)
         {
             Guid masterJobId = new Guid(jobIdStr);
             var testResultIds = testResultIdsStr.TrimEnd(';').Split(';').Select(item => int.Parse(item)).ToList();
@@ -236,9 +237,35 @@ namespace ODataValidator.ValidationService
                 validationJob.Complete = false;
                 x.SaveChanges();
 
+                string stringHeaders = validationJob.ReqHeaders;
+
+                if(!string.IsNullOrEmpty(authorizationHeader))
+                {
+                    stringHeaders = Regex.Replace(stringHeaders, "authorization:.*(;|$)", "", RegexOptions.IgnoreCase);
+                    stringHeaders += authorizationHeader.Trim();
+                }
+
+                try
+                {
+                    // Try to get the necessary information for only one time.
+                    RuleEngine.Common.ServiceStatus.GetInstance(Uri, stringHeaders);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return new JobGroup[] { new JobGroup()
+                    {
+                        Uri = Uri,
+                        MasterJobId = Guid.Empty,
+                        DerivativeJobId = Guid.Empty,
+                        ResourceType = string.Empty,
+                        RuleCount = 0,
+                        Issues = "Error: The current user is unauthorized to access the endpoint." 
+                    }};
+                }
+
                 ServiceContext ctxMaster = null;
                 string Format = validationJob.Format;
-                List<KeyValuePair<string, string>> reqHeaders = ToHeaderCollection(validationJob.ReqHeaders);
+                List<KeyValuePair<string, string>> reqHeaders = ToHeaderCollection(stringHeaders);
 
                 if (string.IsNullOrEmpty(Uri))
                 {
@@ -247,6 +274,7 @@ namespace ODataValidator.ValidationService
                 }
                 else
                 {
+
                     rerunType = JobType.UriRerun;
                     ctxMaster = ServiceContextFactory.Create(Uri, Format, masterJobId, MaxPayloadByteCount, reqHeaders);
                 }
@@ -256,7 +284,7 @@ namespace ODataValidator.ValidationService
         }
 
         [WebGet]
-        public IEnumerable<JobGroup> ConformanceRerunJob(string jobIdStr, string testResultIdsStr)
+        public IEnumerable<JobGroup> ConformanceRerunJob(string jobIdStr, string testResultIdsStr, string authorizationHeader)
         {
             Guid masterJobId = new Guid(jobIdStr);
             var testResultIds = testResultIdsStr.TrimEnd(';').Split(';').Select(item => int.Parse(item)).ToList();
@@ -288,9 +316,35 @@ namespace ODataValidator.ValidationService
                 validationJob.Complete = false;
                 x.SaveChanges();
 
+                string stringHeaders = validationJob.ReqHeaders;
+
+                if (!string.IsNullOrEmpty(authorizationHeader))
+                {
+                    stringHeaders = Regex.Replace(stringHeaders, "authorization:.*(;|$)", "", RegexOptions.IgnoreCase);
+                    stringHeaders += authorizationHeader.Trim();
+                }
+
+                try
+                {
+                    // Try to get the necessary information for only one time.
+                    RuleEngine.Common.ServiceStatus.GetInstance(Uri, stringHeaders);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return new JobGroup[] { new JobGroup()
+                    {
+                        Uri = Uri,
+                        MasterJobId = Guid.Empty,
+                        DerivativeJobId = Guid.Empty,
+                        ResourceType = string.Empty,
+                        RuleCount = 0,
+                        Issues = "Error: The current user is unauthorized to access the endpoint." 
+                    }};
+                }
+
                 string Format = validationJob.Format;
                 string category = "conformance;" + validationJob.ServiceType + ";" + validationJob.LevelTypes;
-                List<KeyValuePair<string, string>> reqHeaders = ToHeaderCollection(validationJob.ReqHeaders);
+                List<KeyValuePair<string, string>> reqHeaders = ToHeaderCollection(stringHeaders);
 
                 ServiceContext ctx = ServiceContextFactory.Create(Uri, Format, masterJobId, MaxPayloadByteCount, reqHeaders, category);
 
@@ -461,11 +515,11 @@ namespace ODataValidator.ValidationService
                     string[] pair = line.Split(new char[] { ':' }, 2);
                     if (pair.Length == 2)
                     {
-                        reqHeaders.Add(new KeyValuePair<string, string>(pair[0], HttpUtility.UrlDecode(pair[1].Trim())));
+                        reqHeaders.Add(new KeyValuePair<string, string>(pair[0].Trim(), HttpUtility.UrlDecode(pair[1].Trim())));
                     }
                     else if (pair.Length == 1)
                     {
-                        reqHeaders.Add(new KeyValuePair<string, string>(pair[0], null));
+                        reqHeaders.Add(new KeyValuePair<string, string>(pair[0].Trim(), null));
                     }
                 }
             }
@@ -812,6 +866,7 @@ namespace ODataValidator.ValidationService
                     var headers = "";
                     foreach (var p in ctx.RequestHeaders)
                     {
+                        if (p.Key.Equals("Authorization")) continue;
                         headers += p.Key + ":" + p.Value + ";";
                     }
                     extJob.ReqHeaders = headers;

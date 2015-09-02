@@ -861,9 +861,11 @@ function resigterUriRerun() {
         // invalid judgement 
 
         function UIResultUpdate(data) {
-            //Concurrent conflict
-            if (data.results[0].Issues && data.results[0].Issues.length != 0) {
-                alert("Error: Job is not complete or somebody else is rerunning this job!");
+            if (data.results[0].Issues) {
+                //display status message only, w/o anchor
+                var jobStatusInfo = { 'status': data.results[0].Issues };
+                $('#infotop #statusInfo').empty();
+                $('#jobStatusInfoTmpl').tmpl(jobStatusInfo).appendTo('#infotop #statusInfo');
                 enableTabSwitch();
                 return;
             }
@@ -973,6 +975,7 @@ function resigterUriRerun() {
                     requestUri: "odatavalidator/SimpleRerunJob"
                               + "?jobIdStr='" + jobid + "'"
                               + "&testResultIdsStr='" + testResultIds + "'"
+                              + "&authorizationHeader='" + getAuthorization() + "'"
                 }
                 if (allSelectedLis.length == 0) {
                     return;
@@ -980,6 +983,7 @@ function resigterUriRerun() {
                 validatorApp.currJobNote.empty().append("Starting rerunning " + allSelectedLis.length + " rules...");
                 disableTabSwitch();
                 OData.request(request, UIResultUpdate);
+                $("#credential").submit();
             }
         }
     })();
@@ -999,6 +1003,14 @@ function registerConformanceRerun() {
         var JobData;
 
         function UIResultUpdate(data) {
+            if (data.results[0].Issues) {
+                //display status message only, w/o anchor
+                var jobStatusInfo = { 'status': data.results[0].Issues };
+                $('#infotop #statusInfo').empty();
+                $('#jobStatusInfoTmpl').tmpl(jobStatusInfo).appendTo('#infotop #statusInfo');
+                enableTabSwitch();
+                return;
+            }
 
             JobData = data;
             jobid = data.results[0].DerivativeJobId;
@@ -1136,11 +1148,13 @@ function registerConformanceRerun() {
                     requestUri: "odatavalidator/ConformanceRerunJob"
                                 + "?jobIdStr='" + jobid + "'"
                                 + "&testResultIdsStr='" + testResultIds + "'"
+                                + "&authorizationHeader='" + getAuthorization() + "'"
                 }
 
                 $('#infotop #statusInfo #status').empty().append("Starting rerunning " + allSelectedLis.length + " rules...");
                 disableTabSwitch();  //disable button
                 OData.request(request, UIResultUpdate);
+                $("#credential").submit();
             }
         }
     })();
