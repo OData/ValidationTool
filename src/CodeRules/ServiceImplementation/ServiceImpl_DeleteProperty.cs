@@ -115,7 +115,7 @@ namespace ODataValidator.Rule
             {
                 foreach (NormalProperty np in en.NormalProperties)
                 {
-                    if (!np.IsKey && !en.HasStream && !np.IsValueNull)
+                    if (!np.IsKey && !en.HasStream && !np.IsValueNull && np.IsNullable)
                     {
                         eTypeElement = en;
                         prop = np;
@@ -157,9 +157,12 @@ namespace ODataValidator.Rule
                 if (HttpStatusCode.Created == resp.StatusCode || HttpStatusCode.NoContent == resp.StatusCode)
                 {
                     url = additionalInfos.Last().EntityId.TrimEnd('/') + "/" + propReltivePath;
-                    if (url.Equals("/"))
+                    if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
                     {
                         detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
+
+                        // Restore the service.
+                        var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
                         return passed;
                     }
 
@@ -171,7 +174,7 @@ namespace ODataValidator.Rule
                         resp = WebHelper.DeleteEntity(url, context.RequestHeaders, additionalInfos.Last().HasEtag);
                         detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Delete, string.Empty, resp, string.Empty, "Successfully updated the stream of the image.");
 
-                        if (null != resp && (HttpStatusCode.NoContent == resp.StatusCode || (prop.IsNullable == false && Convert.ToInt32(resp.StatusCode) >= 400)))
+                        if (null != resp && (HttpStatusCode.NoContent == resp.StatusCode))
                         {
                             passed = true;
                         }
@@ -187,7 +190,7 @@ namespace ODataValidator.Rule
                     }
 
                     // Restore the service.
-                    var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
+                    WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
                 }
                 else
                 {

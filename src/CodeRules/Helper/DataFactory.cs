@@ -50,6 +50,81 @@ namespace ODataValidator.Rule.Helper
         }
 
         /// <summary>
+        /// Check whether a property in the entity is null; if null, add its content.
+        /// </summary>
+        /// <param name="entitySetName">The entity-set name.</param>
+        /// <param name="PropertyName">The property name.</param>
+        /// <param name="entity">The entity whose property is to be added.</param>
+        /// <returns>True if the property content is not null or added successfully; false, otherwise.</returns>
+        public bool CheckOrAddTheMissingPropertyData(
+            string entitySetName,
+            string propertyName,
+            ref JObject entity)
+        {
+
+            if (!entitySetName.IsSpecifiedEntitySetNameExist())
+            {
+                return false;
+            }
+
+            string entityTypeShortName = entitySetName.MapEntitySetNameToEntityTypeShortName();
+
+            if (null != entity)
+            {
+                var properties = entity.Children<JProperty>();
+
+                foreach (var prop in properties)
+                {
+                    if (propertyName.Equals(prop.Name))
+                    {
+                        if (string.IsNullOrEmpty(prop.Value.ToString()))
+                        {
+                            KeyValuePair<string, PropertyTypeClass>? typeAndClass = GetPropertyTypeClass(entityTypeShortName, propertyName);
+
+                            if (typeAndClass != null)
+                            {
+                                switch (typeAndClass.Value.Value)
+                                {
+                                    case PropertyTypeClass.CollectionType:
+                                        prop.Value = ConstructCollectionTypeValue(typeAndClass.Value.Key);
+                                        break;
+                                    case PropertyTypeClass.ComplexType:
+                                        prop.Value = ConstructAComplexTypeValue(typeAndClass.Value.Key);
+                                        break;
+                                    case PropertyTypeClass.EnumType:
+                                        prop.Value = ConstructEnumTypeValue(typeAndClass.Value.Key);
+                                        break;
+                                    case PropertyTypeClass.PrimitiveType:
+                                        prop.Value = ConstructPrimitiveTypeValue(typeAndClass.Value.Key);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+
+                            entity[prop.Name] = prop.Value;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+
+                        if (string.IsNullOrEmpty(entity[prop.Name].ToString()))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Construct an entity property's data.
         /// </summary>
         /// <param name="entitySetName">The entity-set name.</param>
@@ -59,7 +134,7 @@ namespace ODataValidator.Rule.Helper
         public JProperty ConstructPropertyData(
             string entitySetName,
             string actualEntityTypeShortName,
-            string PropertyName)
+            string propertyName)
         {
             JObject entity = new JObject();
 
@@ -80,9 +155,42 @@ namespace ODataValidator.Rule.Helper
 
                 foreach (var prop in properties)
                 {
-                    if (PropertyName.Equals(prop.Name))
+                    if (propertyName.Equals(prop.Name))
                     {
-                        return prop;
+                        if(string.IsNullOrEmpty(prop.Value.ToString()))
+                        {
+                           KeyValuePair<string, PropertyTypeClass>? typeAndClass = GetPropertyTypeClass(entityTypeShortName, propertyName);
+
+                           if(typeAndClass != null)
+                           {
+                               switch(typeAndClass.Value.Value)
+                               {
+                                   case PropertyTypeClass.CollectionType: 
+                                       prop.Value = ConstructCollectionTypeValue(typeAndClass.Value.Key);
+                                       break;
+                                   case PropertyTypeClass.ComplexType:
+                                       prop.Value = ConstructAComplexTypeValue(typeAndClass.Value.Key);
+                                       break;
+                                   case PropertyTypeClass.EnumType:
+                                       prop.Value = ConstructEnumTypeValue(typeAndClass.Value.Key);
+                                       break;
+                                   case PropertyTypeClass.PrimitiveType:
+                                       prop.Value = ConstructPrimitiveTypeValue(typeAndClass.Value.Key);
+                                       break;
+                                   default:
+                                       break;
+                               }
+                           }
+                        }
+
+                        if (!string.IsNullOrEmpty(prop.Value.ToString()))
+                        {
+                            return prop;
+                        }
+                        else 
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -359,6 +467,18 @@ namespace ODataValidator.Rule.Helper
         }
 
         /// <summary>
+        /// The classes of property types
+        /// </summary>
+        public enum PropertyTypeClass : int
+        {
+            Unknown = 0,
+            PrimitiveType = 1,
+            EnumType = 2,
+            ComplexType = 3,
+            CollectionType = 4
+        }
+
+        /// <summary>
         /// Initialize the data factory.
         /// </summary>
         private DataFactory()
@@ -562,6 +682,67 @@ namespace ODataValidator.Rule.Helper
             var aliasAndNs = MetadataHelper.GetAliasAndNamespace(elem);
 
             return aliasAndNs.Namespace;
+        }
+
+        /// <summary>
+        /// Get property type and type class.
+        /// </summary>
+        /// <param name="entityTypeShortName"> The short name of entity type.</param>
+        /// <param name="propertyName">The name of the property in the entity type.</param>
+        /// <returns>The key value pair in which key is the property type short name and the value is the property type class.</returns>
+        private KeyValuePair<string, PropertyTypeClass>? GetPropertyTypeClass(string entityTypeShortName, string propertyName)
+        {
+            string pattern = "//*[local-name()='EntityType' and @Name='{0}']/*[local-name()='Property' and @Name='{1}']";
+            string metadataString = ServiceStatus.GetInstance().MetadataDocument;
+            var metadata = XElement.Parse(metadataString);
+
+            string xPath = string.Format(pattern, entityTypeShortName, propertyName);
+            XElement prop = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+
+            if (prop == null)
+                return null;
+
+            string propType = prop.GetAttributeValue("Type");
+            string propTypeShortName = propType.RemoveCollectionFlag().GetLastSegment();            
+
+            PropertyTypeClass typeClass = PropertyTypeClass.Unknown;
+            string type = propTypeShortName;
+
+            if(propType.Contains("Collection("))
+            {
+               typeClass = PropertyTypeClass.CollectionType;
+            }
+            else if (EdmTypeManager.IsEdmSimpleType(propTypeShortName))
+            {
+                typeClass = PropertyTypeClass.PrimitiveType;
+                type = propType;
+            }
+            else
+            {
+                xPath = string.Format("//*[@Name = '{0}']", propTypeShortName);
+
+                XElement typeDefElement = metadata.XPathSelectElement(xPath, ODataNamespaceManager.Instance);
+
+                if (typeDefElement == null)
+                {
+                    return null;
+                }
+
+                switch (typeDefElement.Name.LocalName)
+                {
+                    case "ComplexType": 
+                        typeClass = PropertyTypeClass.ComplexType;
+                        break;
+                    case "EnumType":
+                        typeClass = PropertyTypeClass.EnumType;
+                        break;
+                    default:
+                        typeClass = PropertyTypeClass.Unknown;
+                        break;
+                }
+            }
+
+            return new KeyValuePair<string, PropertyTypeClass>(type, typeClass);
         }
 
         private static readonly List<string> KeyPropertyTypes;

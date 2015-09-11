@@ -148,6 +148,15 @@ namespace ODataValidator.Rule
             string url = serviceStatus.RootURL.TrimEnd('/') + @"/" + entitySetUrl;
             var additionalInfos = new List<AdditionalInfo>();
             var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
+
+            if (!dFactory.CheckOrAddTheMissingPropertyData(entityType.EntitySetName, primitiveProp.PropertyName, ref reqData))
+            {
+                detail.ErrorMessage = "The property to update does not exist, and cannot be updated.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
+
+                return passed;
+            }
+
             string reqDataStr = reqData.ToString();
             if (reqDataStr.Length > 2)
             {
@@ -160,15 +169,15 @@ namespace ODataValidator.Rule
                     updateUrl = entityId.TrimEnd('/') + "/" + primitiveProp.PropertyName + @"/$value";
                     bool hasEtag = additionalInfos.Last().HasEtag;
                     resp = WebHelper.GetPropertyValue(updateUrl);
-                    detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp);
-                    if (HttpStatusCode.OK == resp.StatusCode)
+                    detail = new ExtensionRuleResultDetail(this.Name, updateUrl, HttpMethod.Get, string.Empty, resp);
+                    if (HttpStatusCode.OK == resp.StatusCode || HttpStatusCode.NoContent == resp.StatusCode)
                     {
                         resp = WebHelper.UpdateAStringProperty(updateUrl, context.RequestHeaders, hasEtag);
-                        detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Put, string.Empty, resp, string.Empty, reqDataStr);
+                        detail = new ExtensionRuleResultDetail(this.Name, updateUrl, HttpMethod.Put, string.Empty, resp, string.Empty, reqDataStr);
                         if (HttpStatusCode.NoContent == resp.StatusCode)
                         {
                             resp = WebHelper.GetPropertyValue(updateUrl);
-                            detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
+                            detail = new ExtensionRuleResultDetail(this.Name, updateUrl, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
 
                             if (HttpStatusCode.OK == resp.StatusCode)
                             {

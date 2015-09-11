@@ -142,9 +142,12 @@ namespace ODataValidator.Rule
             if (HttpStatusCode.Created == resp.StatusCode || HttpStatusCode.NoContent == resp.StatusCode)
             {
                 url = additionalInfos.Last().EntityId.TrimEnd('/') + "/" + relativePath.TrimEnd('/');
-                if(url.Equals("/")) 
+                if (!Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute)) 
                 {
                     detail.ErrorMessage = string.Format("Fail to find the stream property read and edit URL.", resp.StatusCode);
+
+                    // Restore the service.
+                    var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
                     return passed;
                 }                    
 
@@ -183,7 +186,7 @@ namespace ODataValidator.Rule
                 }
 
                 // Restore the service.
-                var resps = WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
+                WebHelper.DeleteEntities(context.RequestHeaders, additionalInfos);
             }
             else
             {
