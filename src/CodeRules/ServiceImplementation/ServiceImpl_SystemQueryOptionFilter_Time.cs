@@ -117,7 +117,7 @@ namespace ODataValidator.Rule
                 JArray jArr = jObj.GetValue(Constants.Value) as JArray;
                 var entity = jArr.First as JObject;
                 var propVal = Convert.ToDateTime(entity[propName]).TimeOfDay.ToString();
-                url = string.Format("{0}?$filter=time({1}) eq time('{1}')", url, propName);
+                url = string.Format("{0}?$filter=time({1}) eq time({1})", url, propName);
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 var detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, string.Empty);
                 info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);

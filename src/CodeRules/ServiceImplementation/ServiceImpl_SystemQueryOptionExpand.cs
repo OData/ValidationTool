@@ -122,6 +122,11 @@ namespace ODataValidator.Rule
                             break;
                         }
                     }
+
+                    if (passed == true)
+                    {
+                        break;
+                    }
                 }
             }
 
