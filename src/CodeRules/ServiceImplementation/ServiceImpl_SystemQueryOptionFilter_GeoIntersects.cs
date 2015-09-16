@@ -127,7 +127,7 @@ namespace ODataValidator.Rule
                     pt + new Point(0.0, 1.0),
                     pt + new Point(0.0, -1.0)
                 };
-                url = string.Format("{0}?$filter=geo.intersects({1}, SRID={2};POLYGON({3}, {4}, {5}, {6}))", url, propName, srid, pts[0], pts[1], pts[2], pts[3]);
+                url = string.Format("{0}?$filter=geo.intersects({1}, geography'POLYGON(({2}, {3}, {4}, {5}, {6}))')", url, propName, pts[0], pts[1], pts[2], pts[3], pts[0]);
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 var detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, string.Empty);
                 info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);

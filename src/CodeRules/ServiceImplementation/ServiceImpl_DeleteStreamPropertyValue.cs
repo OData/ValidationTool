@@ -108,7 +108,6 @@ namespace ODataValidator.Rule
                 return passed;
             }
 
-
             EntityTypeElement eTypeElement = new EntityTypeElement();
 
             Dictionary<string, string> entityAndpaths = MetadataHelper.StreamPropertyEntities(serviceStatus.MetadataDocument);
@@ -117,7 +116,7 @@ namespace ODataValidator.Rule
 
             foreach (var en in entityTypeElements)
             {
-                if (entityAndpaths.Keys.Contains(en.EntityTypeShortName) && !string.IsNullOrEmpty(eTypeElement.EntitySetName))
+                if (entityAndpaths.Keys.Contains(en.EntityTypeShortName) && !string.IsNullOrEmpty(en.EntitySetName))
                 {
                     eTypeElement = en;
                     relativePath = entityAndpaths[en.EntityTypeShortName];

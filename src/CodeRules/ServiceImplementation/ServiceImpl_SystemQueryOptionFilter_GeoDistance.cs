@@ -121,7 +121,7 @@ namespace ODataValidator.Rule
                 var pt1 = new Point(Convert.ToDouble(propVal[0]), Convert.ToDouble(propVal[1]));
                 var pt2 = new Point(0.0, 0.0);
                 var distance = Point.GetDistance(pt1, pt2);
-                url = string.Format("{0}?$filter=geo.distance({1}, SRID={2};POINT(0.0 0.0)) eq {3}", url, propName, srid, distance);
+                url = string.Format("{0}?$filter=geo.distance({1}, geography'POINT(0.0 0.0)') ge {2}", url, propName, distance);
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 var detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, string.Empty);
                 info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
@@ -135,7 +135,7 @@ namespace ODataValidator.Rule
                         pt1 = new Point(Convert.ToDouble(propVal[0]), Convert.ToDouble(propVal[1]));
                         pt2 = new Point(0.0, 0.0);
                         var dis = Point.GetDistance(pt1, pt2);
-                        passed = dis == distance;
+                        passed = dis >= distance;
                     }
                 }
                 else
