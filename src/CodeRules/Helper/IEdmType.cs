@@ -560,8 +560,8 @@ namespace ODataValidator.Rule.Helper
         // (UTF8-char)* ?
         const string patternStringInJson = @"^"".*""$";
 
-        private string xmlValueTemplate = "Life is a wonder.";
-        private string jsonValueTemplate = "Life is a wonder.";
+        private string xmlValueTemplate = "Lifeisawonder";
+        private string jsonValueTemplate = "Lifeisawonder";
 
         public bool IsGoodWith(string text)
         {

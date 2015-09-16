@@ -98,7 +98,7 @@ namespace ODataValidator.Rule
             string updateUrl = serviceStatus.RootURL;
             List<string> keyPropertyTypes = new List<string>() { "Edm.Int32", "Edm.Int16", "Edm.Int64", "Edm.Guid", "Edm.String" };
             List<string> norPropertyTypes = new List<string>() { "Edm.String" };
-            List<EntityTypeElement> entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.None).ToList();
+            List<EntityTypeElement> entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.CollectionValued).ToList();
             if (null == entityTypeElements || 0 == entityTypeElements.Count)
             {
                 detail.ErrorMessage = "To verify this rule it expects an entity type with Int32/Int64/Int16/Guid/String key property and a string type normal property, but there is no this entity type in metadata so can not verify this rule.";
@@ -113,8 +113,6 @@ namespace ODataValidator.Rule
 
             foreach (var en in entityTypeElements)
             {
-
-                
                 if (MetadataHelper.HasEntityNavigationProp(serviceStatus.MetadataDocument, en.EntityTypeShortName, NavigationRoughType.CollectionValued, context, out navigationPropNames))
                 {
                     entityType = en;

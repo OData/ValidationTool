@@ -115,7 +115,7 @@ namespace ODataValidator.Rule
             {
                 foreach (NormalProperty np in en.NormalProperties)
                 {
-                    if (!np.IsKey && !en.HasStream && !np.IsValueNull && np.IsNullable)
+                    if (!np.IsKey && !en.HasStream && np.IsNullable)
                     {
                         eTypeElement = en;
                         prop = np;
@@ -148,7 +148,17 @@ namespace ODataValidator.Rule
             string url = serviceStatus.RootURL.TrimEnd('/') + @"/" + eTypeElement.EntitySetName;
             var additionalInfos = new List<AdditionalInfo>();
             var reqData = dFactory.ConstructInsertedEntityData(eTypeElement.EntitySetName, eTypeElement.EntityTypeShortName, null, out additionalInfos);
+
+            if (!dFactory.CheckOrAddTheMissingPropertyData(eTypeElement.EntitySetName, prop.PropertyName, ref reqData))
+            {
+                detail.ErrorMessage = "The property to update does not have value, and cannot be deleted.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
+
+                return passed;
+            };
+
             string reqDataStr = reqData.ToString();
+
             if (reqDataStr.Length > 2)
             {
                 bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);

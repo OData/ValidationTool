@@ -712,7 +712,7 @@ namespace ODataValidator.Rule.Helper
             {
                typeClass = PropertyTypeClass.CollectionType;
             }
-            else if (EdmTypeManager.IsEdmSimpleType(propTypeShortName))
+            else if (EdmTypeManager.IsEdmSimpleType(propType))
             {
                 typeClass = PropertyTypeClass.PrimitiveType;
                 type = propType;
