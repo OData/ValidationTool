@@ -75,8 +75,8 @@ var ServiceImplementationResults = {
     "rerunloadover": -1
 };
 
-var folderItem = "<li style=\"display: block;margin-left:-15px;\"><table><tr><td><img src=\"Images/leaf.png\"></td><td title=\"{0}\" style=\"white-space:nowrap\">{0}</td></tr></table></li>";
-var folder = "<li name=\"{0}\"><img class=\"angle\" onclick=\"toggleFolder(this)\" src=\"Images/foldAngle.png\"><div style=\"display:inline\" ondblclick=\"toggleFolder(this)\"><img class=\"fold\" style=\"margin:0 3px\" src=\"images/fold.png\" />{0}</div><ul style=\"display: none;\"></ul></li>";
+var folderItem = "<li style=\"width: 100%; display: block;margin-left:-15px;\"><table width=100%><tr><td width=\"10px\"><img src=\"Images/leaf.png\"></td><td title=\"{0}\" style=\"white-space:nowrap\"><input style=\"border:none;width:100%\" value=\"{0}\" type=\"text\" readonly></td></tr></table></li>";
+var folder = "<li width=100% name=\"{0}\"><img class=\"angle\" onclick=\"toggleFolder(this)\" src=\"Images/foldAngle.png\"><div style=\"display:inline\" ondblclick=\"toggleFolder(this)\"><img class=\"fold\" style=\"margin:0 3px\" src=\"images/fold.png\" />{0}</div><ul style=\"display: none;\"></ul></li>";
 var folderWithoutChild = "<li name=\"{0}\"><div style=\"display:inline\" ><img class=\"fold\" style=\"margin:0 3px 0 13px\" src=\"images/fold.png\" />{0}</div><ul style=\"display: none;\"></ul></li>";
 
 var currentDetail;
@@ -2439,16 +2439,16 @@ function display(rule) {
     $.each(rule.URI, function () {
         if (rule.classification == "success") {
             insertTo($($('#implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
-            $('#implementedCount').empty().append("{0} service implementation(s) have been implemented".format(ServiceImplementationResults.ImplementTotal.implementedCount));
+            $('#implementedCount').empty().append("{0} service implementation(s) have been implemented<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.implementedCount));
 
         }
         else if (rule.classification == "error") {
             insertTo($($('#non-implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
-            $('#nonImplementedCount').empty().append("{0} service implementation(s) have not been implemented".format(ServiceImplementationResults.ImplementTotal.nonImplementedCount));
+            $('#nonImplementedCount').empty().append("{0} service implementation(s) have not been implemented<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.nonImplementedCount));
         }
         else {
             insertTo($($('#unknown ul')[0]), rule.FullName.split(','), true)
-            $('#notTestedCount').empty().append("{0} service implementation(s) are unknown because of can't getting the required data".format(ServiceImplementationResults.ImplementTotal.notTestedCount));
+            $('#notTestedCount').empty().append("{0} service implementation(s) are unknown because of can't getting the required data<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.notTestedCount));
         }
     });
 }
