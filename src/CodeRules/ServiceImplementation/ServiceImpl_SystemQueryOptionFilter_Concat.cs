@@ -94,7 +94,13 @@ namespace ODataValidator.Rule
             info = null;
             var svcStatus = ServiceStatus.GetInstance();
             string entityTypeShortName;
-            var propNames = MetadataHelper.GetPropertyNames("Edm.String", out entityTypeShortName);
+            var propNames = MetadataHelper.GetPropertyNames(
+                "Edm.String",
+                out entityTypeShortName,
+                2,
+                (elem) => {
+                    return !(null != elem.Attribute("MaxLength") && elem.GetAttributeValue("MaxLength") == "max");
+                });
             if (null == propNames || propNames.Count < 2)
             {
                 return passed;

@@ -113,17 +113,16 @@ namespace ODataValidator.Rule
             info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
+                var jObj = JObject.Parse(resp.ResponsePayload);
+                var jArr = jObj.GetValue("value") as JArray;
                 passed = true;
-            }
-
-            var jObj = JObject.Parse(resp.ResponsePayload);
-            var jArr = jObj.GetValue("value") as JArray;
-            for (int i = 0; i < jArr.Count - 1; i++)
-            {
-                if (!CompareOperationHelper.Compare(jArr[i][keyPropName], jArr[i + 1][keyPropName], keyPropType, ComparerType.Equal | ComparerType.GreaterThan))
+                for (int i = 0; i < jArr.Count - 1; i++)
                 {
-                    passed = false;
-                    break;
+                    if (!CompareOperationHelper.Compare(jArr[i][keyPropName], jArr[i + 1][keyPropName], keyPropType, ComparerType.Equal | ComparerType.GreaterThan))
+                    {
+                        passed = false;
+                        break;
+                    }
                 }
             }
 

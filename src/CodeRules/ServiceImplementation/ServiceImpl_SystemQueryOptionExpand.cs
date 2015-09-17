@@ -94,7 +94,12 @@ namespace ODataValidator.Rule
             info = null;
             var svcStatus = ServiceStatus.GetInstance();
             string entityTypeShortName;
-            var navigPropNames = MetadataHelper.GetNavigationPropertyNames(out entityTypeShortName);
+            var navigPropNames = MetadataHelper.GetNavigationPropertyNames(
+                out entityTypeShortName, 
+                null, 
+                (elem) => {
+                    return !(null != elem.Attribute("Nullable") && elem.GetAttributeValue("Nullable") == "false");
+                });
             if (null == navigPropNames || !navigPropNames.Any())
             {
                 return passed;
