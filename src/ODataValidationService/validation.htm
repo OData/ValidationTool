@@ -179,9 +179,11 @@
             }
             var uls = $("ul", $("> td > div > ul", e.parentNode.parentNode.nextElementSibling)[0]);
            uls.each(function(){
-                this.style.display = display;
-                $('.angle', this.parentNode)[0].src = angleSrc;
-                $('.fold', this.parentNode)[0].src = folderSrc;
+               this.style.display = display;
+               if ($('.angle', this.parentNode)[0]) {
+                   $('.angle', this.parentNode)[0].src = angleSrc;
+                   $('.fold', this.parentNode)[0].src = folderSrc;
+               }
             })
 
         }
