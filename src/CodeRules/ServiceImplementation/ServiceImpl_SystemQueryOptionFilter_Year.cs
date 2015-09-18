@@ -9,6 +9,7 @@ namespace ODataValidator.Rule
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Net;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using ODataValidator.Rule.Helper;
     using ODataValidator.RuleEngine;
@@ -114,21 +115,25 @@ namespace ODataValidator.Rule
             var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
-                JObject jObj = JObject.Parse(resp.ResponsePayload);
+                var settings = new JsonSerializerSettings();
+                settings.DateParseHandling = DateParseHandling.None;
+                JObject jObj = JsonConvert.DeserializeObject(resp.ResponsePayload, settings) as JObject;
                 JArray jArr = jObj.GetValue(Constants.Value) as JArray;
                 var entity = jArr.First as JObject;
-                var propVal = Convert.ToDateTime(entity[propName]).Year;
+                var propVal = entity[propName].ToString();
+                int index = propVal.IndexOf('-');
+                propVal = propVal.Substring(0, index);
                 url = string.Format("{0}?$filter=year({1}) eq {2}", url, propName, propVal);
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 var detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, string.Empty);
                 info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
                 if (null != resp && HttpStatusCode.OK == resp.StatusCode)
                 {
-                    jObj = JObject.Parse(resp.ResponsePayload);
+                    jObj = JsonConvert.DeserializeObject(resp.ResponsePayload, settings) as JObject;
                     jArr = jObj.GetValue(Constants.Value) as JArray;
                     foreach (JObject et in jArr)
                     {
-                        passed = Convert.ToDateTime(et[propName]).Year == propVal;
+                        passed = et[propName].ToString().Substring(0, index) == propVal;
                     }
                 }
                 else
