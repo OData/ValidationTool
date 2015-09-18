@@ -106,7 +106,7 @@ namespace ODataValidator.Rule
                 PrimitiveDataTypes.Decimal, PrimitiveDataTypes.Double
             });
 
-            var filterRestrictions = AnnotationsHelper.GetFilterRestrictions(context.MetadataDocument, context.VocCapabilities, supportedPropertyTypes, NavigationRoughType.None);
+            var filterRestrictions = AnnotationsHelper.GetFilterRestrictionsWithoutNavi(context.MetadataDocument, context.VocCapabilities, supportedPropertyTypes);
 
             if (string.IsNullOrEmpty(filterRestrictions.Item1) ||
                 null == filterRestrictions.Item2 || !filterRestrictions.Item2.Any())
@@ -202,7 +202,7 @@ namespace ODataValidator.Rule
             supportedPropertyTypes.Clear();
             supportedPropertyTypes.Add(PrimitiveDataTypes.String);
 
-            filterRestrictions = AnnotationsHelper.GetFilterRestrictions(context.MetadataDocument, context.VocCapabilities, supportedPropertyTypes, NavigationRoughType.None);
+            filterRestrictions = AnnotationsHelper.GetFilterRestrictionsWithoutNavi(context.MetadataDocument, context.VocCapabilities, supportedPropertyTypes);
 
             if (string.IsNullOrEmpty(filterRestrictions.Item1) ||
                 null == filterRestrictions.Item2 || !filterRestrictions.Item2.Any())
