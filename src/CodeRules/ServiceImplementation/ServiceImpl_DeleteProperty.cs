@@ -119,13 +119,13 @@ namespace ODataValidator.Rule
                     {
                         eTypeElement = en;
                         prop = np;
-                        if(!np.PropertyType.Contains("Edm."))
+                        if (!np.PropertyType.Contains("Collection(") && np.PropertyType.Contains("Edm."))
                         {
-                            propReltivePath = prop.PropertyName;
+                            propReltivePath = prop.PropertyName + @"/$value";
                         }
                         else
                         {
-                            propReltivePath = prop.PropertyName + @"/$value";
+                            propReltivePath = prop.PropertyName;
                         }
                         break;
                     }
@@ -151,7 +151,7 @@ namespace ODataValidator.Rule
 
             if (!dFactory.CheckOrAddTheMissingPropertyData(eTypeElement.EntitySetName, prop.PropertyName, ref reqData))
             {
-                detail.ErrorMessage = "The property to update does not have value, and cannot be deleted.";
+                detail.ErrorMessage = "The property to delete does not have value, and cannot be deleted.";
                 info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
 
                 return passed;
@@ -180,7 +180,6 @@ namespace ODataValidator.Rule
                     detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, StringHelper.MergeHeaders(Constants.V4AcceptHeaderJsonFullMetadata, serviceStatus.DefaultHeaders), resp);
                     if ((resp.StatusCode.HasValue && HttpStatusCode.OK == resp.StatusCode) || HttpStatusCode.NoContent == resp.StatusCode)
                     {
-
                         resp = WebHelper.DeleteEntity(url, context.RequestHeaders, additionalInfos.Last().HasEtag);
                         detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Delete, string.Empty, resp, string.Empty, "Successfully updated the stream of the image.");
 
@@ -196,7 +195,7 @@ namespace ODataValidator.Rule
                     }
                     else
                     {
-                        detail.ErrorMessage = "Get stream property failed from above URI.";
+                        detail.ErrorMessage = "Get property failed from above URI.";
                     }
 
                     // Restore the service.
