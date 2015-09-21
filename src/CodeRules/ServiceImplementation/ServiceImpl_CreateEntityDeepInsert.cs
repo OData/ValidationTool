@@ -9,6 +9,8 @@ namespace ODataValidator.Rule
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Net;
+    using System.Xml;
+    using Newtonsoft.Json.Linq;
     using ODataValidator.Rule.Helper;
     using ODataValidator.RuleEngine;
     using ODataValidator.RuleEngine.Common;
@@ -95,7 +97,7 @@ namespace ODataValidator.Rule
             DataFactory dFactory = DataFactory.Instance();
             var detail = new ExtensionRuleResultDetail(this.Name, serviceStatus.RootURL, HttpMethod.Post, string.Empty);
             List<string> keyPropertyTypes = new List<string>() { "Edm.Int32", "Edm.Int16", "Edm.Int64", "Edm.Guid", "Edm.String" };
-            var entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.CollectionValued);
+            var entityTypeElements = MetadataHelper.GetEntityTypes(serviceStatus.MetadataDocument, 1, keyPropertyTypes, null, NavigationRoughType.None);
 
             if (null == entityTypeElements || 0 == entityTypeElements.Count())
             {
@@ -107,23 +109,38 @@ namespace ODataValidator.Rule
 
             string entitySet = string.Empty;
             string navigProp = string.Empty;
+            NavigationRoughType navigRoughType = NavigationRoughType.None;
             EntityTypeElement entityType = new EntityTypeElement();
             foreach (var en in entityTypeElements)
             {
-                entitySet = en.EntitySetName;
-                var funcs = new List<Func<string, string, string, List<NormalProperty>, List<NavigProperty>, bool>>() 
+                if(!string.IsNullOrEmpty(en.EntitySetName) && en.NavigationProperties.Count > 0)
                 {
-                    AnnotationsHelper.GetExpandRestrictions, AnnotationsHelper.GetInsertRestrictions, AnnotationsHelper.GetDeleteRestrictions
-                };
+                    foreach (NavigProperty np in en.NavigationProperties)
+                    {
+                        string npTypeFullName = np.NavigationPropertyType.RemoveCollectionFlag();
+                        
+                        XmlDocument metadata = new XmlDocument();
+                        metadata.LoadXml(context.MetadataDocument);
+                        if (context.ContainsExternalSchema)
+                        { 
+                            metadata.LoadXml(context.MergedMetadataDocument); 
+                        }
+                        XmlNode npXmlNode;
+                        MetadataHelper.GetTypeNode(npTypeFullName, metadata, out npXmlNode);
+                        if(!(npXmlNode.Attributes["HasStream"]!=null ? npXmlNode.Attributes["HasStream"].Value.Equals("true") : false))
+                        {
+                            navigProp = np.NavigationPropertyName;
+                            navigRoughType = np.NavigationRoughType;
+                            entityType = en;
+                            entitySet = en.EntitySetName;
+                            break;
+                        }
+                    }
 
-                var restrictions = entitySet.GetRestrictions(serviceStatus.MetadataDocument, termDocs.VocCapabilitiesDoc, funcs, null, NavigationRoughType.CollectionValued);
-                if (!string.IsNullOrEmpty(restrictions.Item1)
-                    && null != restrictions.Item2 && restrictions.Item2.Any()
-                    && null != restrictions.Item3 && restrictions.Item3.Any())
-                {
-                    navigProp = restrictions.Item3.First().NavigationPropertyName;
-                    entityType = en;
-                    break;
+                    if (!string.IsNullOrEmpty(entitySet))
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -144,13 +161,73 @@ namespace ODataValidator.Rule
             detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
             if (HttpStatusCode.Created == resp.StatusCode)
             {
-                var entityId = additionalInfos.Last().EntityId;
-                resp = WebHelper.GetEntity(entityId);
-                detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
+                var mainEntityID = additionalInfos.Last().EntityId;
+                string entityId = additionalInfos.First().EntityId;
+                
+                string refUrl = mainEntityID.TrimEnd('/') + "/" + navigProp + "/$ref";
+                string refEntitySetNameWithEnityID = entityId.Split('/').Last();
+                string refEntityValue = serviceStatus.RootURL.TrimEnd('/') + @"/" + refEntitySetNameWithEnityID;
+                string refEntityID = refEntitySetNameWithEnityID.Contains("'") ? refEntitySetNameWithEnityID.Split('\'')[1] : refEntitySetNameWithEnityID.Split('(')[1].TrimEnd(')');
+
+                resp = WebHelper.GetEntity(mainEntityID);
+                detail = new ExtensionRuleResultDetail(this.Name, mainEntityID, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
 
                 if (HttpStatusCode.OK == resp.StatusCode && additionalInfos.Count > 1)
                 {
-                    passed = true;
+                    resp = WebHelper.GetEntity(refUrl);
+                    detail = new ExtensionRuleResultDetail(this.Name, refUrl, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
+
+                    if (HttpStatusCode.OK == resp.StatusCode)
+                    {
+                        JObject refPayload;
+                        resp.ResponsePayload.TryToJObject(out refPayload);
+                        bool created = false;
+
+                        if (navigRoughType == NavigationRoughType.CollectionValued)
+                        {
+                            var entries = JsonParserHelper.GetEntries(refPayload);
+
+                            if (entries != null)
+                            {
+                                foreach (JObject entry in entries)
+                                {
+                                    foreach (JProperty prop in entry.Children())
+                                    {
+                                        if (prop.Name.Equals(Constants.V4OdataId))
+                                        {
+                                            created = prop.Value.ToString().Contains(refEntityID);
+                                            if (created)
+                                            {
+                                                passed = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (JProperty prop in refPayload.Children())
+                            {
+                                if (prop.Name.Equals(Constants.V4OdataId))
+                                {
+                                    created = prop.Value.ToString().Contains(refEntityID);
+                                    if (created)
+                                    {
+                                        passed = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!created)
+                        {
+                            passed = false;
+                            detail.ErrorMessage = string.Format("The HTTP deep insert failed to add a reference to a collection-valued navigation property failed.");
+                        }
+                    }
                 }
                 else
                 {

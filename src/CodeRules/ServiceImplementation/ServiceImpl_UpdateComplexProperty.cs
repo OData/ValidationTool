@@ -150,11 +150,22 @@ namespace ODataValidator.Rule
             string url = serviceStatus.RootURL.TrimEnd('/') + @"/" + entitySetUrl;
             updateUrl = url;
             var additionalInfos = new List<AdditionalInfo>();
-            var reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
+            JObject reqData = dFactory.ConstructInsertedEntityData(entityType.EntitySetName, entityType.EntityTypeShortName, null, out additionalInfos);
+
+            if (!dFactory.CheckOrAddTheMissingPropertyData(entityType.EntitySetName, complexPropName, ref reqData))
+            {
+                detail.ErrorMessage = "The property to update does not exist, and cannot be updated.";
+                info = new ExtensionRuleViolationInfo(new Uri(serviceStatus.RootURL), serviceStatus.ServiceDocument, detail);
+
+                return passed;
+            }
+            
             string reqDataStr = reqData.ToString();
             bool isMediaType = !string.IsNullOrEmpty(additionalInfos.Last().ODataMediaEtag);
             var resp = WebHelper.CreateEntity(url, context.RequestHeaders, reqData, isMediaType, ref additionalInfos);
+            
             detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Post, string.Empty, resp, string.Empty, reqDataStr);
+
             if (HttpStatusCode.Created == resp.StatusCode)
             {
                 string entityId = additionalInfos.Last().EntityId;
@@ -162,15 +173,25 @@ namespace ODataValidator.Rule
                 bool hasEtag = additionalInfos.Last().HasEtag;
                 resp = WebHelper.GetPropertyValue(updateUrl);
                 detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp);
-                if (HttpStatusCode.OK == resp.StatusCode)
+                if (HttpStatusCode.OK == resp.StatusCode || HttpStatusCode.NoContent == resp.StatusCode)
                 {
-                    JProperty complexPropContent = dFactory.ConstructPropertyData(entityType.EntitySetName, entityType.EntityTypeShortName, complexPropName);
+                    JProperty complexPropContent = null;
+
+                    foreach (JProperty prop in reqData.Children<JProperty>())
+                    {
+                        if(prop.Name.Equals(complexPropName))
+                        {
+                            complexPropContent = prop;
+                            break;
+                        }
+                    }
+
                     resp = WebHelper.UpdateComplexProperty(updateUrl, context.RequestHeaders, complexPropContent, hasEtag, complexPop.Value);
-                    detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Patch, string.Empty, resp, string.Empty, reqDataStr);
+                    detail = new ExtensionRuleResultDetail(this.Name, updateUrl, HttpMethod.Patch, string.Empty, resp, string.Empty, reqDataStr);
                     if (HttpStatusCode.NoContent == resp.StatusCode)
                     {
                         resp = WebHelper.GetPropertyValue(updateUrl);
-                        detail = new ExtensionRuleResultDetail(this.Name, entityId, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
+                        detail = new ExtensionRuleResultDetail(this.Name, updateUrl, HttpMethod.Get, string.Empty, resp, string.Empty, reqDataStr);
 
                         if (HttpStatusCode.OK == resp.StatusCode)
                         {
