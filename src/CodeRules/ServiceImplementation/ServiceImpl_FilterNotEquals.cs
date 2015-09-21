@@ -96,7 +96,7 @@ namespace ODataValidator.Rule
             info = new ExtensionRuleViolationInfo(context.Destination, context.ResponsePayload, detail);
             detail = info.Details[0];
 
-            var filterRestrictions = AnnotationsHelper.GetFilterRestrictions(context.MetadataDocument, context.VocCapabilities);
+            var filterRestrictions = AnnotationsHelper.GetFilterRestrictionsWithoutNavi(context.MetadataDocument, context.VocCapabilities);
 
             if (string.IsNullOrEmpty(filterRestrictions.Item1) ||
                 null == filterRestrictions.Item2 || !filterRestrictions.Item2.Any())

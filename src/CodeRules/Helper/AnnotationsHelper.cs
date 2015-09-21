@@ -896,6 +896,68 @@ namespace ODataValidator.Rule.Helper
         }
 
         /// <summary>
+        /// Gets filter restrictions without navigation property checking.
+        /// </summary>
+        /// <param name="metadataDoc">The metadata document.</param>
+        /// <param name="vocCapabilitiesDoc">The vocabulary-capabilities document.</param>
+        /// <param name="primitiveTypes">The expected primitive types' list.</param>
+        /// <returns>Returns an appropriate tuple element which supports filter restrictions.</returns>
+        public static Tuple<string, List<NormalProperty>> GetFilterRestrictionsWithoutNavi(
+            string metadataDoc,
+            string vocCapabilitiesDoc,
+            List<string> primitiveTypes = null)
+        {
+            if (string.IsNullOrEmpty(metadataDoc) ||
+                !metadataDoc.IsXmlPayload() ||
+                string.IsNullOrEmpty(vocCapabilitiesDoc) ||
+                !vocCapabilitiesDoc.IsXmlPayload())
+            {
+                return new Tuple<string, List<NormalProperty>>(string.Empty, new List<NormalProperty>());
+            }
+
+            var feeds = MetadataHelper.GetFeeds(metadataDoc);
+
+            if (!feeds.Any())
+            {
+                return new Tuple<string, List<NormalProperty>>(string.Empty, new List<NormalProperty>());
+            }
+
+            string entitySet = string.Empty;
+            List<NormalProperty> normalProps = new List<NormalProperty>();
+            List<NavigProperty> navigationProps = new List<NavigProperty>();
+
+            foreach (var f in feeds)
+            {
+                string entityTypeShortName = f.MapEntitySetNameToEntityTypeShortName();
+                bool flag = true;
+
+                if (string.IsNullOrEmpty(entityTypeShortName) || !flag)
+                {
+                    continue;
+                }
+
+                var props = MetadataHelper.GetNormalProperties(metadataDoc, entityTypeShortName).ToList();
+
+                if (null == props || !props.Any())
+                {
+                    continue;
+                }
+
+                if (null != primitiveTypes && primitiveTypes.Any() &&
+                    !AnnotationsHelper.IsSuitableProperty(props, primitiveTypes))
+                {
+                    continue;
+                }
+
+                entitySet = f;
+                normalProps.AddRange(props);
+                break;
+            }
+
+            return new Tuple<string, List<NormalProperty>>(entitySet, normalProps);
+        }
+
+        /// <summary>
         /// Gets sort restrictions.
         /// </summary>
         /// <param name="metadataDoc">The metadata document.</param>

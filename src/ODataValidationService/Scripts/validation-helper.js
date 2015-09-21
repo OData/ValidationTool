@@ -2442,7 +2442,7 @@ function display(rule) {
             $('#implementedCount').empty().append("{0} service implementation(s) have been implemented<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.implementedCount));
 
         }
-        else if (rule.classification == "error") {
+        else if (rule.classification == "error" || rule.classification == "warning" || rule.classification == "recommendation") {
             insertTo($($('#non-implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
             $('#nonImplementedCount').empty().append("{0} service implementation(s) have not been implemented<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.nonImplementedCount));
         }
