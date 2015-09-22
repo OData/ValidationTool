@@ -59,7 +59,7 @@ namespace ODataValidator.Rule
         {
             get
             {
-                return RequirementLevel.Must;
+                return RequirementLevel.May;
             }
         }
 
