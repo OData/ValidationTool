@@ -16,10 +16,10 @@ var validatorStat = {
 };
 var dataforRerun = {
     "index" : 0,
-    "JobDetails" : [ [], [], [] ],
-    "JobNotes": [[], [], []],
-    "Jobs": [[], [], []],
-    "Results" : [ [], [], [] ]
+    "JobDetails" : [ [], [], [], [] ],
+    "JobNotes": [[], [], [], []],
+    "Jobs": [[], [], [], []],
+    "Results": [[], [], [], []]
 };
 
 var validatorConf = {
@@ -773,7 +773,7 @@ function catcheServiceImplementationResults(testResult)
     { 
         ServiceImplementationResults.ImplementTotal.implementedCount++; 
     }
-    else if (testResult.Classification == "error")
+    else if (testResult.Classification == "error" || rule.classification == "warning" || rule.classification == "recommendation")
     { 
         ServiceImplementationResults.ImplementTotal.nonImplementedCount++; 
     }

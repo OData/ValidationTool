@@ -3106,12 +3106,14 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         /// <param name="propertyType">The specified type of a property.</param>
         /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <param name="number">The number of the property names will be get.</param>
+        /// <param name="filter">The function to filter out the inappropriate result.</param>
         /// <returns>Returns all the eligible property names in an entity-type.</returns>
-        public static List<string> GetPropertyNames(string propertyType, out string entityTypeShortName)
+        public static List<string> GetPropertyNames(string propertyType, out string entityTypeShortName, int number = 1, Func<XElement, bool> filter = null)
         {
             var propertyTypes = new string[1] { propertyType };
 
-            return MetadataHelper.GetPropertyNames(propertyTypes, out entityTypeShortName);
+            return MetadataHelper.GetPropertyNames(propertyTypes, out entityTypeShortName, number, filter);
         }
 
         /// <summary>
@@ -3119,8 +3121,10 @@ namespace ODataValidator.Rule.Helper
         /// </summary>
         /// <param name="propertyTypes">The specified types of properties.</param>
         /// <param name="entityTypeShortName">The entity-type short name.</param>
+        /// <param name="number">The number of the property names will be get.</param>
+        /// <param name="filter">The function to filter out the inappropriate result.</param>
         /// <returns>Returns all the eligible property names in an entity-type.</returns>
-        public static List<string> GetPropertyNames(IEnumerable<string> propertyTypes, out string entityTypeShortName)
+        public static List<string> GetPropertyNames(IEnumerable<string> propertyTypes, out string entityTypeShortName, int number = 1, Func<XElement, bool> filter = null)
         {
             var result = new List<string>();
             entityTypeShortName = string.Empty;
@@ -3151,14 +3155,30 @@ namespace ODataValidator.Rule.Helper
                             string type = propElem.GetAttributeValue("Type");
                             if (propertyTypes.Contains(type))
                             {
-                                result.Add(propElem.GetAttributeValue("Name"));
+                                if (null == filter)
+                                {
+                                    result.Add(propElem.GetAttributeValue("Name"));
+                                }
+                                else
+                                {
+                                    if (filter(propElem))
+                                    {
+                                        result.Add(propElem.GetAttributeValue("Name"));
+                                    }
+                                }
+                                
                             }
                         }
                     }
 
-                    if (result.Any())
+                    if (result.Count >= number)
                     {
                         break;
+                    }
+                    else
+                    {
+                        result.Clear();
+                        continue;
                     }
                 }
             }
@@ -3411,8 +3431,10 @@ namespace ODataValidator.Rule.Helper
         /// Get the navigation property names from an entity-type.
         /// </summary>
         /// <param name="entityTypeShortName">Output the entity-type short name.</param>
+        /// <param name="entityTypeShortNames">The negative set of the navigation properties.</param>
+        /// <param name="filter">The function to filter out the inappropriate result.</param>
         /// <returns>Returns all the navigation property name in the entity-type.</returns>
-        public static List<string> GetNavigationPropertyNames(out string entityTypeShortName, IEnumerable<string> entityTypeShortNames = null)
+        public static List<string> GetNavigationPropertyNames(out string entityTypeShortName, IEnumerable<string> entityTypeShortNames = null, Func<XElement, bool> filter = null)
         {
             var result = new List<string>();
             entityTypeShortName = string.Empty;
@@ -3435,12 +3457,22 @@ namespace ODataValidator.Rule.Helper
 
                 entityTypeShortName = etElem.GetAttributeValue("Name");
                 xPath = "./*[local-name()='NavigationProperty']";
-                var propElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
-                if (null != propElems && propElems.Any())
+                var navigPropElems = etElem.XPathSelectElements(xPath, ODataNamespaceManager.Instance);
+                if (null != navigPropElems && navigPropElems.Any())
                 {
-                    foreach (var propElem in propElems)
+                    foreach (var np in navigPropElems)
                     {
-                        result.Add(propElem.GetAttributeValue("Name"));
+                        if (null == filter)
+                        {
+                            result.Add(np.GetAttributeValue("Name"));
+                        }
+                        else
+                        {
+                            if (filter(np))
+                            {
+                                result.Add(np.GetAttributeValue("Name"));
+                            }
+                        }
                     }
 
                     if (result.Any())
