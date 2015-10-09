@@ -263,32 +263,6 @@ namespace ODataValidator.ValidationService
                 validationJob.Complete = false;
                 x.SaveChanges();
 
-                string stringHeaders = validationJob.ReqHeaders;
-
-                if(!string.IsNullOrEmpty(authorizationHeader))
-                {
-                    stringHeaders = Regex.Replace(stringHeaders, "authorization:.*(;|$)", "", RegexOptions.IgnoreCase);
-                    stringHeaders += authorizationHeader.Trim();
-                }
-
-                try
-                {
-                    // Try to get the necessary information for only one time.
-                    RuleEngine.Common.ServiceStatus.GetInstance(Uri, stringHeaders);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    return new JobGroup[] { new JobGroup()
-                    {
-                        Uri = Uri,
-                        MasterJobId = Guid.Empty,
-                        DerivativeJobId = Guid.Empty,
-                        ResourceType = string.Empty,
-                        RuleCount = 0,
-                        Issues = "Error: The current user is unauthorized to access the endpoint." 
-                    }};
-                }
-
                 ServiceContext ctxMaster = null;
                 string Format = validationJob.Format;
                 List<KeyValuePair<string, string>> reqHeaders = ToHeaderCollection(stringHeaders);
