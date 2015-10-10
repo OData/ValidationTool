@@ -8,6 +8,7 @@ namespace ODataValidator.Rule
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Net;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using ODataValidator.Rule.Helper;
     using ODataValidator.RuleEngine;
@@ -113,21 +114,32 @@ namespace ODataValidator.Rule
             var resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
             if (null != resp && HttpStatusCode.OK == resp.StatusCode)
             {
-                JObject jObj = JObject.Parse(resp.ResponsePayload);
+                var settings = new JsonSerializerSettings();
+                settings.DateParseHandling = DateParseHandling.None;
+                JObject jObj = JsonConvert.DeserializeObject(resp.ResponsePayload, settings) as JObject;
                 JArray jArr = jObj.GetValue(Constants.Value) as JArray;
                 var entity = jArr.First as JObject;
-                var propVal = Convert.ToDateTime(entity[propName]).TimeOfDay.ToString();
-                url = string.Format("{0}?$filter=time({1}) eq time({1})", url, propName);
+                var propVal = entity[propName].ToString();
+                int index = propVal.IndexOf('T');
+                propVal = propVal.Remove(0, index + 1);
+                index = propVal.IndexOf('-');
+                propVal = propVal.Remove(index, propVal.Length - index);
+                url = string.Format("{0}?$filter=time({1}) eq {2}", url, propName, propVal);
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 var detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, string.Empty);
                 info = new ExtensionRuleViolationInfo(new Uri(url), string.Empty, detail);
                 if (null != resp && HttpStatusCode.OK == resp.StatusCode)
                 {
-                    jObj = JObject.Parse(resp.ResponsePayload);
+                    jObj = JsonConvert.DeserializeObject(resp.ResponsePayload, settings) as JObject;
                     jArr = jObj.GetValue(Constants.Value) as JArray;
                     foreach (JObject et in jArr)
                     {
-                        passed = Convert.ToDateTime(et[propName]).TimeOfDay.ToString() == propVal;
+                        var actualVal = entity[propName].ToString();
+                        index = actualVal.IndexOf('T');
+                        actualVal = actualVal.Remove(0, index + 1);
+                        index = actualVal.IndexOf('-');
+                        actualVal = actualVal.Remove(index, actualVal.Length - index);
+                        passed = actualVal == propVal;
                     }
                 }
                 else
@@ -135,7 +147,7 @@ namespace ODataValidator.Rule
                     passed = false;
                 }
             }
-            
+
             return passed;
         }
     }
