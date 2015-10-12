@@ -122,8 +122,8 @@ namespace ODataValidator.Rule
                 var propVal = entity[propName].ToString();
                 int index = propVal.IndexOf('T');
                 propVal = propVal.Remove(0, index + 1);
-                index = propVal.IndexOf('-');
-                propVal = propVal.Remove(index, propVal.Length - index);
+                int len = 8;
+                propVal = propVal.Substring(0, len);
                 url = string.Format("{0}?$filter=time({1}) eq {2}", url, propName, propVal);
                 resp = WebHelper.Get(new Uri(url), string.Empty, RuleEngineSetting.Instance().DefaultMaximumPayloadSize, svcStatus.DefaultHeaders);
                 var detail = new ExtensionRuleResultDetail(this.Name, url, HttpMethod.Get, string.Empty);
@@ -137,8 +137,7 @@ namespace ODataValidator.Rule
                         var actualVal = entity[propName].ToString();
                         index = actualVal.IndexOf('T');
                         actualVal = actualVal.Remove(0, index + 1);
-                        index = actualVal.IndexOf('-');
-                        actualVal = actualVal.Remove(index, actualVal.Length - index);
+                        actualVal = actualVal.Substring(0, len);
                         passed = actualVal == propVal;
                     }
                 }
