@@ -122,7 +122,7 @@ namespace ODataValidator.Rule.Common
         {
             get
             {
-                return null;
+                return RuleEngine.PayloadFormat.Xml;
             }
         }
 
