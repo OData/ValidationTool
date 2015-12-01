@@ -166,7 +166,7 @@ namespace ODataValidator.Rule
         {
             get
             {
-                return RuleEngine.PayloadFormat.JsonLight;
+                return null;
             }
         }
 
