@@ -479,3 +479,14 @@ button.subrule_rerun{
     padding-left: 5px;
     margin-left: -28px;
 }
+
+
+#implementedCount > button, #nonImplementedCount > button, #notTestedCount > button{
+    cursor: pointer;
+    float:right;
+    color:white;
+    background: none repeat scroll 0 0 #F89C36;
+    border-style: dotted;
+    border-width: 1px;
+    font-size: 15px;
+}

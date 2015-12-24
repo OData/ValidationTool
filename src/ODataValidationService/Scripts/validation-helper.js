@@ -874,7 +874,7 @@ function resigterUriRerun() {
             function waitUtilComplete() {
                 var Completequery = "odatavalidator/ValidationJobs(guid'" + jobid + "')/Complete";
 
-                validatorApp.currJobNote.empty().append("Rerunning rules...");
+                $('#infotop #statusInfo #status').empty().append("Rerunning rules...");
                 OData.read(Completequery, function (data) {
                     if (data.Complete == true) {
                         complete = true;
@@ -889,7 +889,7 @@ function resigterUriRerun() {
                 return;
             }
 
-            validatorApp.currJobNote.empty().append("Loading " + allSelectedLis.length + " rerun results...");
+            $('#infotop #statusInfo #status').empty().append("Loading " + allSelectedLis.length + " rerun results...");
             summarychange = false;
 
             var updateCount = allSelectedLis.length;
@@ -934,7 +934,7 @@ function resigterUriRerun() {
                                 jQuery('#summary', validatorApp.currJobDetail).addClass("highlit");
                             }
                         }
-                        validatorApp.currJobNote.empty().append("Rerun complete.");
+                        $('#infotop #statusInfo #status').empty().append("Rerun complete.");
                         enableTabSwitch();
                         validatorApp.currJobDetail = null;
                         validatorApp.currJobNote = null;
@@ -980,7 +980,7 @@ function resigterUriRerun() {
                 if (allSelectedLis.length == 0) {
                     return;
                 }
-                validatorApp.currJobNote.empty().append("Starting rerunning " + allSelectedLis.length + " rules...");
+                $('#infotop #statusInfo #status').empty().append("Starting rerunning " + allSelectedLis.length + " rules...");
                 disableTabSwitch();
                 OData.request(request, UIResultUpdate);
                 $("#credential").submit();
@@ -2439,16 +2439,16 @@ function display(rule) {
     $.each(rule.URI, function () {
         if (rule.classification == "success") {
             insertTo($($('#implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
-            $('#implementedCount').empty().append("{0} service implementation(s) have been implemented<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.implementedCount));
+            $('#implementedCount').empty().append("{0} service implementation(s) have been implemented<button onclick=\"collapsExpand(this)\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.implementedCount));
 
         }
         else if (rule.classification == "error" || rule.classification == "warning" || rule.classification == "recommendation") {
             insertTo($($('#non-implementedTree ul')[0]), rule.FullName.split(',').concat(this), false);
-            $('#nonImplementedCount').empty().append("{0} service implementation(s) have not been implemented<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.nonImplementedCount));
+            $('#nonImplementedCount').empty().append("{0} service implementation(s) have not been implemented<button onclick=\"collapsExpand(this)\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.nonImplementedCount));
         }
         else {
             insertTo($($('#unknown ul')[0]), rule.FullName.split(','), true)
-            $('#notTestedCount').empty().append("{0} service implementation(s) are unknown because of can't getting the required data<button onclick=\"collapsExpand(this)\" style=\"float:right\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.notTestedCount));
+            $('#notTestedCount').empty().append("{0} service implementation(s) are unknown because of can't getting the required data<button onclick=\"collapsExpand(this)\">Expand</button>".format(ServiceImplementationResults.ImplementTotal.notTestedCount));
         }
     });
 }
