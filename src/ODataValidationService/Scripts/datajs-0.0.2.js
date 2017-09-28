@@ -3513,7 +3513,7 @@
             /// <param name="response">Response object.</param>
             /// <param name="context">Operation context.</param>
 
-            if (response && response.body !== null && response.body !== undefined && response.headers["Content-Type"]) {
+            if (response && response.body !== null && response.body !== undefined && (response.headers["Content-Type"] || response.headers["content-type"])) {
                 dispatchHandler("read", response, context);
             }
         },
