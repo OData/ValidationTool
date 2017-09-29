@@ -444,7 +444,7 @@
         /// <param name="xhr" type="XMLHttpRequest">HTTP request with response available.</param>
         /// <param name="headers" type="Array">Target array to fill with name/value pairs.</param>
 
-        var responseHeaders = xhr.getAllResponseHeaders().split(/\r?\n/);
+        var responseHeaders = xhr.getAllResponseHeaders().toLowerCase().split(/\r?\n/);
         var i, len;
         for (i = 0, len = responseHeaders.length; i < len; i++) {
             if (responseHeaders[i]) {
@@ -544,7 +544,7 @@
                 name = "handleJSONP_" + tickText;
                 window[name] = function (data) {
                     removeCallback(name, tick);
-                    success({ body: data, statusCode: 200, headers: { "Content-Type": "application/json"} });
+                    success({ body: data, statusCode: 200, headers: { "content-type": "application/json"} });
                 };
 
                 var scriptTag = document.createElement("SCRIPT");
@@ -673,7 +673,7 @@
         /// <param name="requestOrResponse">Object representing a request or a response.</summary>
         /// <returns type="Object">Object with 'mediaType' and a 'properties' dictionary; null in case that the header is not found or doesn't have a value.</returns>
 
-        return contentType(getRequestOrResponseHeader(requestOrResponse, "Content-Type"));
+        return contentType(getRequestOrResponseHeader(requestOrResponse, "content-type"));
     };
 
     var getDataServiceVersion = function (requestOrResponse) {
@@ -747,8 +747,8 @@
             request.body = serializeCallback(handler, request.data, writeContext);
 
             if (request.body) {
-                fixRequestHeader(request, "DataServiceVersion", writeContext.dataServiceVersion || "1.0");
-                fixRequestHeader(request, "Content-Type", contentTypeToString(writeContext.contentType));
+                fixRequestHeader(request, "dataserviceversion", writeContext.dataServiceVersion || "1.0");
+                fixRequestHeader(request, "content-type", contentTypeToString(writeContext.contentType));
                 return true;
             }
         }
@@ -3513,7 +3513,7 @@
             /// <param name="response">Response object.</param>
             /// <param name="context">Operation context.</param>
 
-            if (response && response.body !== null && response.body !== undefined && response.headers["Content-Type"]) {
+            if (response && response.body !== null && response.body !== undefined && response.headers["content-type"]) {
                 dispatchHandler("read", response, context);
             }
         },
@@ -3620,7 +3620,7 @@
 
         while (partEnd !== "--" && context.position < text.length) {
             var partHeaders = readHeaders(text, context);
-            var partContentType = contentType(partHeaders["Content-Type"]);
+            var partContentType = contentType(partHeaders["content-type"]);
 
             if (partContentType && partContentType.mediaType === batchMediaType) {
                 context.boundaries.push(partContentType.properties["boundary"]);
@@ -3806,7 +3806,7 @@
             }
 
             var changeSetBoundary = createBoundary("changeset_");
-            result = "Content-Type: " + batchMediaType + "; boundary=" + changeSetBoundary + "\r\n";
+            result = "content-type: " + batchMediaType + "; boundary=" + changeSetBoundary + "\r\n";
             var i, len;
             for (i = 0, len = changeSet.length; i < len; i++) {
                 result += writeBatchPartDelimiter(changeSetBoundary, false) +
@@ -3815,7 +3815,7 @@
 
             result += writeBatchPartDelimiter(changeSetBoundary, true);
         } else {
-            result = "Content-Type: application/http\r\nContent-Transfer-Encoding: binary\r\n\r\n";
+            result = "content-type: application/http\r\ncontent-transfer-encoding: binary\r\n\r\n";
             prepareRequest(part, partHandler(context), { metadata: context.metadata });
             result += writeRequest(part);
         }
